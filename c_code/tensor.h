@@ -8,7 +8,12 @@
  *  The FORM has a length of N, each index of the FORM corrosponds to an ordering
  *    of the TENSOR
  *  The number J at index K of the FORM indicates the number of distinct values
- *    the ELEMENTS can have under ordering K within the TENSOR
+ *    the ELEMENTS can have under ordering K within the TENSOR. 
+ *    FORM[K] = J
+ *  The COORDINATES of an ELEMENT are a list of N indicies, where the Kth index
+ *    has FORM[K] number of possibilities, every ELEMENT in tensor has a unique
+ *    COORDINATE. 
+ *    C[M] is the ELEMENT in TENSOR C with COORDINATE M
  *
  *  
  *  Consider the following notation:
@@ -62,12 +67,57 @@ tensor* tensor_create(ELEMENT* data);
 
 void tensor_delete(tensor *t);
 
-tensor* tensor_add(tensor *A, tensor *B);
-
-tensor* tensor_sub(tensor *A, tensor *B);
-
-tensor* tensor_scale(tensor *A, ELEMENT c);
 
 
+/*Adds two TENSORs
+Inputs: pointers to TENSORs A and B to be added.
+  A and B must have the same FORM.
+Returns: pointer to TENSOR C.
+  C has the same form as A and B.
+  For any COORDINATE M,
+    C[M] is equal to A[M] + B[M]
+*/
+tensor *tensor_add(tensor *A, tensor *B);
+
+//Returns the partial derivative of C with respect to A
+tensor *tensor_add_d_1(tensor *A, tensor *B);
+
+//Returns the partial derivative of C with respect to B
+tensor *tensor_add_d_2(tensor *A, tensor *B);
+
+
+
+/*Subtracts two TENSORs
+Inputs: pointers to TENSORs A and B to be subtracted.
+  A and B must have the same FORM.
+Returns: pointer to TENSOR C.
+  C has the same form as A and B.
+  For any COORDINATE M,
+    C[M] is equal to A[M] - B[M]
+*/
+tensor *tensor_sub(tensor *A, tensor *B);
+
+//Returns the partial derivative of C with respect to A
+tensor *tensor_sub_d_1(tensor *A, tensor *B);
+
+//Returns the partial derivative of C with respect to B
+tensor *tensor_sub_d_2(tensor *A, tensor *B);
+
+
+
+/*Scales a TENSOR by a scalar ELEMENT
+Inputs: pointer to TENSOR A to be scaled and ELEMENT B to be the scalar
+Returns: pointer to TENSOR C.
+  C has the same form as A.
+  For any COORDINATE M,
+    C[M] is equal to A[M] * B
+*/
+tensor *tensor_scale(tensor *A, ELEMENT B);
+
+//Returns the partial derivative of C with respect to A
+tensor *tensor_scale_d_1(tensor *A, tensor *B);
+
+//Returns the partial derivative of C with respect to B
+tensor *tensor_scale_d_2(tensor *A, tensor *B);
 
 #endif NEURAL_C_CODE_TENSOR_H
