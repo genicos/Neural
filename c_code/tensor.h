@@ -120,4 +120,21 @@ tensor *tensor_scale_d_1(tensor *A, tensor *B);
 //Returns the partial derivative of C with respect to B
 tensor *tensor_scale_d_2(tensor *A, tensor *B);
 
+
+/*Traditional fully connected layer
+Inputs: pointers to TENSORs A and B, A is the activation layer and B is the parameter TENSOR
+  FORM of A is ignored
+  FORM[0] of B is to equal to A->length
+Returns: pointer to TENSOR C
+  FORM of C is equal to the FORM of B without the 0th index
+  For any COORDINATE M,
+    C[M] is equal to the sum of A[i]*B[{i,M}] as i increments
+*/
+tensor *tensor_full(tensor *A, tensor *B);
+
+//Returns the partial derivative of C with respect to A
+tensor *tensor_full_d_1(tensor *A, tensor *B);
+
+//Returns the partial derivative of C with respect to B
+tensor *tensor_full_d_2(tensor *A, tensor *B);
 #endif NEURAL_C_CODE_TENSOR_H
