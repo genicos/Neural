@@ -52,18 +52,22 @@
 #include <inttypes.h>
 typedef float ELEMENT               //The type for the TENSOR ELEMENTS
 typedef uint8_t FORM_LENGTH_STORE   //Size of FORM length type, for when a TENSOR is stored in a file
+
+//size(FORM_ELEMENT) <= size(DATA_LENGTH_STORE)
 typedef uint32_t FORM_ELEMENT       //The type for the FORM ELEMENTS
 typedef uint32_t DATA_LENGTH_STORE  //Size of DATA length type, for when a TENSOR is stored in a file
 
 typedef struct tensor{
   FORM_LENGTH_STORE form_length;
   FORM_ELEMENT *form;
+  DATA_LENGTH_STORE 
   
   DATA_LENGTH_STORE data_length;
   ELEMENT *data; //array of ELEMENTS
+  //As the last index of form increases by one, the index in data it corrosponds to increases by 1
 } tensor;
 
-tensor* tensor_create(ELEMENT* data);
+tensor* tensor_create(FORM_ELEMENT *form, FORM_LENGTH_STORE form_length);
 
 void tensor_delete(tensor *t);
 
@@ -137,4 +141,6 @@ tensor *tensor_full_d_1(tensor *A, tensor *B);
 
 //Returns the partial derivative of C with respect to B
 tensor *tensor_full_d_2(tensor *A, tensor *B);
+
+
 #endif NEURAL_C_CODE_TENSOR_H
