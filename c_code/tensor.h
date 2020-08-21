@@ -50,24 +50,26 @@
 #define NEURAL_C_CODE_TENSOR_H
 
 #include <inttypes.h>
-typedef float ELEMENT               //The type for the TENSOR ELEMENTS
-typedef uint8_t FORM_LENGTH_STORE   //Size of FORM length type, for when a TENSOR is stored in a file
+typedef float ELEMENT;               //The type for the TENSOR ELEMENTS
+typedef uint8_t FORM_LENGTH;         //Size of FORM length type
 
-//size(FORM_ELEMENT) <= size(DATA_LENGTH_STORE)
-typedef uint32_t FORM_ELEMENT       //The type for the FORM ELEMENTS
-typedef uint32_t DATA_LENGTH_STORE  //Size of DATA length type, for when a TENSOR is stored in a file
+//size(FORM_ELEMENT) <= size(DATA_LENGTH_STORE), product of all FORM elements is equal to DATA length
+typedef uint32_t FORM_ELEMENT;       //The type for the FORM ELEMENTS
+typedef uint32_t DATA_LENGTH;        //Size of DATA length type
+typedef DATA_LENGTH FORM_CASCADE_ELEMENT; //Element of form cascade
+
 
 typedef struct tensor{
-  FORM_LENGTH_STORE form_length;
+  FORM_LENGTH form_length;
   FORM_ELEMENT *form;
-  DATA_LENGTH_STORE 
+  FORM_CASCADE_ELEMENT *form_cascade; 
   
-  DATA_LENGTH_STORE data_length;
+  DATA_LENGTH data_length;
   ELEMENT *data; //array of ELEMENTS
   //As the last index of form increases by one, the index in data it corrosponds to increases by 1
 } tensor;
 
-tensor* tensor_create(FORM_ELEMENT *form, FORM_LENGTH_STORE form_length);
+tensor* tensor_create(FORM_ELEMENT *form, FORM_LENGTH form_length);
 
 void tensor_delete(tensor *t);
 
@@ -143,4 +145,4 @@ tensor *tensor_full_d_1(tensor *A, tensor *B);
 tensor *tensor_full_d_2(tensor *A, tensor *B);
 
 
-#endif NEURAL_C_CODE_TENSOR_H
+#endif
