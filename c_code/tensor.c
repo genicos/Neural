@@ -66,7 +66,7 @@ tensor *tensor_create(FORM_ELEMENT *form, FORM_LENGTH form_length){
   return t;
 }
 
-tensor* tensor_create_data(tensor *t){
+ELEMENT* tensor_create_data(tensor *t){
   if(!t){
     return NULL;
   }
@@ -75,9 +75,53 @@ tensor* tensor_create_data(tensor *t){
 }
 
 
+void tensor_print(tensor *t, char* printf_element_tag){
+  if(!t){
+    printf("Null tensor\n");
+    return; 
+  }
+  
+  char *datum_string = (char *)calloc(7,1);
+  sprintf(datum_string, " %%%s,",printf_element_tag);
+  
+  for(FORM_LENGTH b = 0; b < t->form_length; b++){
+    putchar('{');
+  }
 
-tensor* tensor_add(tensor *A, tensor *B){
-  tensor* C = tensor_create(A->form, A->form_length);
+  for(DATA_LENGTH i = 0; i < t->data_length; i++){
+    if(i<0){
+      FORM_LENGTH brackets = 0;
+ 
+      for(FORM_LENGTH fi = 0; fi < t->form_length; fi++){
+        if(i % t->form_cascade[fi] == 0){
+          brackets++;
+        }
+      }
+      
+      for(FORM_LENGTH b = 0; b < brackets; b++){
+        putchar('{');
+      }
+      if(brackets > 0){
+        putchar('\n');
+      }
+      for(FORM_LENGTH b = 0; b < brackets; b++){
+        putchar('}');
+      }
+    }
+    
+    printf(datum_string, t->data[i]);
+  }
+  
+  for(FORM_LENGTH b = 0; b < t->form_length; b++){
+    putchar('}');
+  }
+  
+  putchar('\n');
+}
+
+
+
+tensor* tensor_add(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < A->data_length; i++)
     C->data[i] = A->data[i] + B->data[i];
@@ -85,9 +129,7 @@ tensor* tensor_add(tensor *A, tensor *B){
   return C;
 }
 
-
-tensor* tensor_add_d_1(tensor *A, tensor *B){
-  tensor* C = tensor_create(A->form, A->form_length);
+tensor* tensor_add_d_1(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < A->data_length; i++)
     C->data[i] = 1;
@@ -95,9 +137,7 @@ tensor* tensor_add_d_1(tensor *A, tensor *B){
   return C;
 }
 
-
-tensor* tensor_add_d_2(tensor *A, tensor *B){
-  tensor* C = tensor_create(A->form, A->form_length);
+tensor* tensor_add_d_2(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < A->data_length; i++)
     C->data[i] = 1;
@@ -105,9 +145,16 @@ tensor* tensor_add_d_2(tensor *A, tensor *B){
   return C;
 }
 
+tensor* tensor_add_create(tensor *A, tensor *B){
+  tensor *C = tensor_create(A->form, A->form_length);
+  tensor_create_data(C);
+  
+  return C;
+}
 
-tensor* tensor_sub(tensor *A, tensor *B){
-  tensor* C = tensor_create(A->form, A->form_length);
+
+
+tensor* tensor_sub(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < A->data_length; i++)
     C->data[i] = A->data[i] - B->data[i];
@@ -115,8 +162,7 @@ tensor* tensor_sub(tensor *A, tensor *B){
   return C;
 }
 
-tensor* tensor_sub_d_1(tensor *A, tensor *B){
-  tensor* C = tensor_create(A->form, A->form_length);
+tensor* tensor_sub_d_1(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < A->data_length; i++)
     C->data[i] = 1;
@@ -124,8 +170,7 @@ tensor* tensor_sub_d_1(tensor *A, tensor *B){
   return C;
 }
 
-tensor* tensor_sub_d_2(tensor *A, tensor *B){
-  tensor* C = tensor_create(A->form, A->form_length);
+tensor* tensor_sub_d_2(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < A->data_length; i++)
     C->data[i] = -1;
@@ -133,9 +178,16 @@ tensor* tensor_sub_d_2(tensor *A, tensor *B){
   return C;
 }
 
+tensor* tensor_sub_create(tensor *A, tensor *B){
+  tensor *C = tensor_create(A->form, A->form_length);
+  tensor_create_data(C);
+  
+  return C;
+}
 
-tensor* tensor_scale(tensor *A, ELEMENT B){
-  tensor* C = tensor_create(A->form, A->form_length);
+
+
+tensor* tensor_scale(tensor *C, tensor *A, ELEMENT B){
   
   for(DATA_LENGTH i = 0; i < A->data_length; i++)
     C->data[i] = A->data[i] * B;
@@ -143,8 +195,7 @@ tensor* tensor_scale(tensor *A, ELEMENT B){
   return C;
 }
 
-tensor* tensor_scale_d_1(tensor *A, tensor *B){
-  tensor* C = tensor_create(A->form, A->form_length);
+tensor* tensor_scale_d_1(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < A->data_length; i++)
     C->data[i] = B->data[0];
@@ -152,8 +203,7 @@ tensor* tensor_scale_d_1(tensor *A, tensor *B){
   return C;
 }
 
-tensor* tensor_scale_d_2(tensor *A, tensor *B){
-  tensor* C = tensor_create(A->form, A->form_length);
+tensor* tensor_scale_d_2(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < A->data_length; i++)
     C->data[i] = A->data[i];
@@ -161,10 +211,16 @@ tensor* tensor_scale_d_2(tensor *A, tensor *B){
   return C;
 }
 
+tensor* tensor_scale_create(tensor *A, tensor *B){
+  tensor *C = tensor_create(A->form, A->form_length);
+  tensor_create_data(C);
+  
+  return C;
+}
 
 
-tensor* tensor_full(tensor *A, tensor *B){
-  tensor* C = tensor_create(&B->form[1], B->form_length-1);
+
+tensor* tensor_full(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->data_length; i++){
     for(DATA_LENGTH h = 0; h < A->data_length; h++){
@@ -175,8 +231,7 @@ tensor* tensor_full(tensor *A, tensor *B){
   return C;
 }
 
-tensor* tensor_full_d_1(tensor *A, tensor *B){
-  tensor* C = tensor_create(&B->form[1], B->form_length-1);
+tensor* tensor_full_d_1(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->data_length; i++){
     for(DATA_LENGTH h = 0; h < A->data_length; h++){
@@ -187,8 +242,7 @@ tensor* tensor_full_d_1(tensor *A, tensor *B){
   return C;
 }
 
-tensor* tensor_full_d_2(tensor *A, tensor *B){
-  tensor* C = tensor_create(&B->form[1], B->form_length-1);
+tensor* tensor_full_d_2(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->data_length; i++){
     for(DATA_LENGTH h = 0; h < A->data_length; h++){
@@ -196,5 +250,12 @@ tensor* tensor_full_d_2(tensor *A, tensor *B){
     }
   }
 
+  return C;
+}
+
+tensor* tensor_full_create(tensor *A, tensor *B){
+  tensor *C = tensor_create(&B->form[1], B->form_length-1);
+  tensor_create_data(C);
+  
   return C;
 }

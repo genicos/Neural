@@ -41,9 +41,14 @@ int main(){
   }
   B->data = b_data;
   
-  tensor *addition = tensor_add(A, B);
+  tensor *C = tensor_create(a_form, a_form_length);
+  tensor_create_data(C);
   
+  tensor_add(C,A,B);
+  tensor_print(C, "f");
   
+  tensor_delete_data(C);
+  tensor_delete(C);
   tensor_delete(B);
   tensor_delete(A); 
   return 0; 

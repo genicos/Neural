@@ -71,9 +71,13 @@ typedef struct tensor{
 
 tensor* tensor_create(FORM_ELEMENT *form, FORM_LENGTH form_length);
 
+ELEMENT* tensor_create_data(tensor *t);
+
 void tensor_delete_data(tensor *t);
 
 void tensor_delete(tensor *t);
+
+void tensor_print(tensor *t, char *printf_element_tag);
 
 
 
@@ -85,14 +89,16 @@ Returns: pointer to TENSOR C.
   For any COORDINATE M,
     C[M] is equal to A[M] + B[M]
 */
-tensor *tensor_add(tensor *A, tensor *B);
+tensor *tensor_add(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial derivative of C with respect to A
-tensor *tensor_add_d_1(tensor *A, tensor *B);
+tensor *tensor_add_d_1(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial derivative of C with respect to B
-tensor *tensor_add_d_2(tensor *A, tensor *B);
+tensor *tensor_add_d_2(tensor *C, tensor *A, tensor *B);
 
+//Creates answer tensor to be used in function
+tensor *tensor_add_create(tensor *A, tensor *B);
 
 
 /*Subtracts two TENSORs
@@ -103,14 +109,16 @@ Returns: pointer to TENSOR C.
   For any COORDINATE M,
     C[M] is equal to A[M] - B[M]
 */
-tensor *tensor_sub(tensor *A, tensor *B);
+tensor *tensor_sub(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial derivative of C with respect to A
-tensor *tensor_sub_d_1(tensor *A, tensor *B);
+tensor *tensor_sub_d_1(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial derivative of C with respect to B
-tensor *tensor_sub_d_2(tensor *A, tensor *B);
+tensor *tensor_sub_d_2(tensor *C, tensor *A, tensor *B);
 
+//Creates answer tensor to be used in function
+tensor *tensor_sub_create(tensor *A, tensor *B);
 
 
 /*Scales a TENSOR by a scalar ELEMENT
@@ -120,13 +128,16 @@ Returns: pointer to TENSOR C.
   For any COORDINATE M,
     C[M] is equal to A[M] * B
 */
-tensor *tensor_scale(tensor *A, ELEMENT B);
+tensor *tensor_scale(tensor *C, tensor *A, ELEMENT B);
 
 //Returns the partial derivative of C with respect to A
-tensor *tensor_scale_d_1(tensor *A, tensor *B);
+tensor *tensor_scale_d_1(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial derivative of C with respect to B
-tensor *tensor_scale_d_2(tensor *A, tensor *B);
+tensor *tensor_scale_d_2(tensor *C, tensor *A, tensor *B);
+
+//Creates answer tensor to be used in function
+tensor *tensor_scale_create(tensor *A, tensor *B);
 
 
 /*Traditional fully connected layer
@@ -138,13 +149,15 @@ Returns: pointer to TENSOR C
   For any COORDINATE M,
     C[M] is equal to the sum of A[i]*B[{i,M}] as i increments
 */
-tensor *tensor_full(tensor *A, tensor *B);
+tensor *tensor_full(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial derivative of C with respect to A
-tensor *tensor_full_d_1(tensor *A, tensor *B);
+tensor *tensor_full_d_1(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial derivative of C with respect to B
-tensor *tensor_full_d_2(tensor *A, tensor *B);
+tensor *tensor_full_d_2(tensor *C, tensor *A, tensor *B);
 
+//Creates answer tensor to be used in function
+tensor *tensor_full_create(tensor *A, tensor *B);
 
 #endif
