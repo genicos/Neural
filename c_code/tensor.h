@@ -66,10 +66,12 @@ typedef struct tensor{
   
   DATA_LENGTH data_length;
   ELEMENT *data; //array of ELEMENTS
-  //As the last index of form increases by one, the index in data it corrosponds to increases by 1
+  //As the last index of form increases by 1, the index in data it corrosponds to increases by 1
 } tensor;
 
 tensor* tensor_create(FORM_ELEMENT *form, FORM_LENGTH form_length);
+
+void tensor_delete_data(tensor *t);
 
 void tensor_delete(tensor *t);
 

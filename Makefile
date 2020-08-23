@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS =  -Wpedantic -Wextra 
+CFLAGS =  -Wpedantic -Wextra -Wall -Werror -Wno-unused-parameter -Wno-unused-variable 
 
 .phony: clean
 
@@ -14,3 +14,6 @@ tensor.o: c_code/tensor.c c_code/tensor.h
 clean:
 	rm test.o test tensor.o
 
+testval:
+	make test
+	valgrind --leak-check=yes ./test
