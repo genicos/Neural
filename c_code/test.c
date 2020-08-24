@@ -45,6 +45,8 @@ int main(){
   tensor_create_data(C);
   
   tensor_add(C,A,B);
+  tensor_print(A, "f");
+  tensor_print(B, "f");
   tensor_print(C, "f");
   
   tensor_delete_data(C);
