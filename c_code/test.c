@@ -26,13 +26,23 @@ int main(){
   }
   A->data = a_data;
   
-  
+  printf("A successfully created\n");
+  printf(" Form:\n ");
+  for(FORM_LENGTH i = 0; i < A->form_length; i++){
+    printf("%d, ", A->form[i]);
+  }
+  printf("\n Form cascade:\n ");
+  for(FORM_LENGTH i = 0; i < A->form_length; i++){
+    printf("%d, ", A->form_cascade[i]);
+  }
+  printf("\n Contents of data:\n");
+  tensor_print(A, "f");
   
   FORM_LENGTH b_form_length = 2;
   FORM_ELEMENT b_form[2] = {2, 3};
   
-  ELEMENT b_data[6] = { 1,-2, 3,
-                       -4, 5,-6};
+  ELEMENT b_data[6] = { 2,-3, 4,
+                       -5, 6,-7};
   
   tensor *B = tensor_create(b_form, b_form_length);
   if(!B){
@@ -40,14 +50,25 @@ int main(){
     return 1;
   }
   B->data = b_data;
+  printf("B data:\n");
+  tensor_print(B, "f");
   
   tensor *C = tensor_create(a_form, a_form_length);
-  tensor_create_data(C);
+  tensor_create_data(C);  
   
+  printf("tensor_add(C,A,B):\n");
   tensor_add(C,A,B);
-  tensor_print(A, "f");
-  tensor_print(B, "f");
   tensor_print(C, "f");
+  
+  printf("tensor_sub(C,A,B):\n");
+  tensor_sub(C,A,B);
+  tensor_print(C, "f");
+  
+  printf("tensor_scale(C,A,B):\n");
+  tensor_scale(C,A,B);
+  tensor_print(C, "f");
+  
+  
   
   tensor_delete_data(C);
   tensor_delete(C);

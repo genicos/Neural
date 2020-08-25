@@ -128,7 +128,7 @@ Returns: pointer to TENSOR C.
   For any COORDINATE M,
     C[M] is equal to A[M] * B
 */
-tensor *tensor_scale(tensor *C, tensor *A, ELEMENT B);
+tensor *tensor_scale(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial derivative of C with respect to A
 tensor *tensor_scale_d_1(tensor *C, tensor *A, tensor *B);

@@ -89,7 +89,7 @@ void tensor_print(tensor *t, char* printf_element_tag){
   }
 
   for(DATA_LENGTH i = 0; i < t->data_length; i++){
-    if(i<0){
+    if(i>0){
       FORM_LENGTH brackets = 0;
  
       for(FORM_LENGTH fi = 0; fi < t->form_length; fi++){
@@ -99,13 +99,13 @@ void tensor_print(tensor *t, char* printf_element_tag){
       }
       
       for(FORM_LENGTH b = 0; b < brackets; b++){
-        putchar('{');
+        putchar('}');
       }
       if(brackets > 0){
         putchar('\n');
       }
       for(FORM_LENGTH b = 0; b < brackets; b++){
-        putchar('}');
+        putchar('{');
       }
     }
     
@@ -187,10 +187,10 @@ tensor* tensor_sub_create(tensor *A, tensor *B){
 
 
 
-tensor* tensor_scale(tensor *C, tensor *A, ELEMENT B){
+tensor* tensor_scale(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < A->data_length; i++)
-    C->data[i] = A->data[i] * B;
+    C->data[i] = A->data[i] * B->data[0];
   
   return C;
 }
