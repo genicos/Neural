@@ -81,17 +81,17 @@ void tensor_print(tensor *t, char* printf_element_tag){
     return; 
   }
   
-  char *datum_string = (char *)calloc(7,1);
-  sprintf(datum_string, " %%%s,",printf_element_tag);
-  
   for(FORM_LENGTH b = 0; b < t->form_length; b++){
     putchar('{');
   }
-
+  
+  char *datum_string = (char *)calloc(7,1);
+  sprintf(datum_string, " %%%s,",printf_element_tag);
+  
   for(DATA_LENGTH i = 0; i < t->data_length; i++){
     if(i>0){
       FORM_LENGTH brackets = 0;
- 
+      
       for(FORM_LENGTH fi = 0; fi < t->form_length; fi++){
         if(i % t->form_cascade[fi] == 0){
           brackets++;
@@ -112,10 +112,12 @@ void tensor_print(tensor *t, char* printf_element_tag){
     printf(datum_string, t->data[i]);
   }
   
+  free(datum_string);
+  
   for(FORM_LENGTH b = 0; b < t->form_length; b++){
     putchar('}');
   }
-  
+   
   putchar('\n');
 }
 
@@ -224,7 +226,8 @@ tensor* tensor_full(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->data_length; i++){
     for(DATA_LENGTH h = 0; h < A->data_length; h++){
-      C->data[i] += A->data[h] * B->data[h + (i * A->data_length)];
+      C->data[i] += A->data[h] * B->data[i + (h * C->data_length)];
+      
     }
   }
 
@@ -235,7 +238,7 @@ tensor* tensor_full_d_1(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->data_length; i++){
     for(DATA_LENGTH h = 0; h < A->data_length; h++){
-      C->data[i] += B->data[h + (i * A->data_length)];
+      C->data[i] += B->data[i + (h * C->data_length)];
     }
   }
 

@@ -2,6 +2,7 @@
 #include "tensor.h"
 #include <inttypes.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(){
   printf("max of uint8_t:  %llu \n", maxof(uint8_t)  );
@@ -68,7 +69,26 @@ int main(){
   tensor_scale(C,A,B);
   tensor_print(C, "f");
   
+  printf("\nTesting fully connected layer\n\n");
+  FORM_ELEMENT D_form[3] = {A->data_length, 2, 2};
+  tensor *D = tensor_create(D_form, 3);
+  tensor_create_data(D);
   
+  for(DATA_LENGTH i = 0; i < D->data_length; i++){
+    D->data[i] =  i;
+  }
+   
+  tensor *E = tensor_full_create(A, D);
+  
+  tensor_full(E,A,D);
+  printf("A\n"); 
+  tensor_print(A, "f");
+
+  printf("D\n");
+  tensor_print(D, "f");
+  
+  printf("E\n");
+  tensor_print(E, "f");
   
   tensor_delete_data(C);
   tensor_delete(C);
