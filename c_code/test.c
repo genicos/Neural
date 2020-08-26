@@ -90,6 +90,10 @@ int main(){
   printf("E\n");
   tensor_print(E, "f");
   
+  tensor_delete_data(E);
+  tensor_delete(E);
+  tensor_delete_data(D);
+  tensor_delete(D);
   tensor_delete_data(C);
   tensor_delete(C);
   tensor_delete(B);
