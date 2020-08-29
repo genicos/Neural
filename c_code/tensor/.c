@@ -1,5 +1,5 @@
-#include "project.h"
-#include "tensor.h"
+#include "../project.h"
+#include ".h"
 #include <stdlib.h>
 
 #include <stdio.h>

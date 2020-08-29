@@ -1,5 +1,5 @@
 #include "project.h"
-#include "tensor.h"
+#include "tensor/.h"
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -91,6 +91,9 @@ int main(){
   printf("E\n");
   tensor_print(E, "f");
   
+  tensor_save(NULL);
+  
+
   tensor_delete_data(E);
   tensor_delete(E);
   tensor_delete_data(D);

@@ -50,6 +50,7 @@
 #define NEURAL_C_CODE_TENSOR_H
 
 #include <inttypes.h>
+#include <stdbool.h>
 typedef float ELEMENT;               //The type for the TENSOR ELEMENTS
 typedef uint8_t FORM_LENGTH;         //Size of FORM length type
 
@@ -68,6 +69,11 @@ typedef struct tensor{
   ELEMENT *data; //array of ELEMENTS
   //As the last index of form increases by 1, the index in data it corrosponds to increases by 1
 } tensor;
+
+bool tensor_save(tensor *t);
+
+
+
 
 tensor* tensor_create(FORM_ELEMENT *form, FORM_LENGTH form_length);
 
