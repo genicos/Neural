@@ -154,6 +154,14 @@ tensor* tensor_add_create(tensor *A, tensor *B){
   return C;
 }
 
+//tensor *(*tensor_add_table[4])(tensor *, tensor *, tensor *) = {
+//  tensor_add,
+//  tensor_add_d_1,
+//  tensor_add_d_2,
+//  (tensor *(*)(tensor *, tensor *, tensor *)) tensor_add_create,
+//};
+
+
 
 
 tensor* tensor_sub(tensor *C, tensor *A, tensor *B){
