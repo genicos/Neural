@@ -100,6 +100,12 @@ tensor *tensor_add_d_2(tensor *C, tensor *A, tensor *B);
 //Creates answer tensor to be used in function
 tensor *tensor_add_create(tensor *A, tensor *B);
 
+tensor *(*tensor_add_list[4])(tensor *, tensor *, tensor *) = {
+  tensor_add,
+  tensor_add_d_1,
+  tensor_add_d_2,
+  (tensor *(*)(tensor *, tensor *, tensor *)) tensor_add_create,
+};
 
 /*Subtracts two TENSORs
 Inputs: pointers to TENSORs A and B to be subtracted.
