@@ -70,8 +70,9 @@ typedef struct tensor{
   //As the last index of form increases by 1, the index in data it corrosponds to increases by 1
 } tensor;
 
-bool tensor_save(tensor *t);
+bool tensor_write(tensor *t);
 
+tensor *tensor_read();
 
 
 

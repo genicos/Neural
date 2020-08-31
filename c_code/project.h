@@ -3,6 +3,8 @@ This set of macros came from stack overflow
 maxof(t) returns the maximum value of an int type t
 */
 
+#define isfloat(t) ((t)1/2 > 0)
+
 #define issigned(t) (((t)(-1)) < ((t) 0))
 
 #define umaxof(t) (((0x1ULL << ((sizeof(t) * 8ULL) - 1ULL)) - 1ULL) | \

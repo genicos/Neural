@@ -91,7 +91,7 @@ int main(){
   printf("E\n");
   tensor_print(E, "f");
   
-  tensor_save(NULL);
+  
   
 
   tensor_delete_data(E);
