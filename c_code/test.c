@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 
-int main(){
+int main(){  
   printf("max of uint8_t:  %llu \n", maxof(uint8_t)  );
   printf("max of uint16_t: %llu \n", maxof(uint16_t) );
   printf("max of uint32_t: %llu \n", maxof(uint32_t) );
@@ -101,6 +101,9 @@ int main(){
   tensor_delete_data(C);
   tensor_delete(C);
   tensor_delete(B);
-  tensor_delete(A); 
+  tensor_delete(A);
+
+  tensor_read();
+ 
   return 0; 
 }

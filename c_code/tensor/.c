@@ -1,4 +1,3 @@
-#include "../project.h"
 #include ".h"
 #include <stdlib.h>
 
