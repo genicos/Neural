@@ -30,46 +30,15 @@ double   00100011  35
 
 
 void stream_ELEMENT(ELEMENT datum, uint8_t *buffer, uint64_t *index){
-  uint64_t tiny_buffer = *(uint64_t *) &datum;  //dereferencing datum to remove type
-  
-  for(uint8_t i = 0; i < sizeof(ELEMENT); i++){ 
-    buffer[*index + i] += tiny_buffer;          //first byte of tiny_buffer is transferred to buffer
-    tiny_buffer >>= 8;                          //loading next byte
+  uint64_t tiny_buffer = *(uint64_t *) &datum;
+  printf("A %lx\n",tiny_buffer);
+   
+  //uint8_t shift = (sizeof(ELEMENT) - 1) * 8;
+  for(uint8_t i = 0; i < sizeof(ELEMENT); i++){
+    buffer[*index + i] += tiny_buffer;
+    printf("A %lx %x\n",tiny_buffer, buffer[*index + i]);
+    tiny_buffer >>= 8;
   }
-
-  *index+=sizeof(ELEMENT);
-}
-
-void stream_ELEMENT(ELEMENT datum, uint8_t *buffer, uint64_t *index){
-  uint64_t tiny_buffer = *(uint64_t *) &datum;  //dereferencing datum to remove type
-  
-  for(uint8_t i = 0; i < sizeof(ELEMENT); i++){ 
-    buffer[*index + i] += tiny_buffer;          //first byte of tiny_buffer is transferred to buffer
-    tiny_buffer >>= 8;                          //loading next byte
-  }
-
-  *index+=sizeof(ELEMENT);
-}
-
-void stream_ELEMENT(ELEMENT datum, uint8_t *buffer, uint64_t *index){
-  uint64_t tiny_buffer = *(uint64_t *) &datum;  //dereferencing datum to remove type
-  
-  for(uint8_t i = 0; i < sizeof(ELEMENT); i++){ 
-    buffer[*index + i] += tiny_buffer;          //first byte of tiny_buffer is transferred to buffer
-    tiny_buffer >>= 8;                          //loading next byte
-  }
-
-  *index+=sizeof(ELEMENT);
-}
-
-void stream_ELEMENT(ELEMENT datum, uint8_t *buffer, uint64_t *index){
-  uint64_t tiny_buffer = *(uint64_t *) &datum;  //dereferencing datum to remove type
-  
-  for(uint8_t i = 0; i < sizeof(ELEMENT); i++){ 
-    buffer[*index + i] += tiny_buffer;          //first byte of tiny_buffer is transferred to buffer
-    tiny_buffer >>= 8;                          //loading next byte
-  }
-
   *index+=sizeof(ELEMENT);
 }
 
