@@ -53,28 +53,41 @@
 #include <stdbool.h>
 #include "../project.h"
 
-typedef float ELEMENT;               //The type for the TENSOR ELEMENTS
-typedef uint8_t FORM_LENGTH;         //Size of FORM length type
-
+typedef float       ELEMENT;              //The type for the TENSOR ELEMENTS
+typedef uint8_t     FORM_LENGTH;          //Size of FORM length type
 //size(FORM_ELEMENT) <= size(DATA_LENGTH_STORE), product of all FORM elements is equal to DATA length
-typedef uint32_t FORM_ELEMENT;       //The type for the FORM ELEMENTS
-typedef uint32_t DATA_LENGTH;        //Size of DATA length type
+typedef uint32_t    FORM_ELEMENT;         //The type for the FORM ELEMENTS
+typedef uint32_t    DATA_LENGTH;          //Size of DATA length type
 typedef DATA_LENGTH FORM_CASCADE_ELEMENT; //Element of form cascade
 
 
 typedef struct tensor{
-  FORM_LENGTH form_length;
-  FORM_ELEMENT *form;
+  FORM_LENGTH           form_length;
+  FORM_ELEMENT         *form;
   FORM_CASCADE_ELEMENT *form_cascade; 
   
-  DATA_LENGTH data_length;
-  ELEMENT *data; //array of ELEMENTS
+  DATA_LENGTH           data_length;
+  ELEMENT              *data; //array of ELEMENTS
   //As the last index of form increases by 1, the index in data it corrosponds to increases by 1
 } tensor;
 
-bool tensor_write(tensor *t, char *file_name);
 
-tensor *tensor_read();
+
+void         save_ELEMENT     (uint8_t *buffer, uint64_t *index, ELEMENT datum);
+ELEMENT      read_ELEMENT     (uint8_t *buffer, uint64_t *index);
+
+void         save_FORM_LENGTH (uint8_t *buffer, uint64_t *index, FORM_LENGTH datum);
+FORM_LENGTH  read_FORM_LENGTH (uint8_t *buffer, uint64_t *index);
+
+void         save_FORM_ELEMENT(uint8_t *buffer, uint64_t *index, FORM_ELEMENT datum);
+FORM_ELEMENT read_FORM_ELEMENT(uint8_t *buffer, uint64_t *index);
+
+void         save_DATA_LENGTH (uint8_t *buffer, uint64_t *index, DATA_LENGTH datum);
+DATA_LENGTH  read_DATA_LENGTH (uint8_t *buffer, uint64_t *index);
+
+
+bool    tensor_save(char *file_name, tensor *t);
+tensor *tensor_read(char *file_name);
 
 
 
