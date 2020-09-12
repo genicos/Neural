@@ -179,8 +179,6 @@ bool tensor_save(char *file_name, tensor *t){
   return true;
 }
 
-
-
 tensor *tensor_read(char *file_name){
   if(!file_name){
     return NULL;
@@ -191,41 +189,11 @@ tensor *tensor_read(char *file_name){
   fseek(file, 0L, SEEK_END);
   uint64_t file_size = ftell(file);
   fseek(file, 0L, SEEK_SET);
-  
-  uint8_t *buffer = (uint8_t *)calloc(file_size, 1);
-  
-  fread(buffer, 1, file_size, file);
 
-  bool types_match = true;
-  if(buffer[index++] != typecode(ELEMENT))
-    type_match = false;
-  if(buffer[index++] != typecode(FORM_ELEMENT))
-    type_match = false;
-  if(buffer[index++] != typecode(FORM_ELEMENT))
-    type_match = false;
-  if(buffer[index++] != typecode(DATA_LENGTH))
-    type_match = false;
-  
-  if(!type_match)
-    return NULL;
-  
-  FORM_LENGTH form_length = read_FORM_LENGTH(buffer, &index);
-  FORM_ELEMENT *form = (FORM_ELEMENT *)malloc(file_size);
-  
-  for(FORM_LENGTH i = 0; i < form_length; i++){
-    form[i] = read_FORM_ELEMENT(buffer, &index);
-  }
-  
-  tensor *t = tensor_create(form, form_length);
-  
-  tensor_create_data(t);
-  
-  for(DATA_LENGTH i = 0; i < t->data_length; i++){
-    t->data[i] = read_ELEMENT(buffer, &index);
-  }
-  
-  
-  
+
+
+
+
   
   return NULL;
 }
