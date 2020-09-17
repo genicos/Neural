@@ -91,7 +91,7 @@ int main(){
   printf("E\n");
   tensor_print(E, "f");
   
-  printf("Testing the saving and reading of atomic types");
+  printf("Testing the saving and reading of atomic types\n");
   uint8_t test[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   uint64_t index = 1;
   uint64_t index_save = index;
@@ -105,6 +105,7 @@ int main(){
   for(int h = 0;h < 20; h++){
     printf("%02x", test[h]);
   }
+  index=index_save;
   ELEMENT ef = read_ELEMENT(test, &index);
   printf("\nELEMENT fish %08x\n",*(uint32_t *) &ef);
   printf("index %lu index before %lu\n\n",index,index_save);
@@ -119,6 +120,7 @@ int main(){
   for(int h = 0;h < 20; h++){
     printf("%02x", test[h]);
   }
+  index=index_save;
   FORM_LENGTH fle = read_FORM_LENGTH(test, &index);
   printf("\nFORM_LENGTH fish %02x\n",*(uint8_t *) &fle);
   printf("index %lu index before %lu\n\n",index,index_save);
@@ -133,6 +135,7 @@ int main(){
   for(int h = 0;h < 20; h++){
     printf("%02x", test[h]);
   }
+  index=index_save;
   FORM_ELEMENT fef = read_FORM_ELEMENT(test, &index);
   printf("\nFORM_ELEMENT fish %08x\n",*(uint32_t *) &fef);
   printf("index %lu index before %lu\n\n",index,index_save);
@@ -147,13 +150,38 @@ int main(){
   for(int h = 0;h < 20; h++){
     printf("%02x", test[h]);
   }
+  index=index_save;
   DATA_LENGTH dlf = read_DATA_LENGTH(test, &index);
   printf("\nDATA_LENGTH fish %08x\n",*(uint32_t *) &dlf);
   printf("index %lu index before %lu\n\n",index,index_save);
    
+  printf("TESTING save_tensor and read_tensor\n");
+  printf("tensor D:\n");
+  tensor_print(D, "f");
+  printf("Form length: %d form:\n", D->form_length);
+  for(int i = 0; i < D->form_length; i++){
+    printf("%d, ", D->form[i]);
+  }
+  printf("\n\n");
+  
+  if(tensor_save("snore", D))
+    printf("Successfully saved D\n");
+  else
+    printf("Failed to save D\n");
+  
+  tensor *D_uncovered = tensor_read("snore");
+  
+  if(D_uncovered){
+    printf("Successfully read D\n");
+    printf("Uncovered D:\n");
+    tensor_print(D_uncovered, "f");
+  }else
+    printf("Failed to read D\n");
   
   
-
+  
+  tensor_delete_data(D_uncovered);
+  tensor_delete(D_uncovered);
   tensor_delete_data(E);
   tensor_delete(E);
   tensor_delete_data(D);

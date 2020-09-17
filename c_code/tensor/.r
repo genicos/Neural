@@ -44,12 +44,14 @@ void save_ELEMENT(uint8_t *buffer, uint64_t *index, ELEMENT datum){
 ELEMENT read_ELEMENT(uint8_t *buffer, uint64_t *index){
   uint64_t tiny_buffer = 0; 
   
+  *index+=sizeof(ELEMENT);
+  
   for(uint8_t i = 0; i < sizeof(ELEMENT); i++){ 
     tiny_buffer <<= 8;                          //loading next byte  
     tiny_buffer += buffer[*index - i - 1];      //buffer is transferred to first byte of tiny_buffer
   }
 
-  *index-=sizeof(ELEMENT);
+  *index+=0;
   
   ELEMENT answer = *(ELEMENT *) &tiny_buffer;
   return answer;
@@ -71,12 +73,14 @@ void save_FORM_LENGTH(uint8_t *buffer, uint64_t *index, FORM_LENGTH datum){
 FORM_LENGTH read_FORM_LENGTH(uint8_t *buffer, uint64_t *index){
   uint64_t tiny_buffer = 0; 
   
+  *index+=sizeof(FORM_LENGTH);
+  
   for(uint8_t i = 0; i < sizeof(FORM_LENGTH); i++){ 
     tiny_buffer <<= 8;                          //loading next byte  
     tiny_buffer += buffer[*index - i - 1];      //buffer is transferred to first byte of tiny_buffer
   }
 
-  *index-=sizeof(FORM_LENGTH);
+  *index+=0;
   
   FORM_LENGTH answer = *(FORM_LENGTH *) &tiny_buffer;
   return answer;
@@ -98,12 +102,14 @@ void save_FORM_ELEMENT(uint8_t *buffer, uint64_t *index, FORM_ELEMENT datum){
 FORM_ELEMENT read_FORM_ELEMENT(uint8_t *buffer, uint64_t *index){
   uint64_t tiny_buffer = 0; 
   
+  *index+=sizeof(FORM_ELEMENT);
+  
   for(uint8_t i = 0; i < sizeof(FORM_ELEMENT); i++){ 
     tiny_buffer <<= 8;                          //loading next byte  
     tiny_buffer += buffer[*index - i - 1];      //buffer is transferred to first byte of tiny_buffer
   }
 
-  *index-=sizeof(FORM_ELEMENT);
+  *index+=0;
   
   FORM_ELEMENT answer = *(FORM_ELEMENT *) &tiny_buffer;
   return answer;
@@ -125,12 +131,14 @@ void save_DATA_LENGTH(uint8_t *buffer, uint64_t *index, DATA_LENGTH datum){
 DATA_LENGTH read_DATA_LENGTH(uint8_t *buffer, uint64_t *index){
   uint64_t tiny_buffer = 0; 
   
+  *index+=sizeof(DATA_LENGTH);
+  
   for(uint8_t i = 0; i < sizeof(DATA_LENGTH); i++){ 
     tiny_buffer <<= 8;                          //loading next byte  
     tiny_buffer += buffer[*index - i - 1];      //buffer is transferred to first byte of tiny_buffer
   }
 
-  *index-=sizeof(DATA_LENGTH);
+  *index+=0;
   
   DATA_LENGTH answer = *(DATA_LENGTH *) &tiny_buffer;
   return answer;
@@ -171,7 +179,7 @@ bool tensor_save(char *file_name, tensor *t){
   }
   
   fwrite(buffer, 1, file_size, file);
-  
+  free(buffer);
   if(fclose(file)!=0){
     return false;
   }
@@ -182,50 +190,65 @@ bool tensor_save(char *file_name, tensor *t){
 
 
 tensor *tensor_read(char *file_name){
-  if(!file_name){
+  if(!file_name)
     return NULL;
-  }
+  
   
   FILE *file = fopen(file_name, "r");
   
+  if(!file)
+    return NULL;
+  printf("AAAAAAAAAA\n"); 
   fseek(file, 0L, SEEK_END);
   uint64_t file_size = ftell(file);
   fseek(file, 0L, SEEK_SET);
-  
+  printf("BBBBBBBBBBBBBB\n");
+  if(file_size < 4 + sizeof(FORM_LENGTH)) //Check if type data is in file
+    return NULL;
+  printf("CCCCCCCCCCCCC\n");
   uint8_t *buffer = (uint8_t *)calloc(file_size, 1);
-  
+  uint64_t index = 0;
+  printf("DDDDDDDDD\n");
   fread(buffer, 1, file_size, file);
-
-  bool types_match = true;
+  fclose(file);
+  printf("EEEEEEEEEEEE\n");
+  bool type_match = true;
   if(buffer[index++] != typecode(ELEMENT))
     type_match = false;
-  if(buffer[index++] != typecode(FORM_ELEMENT))
+  if(buffer[index++] != typecode(FORM_LENGTH))
     type_match = false;
   if(buffer[index++] != typecode(FORM_ELEMENT))
     type_match = false;
   if(buffer[index++] != typecode(DATA_LENGTH))
     type_match = false;
-  
+  printf("FFFFFFFFFFFFFF\n");
   if(!type_match)
     return NULL;
-  
+  printf("GGGGGGGG index %lu\n",index);
   FORM_LENGTH form_length = read_FORM_LENGTH(buffer, &index);
-  FORM_ELEMENT *form = (FORM_ELEMENT *)malloc(file_size);
-  
+  printf("form length: %d index %lu\n", form_length, index);
+  FORM_ELEMENT *form = (FORM_ELEMENT *)malloc(form_length * sizeof(FORM_ELEMENT));
+  printf("HHHHHHH\n");
+  if(file_size - index < form_length*sizeof(FORM_ELEMENT))
+    return NULL;
+  printf("IIIIIIIIII\n");
   for(FORM_LENGTH i = 0; i < form_length; i++){
+    printf("%d ", i);
     form[i] = read_FORM_ELEMENT(buffer, &index);
   }
-  
+  printf("JJJJJJJJJJJ\n");
   tensor *t = tensor_create(form, form_length);
-  
-  tensor_create_data(t);
-  
+  free(form);
+  printf("KKKKKKKKK\n");
+  if(!tensor_create_data(t))
+    return NULL;
+  printf("LLLLLLL\n");
   for(DATA_LENGTH i = 0; i < t->data_length; i++){
     t->data[i] = read_ELEMENT(buffer, &index);
   }
   
+  free(buffer);
+  printf("MMMMMMMM\n");
   
-  
-  
-  return NULL;
+  return t;
 }

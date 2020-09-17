@@ -16,7 +16,7 @@ tensor_r.o: c_code/tensor/.r c_code/tensor/.h c_code/project.h
 	cp c_code/tensor/.r c_code/tensor/r.c
 	$(CC) $(CFLAGS) -c c_code/tensor/r.c -o tensor_r.o
 clean:
-	rm test.o test tensor.o c_code/tensor/r.c
+	rm -f test.o test tensor.o tensor_r.o c_code/tensor/r.c snore
 
 testval:
 	make test
