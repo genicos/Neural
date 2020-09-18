@@ -5,15 +5,22 @@
 #include <stdlib.h>
 
 
-int main(){  
-  printf("max of uint8_t:  %llu \n", maxof(uint8_t)  );
-  printf("max of uint16_t: %llu \n", maxof(uint16_t) );
-  printf("max of uint32_t: %llu \n", maxof(uint32_t) );
-  printf("max of uint64_t: %llu \n", maxof(uint64_t) );
-  printf("max of int8_t:   %llu \n", maxof(int8_t)   );
-  printf("max of int16_t:  %llu \n", maxof(int16_t)  );
-  printf("max of int32_t:  %llu \n", maxof(int32_t)  );
-  printf("max of int64_t:  %llu \n", maxof(int64_t)  );
+int main(){
+  printf("#################### TENSOR TEST ####################\n\n");
+  
+  printf("Authored by Nicolas Ayala, nicoayalamag@gmail.com\n");
+  printf("  EV means expected value\n\n");
+  
+  printf("----------Test 1/4, macros\n\n");
+
+  printf("max of uint8_t:  %llu EV %llu\n", maxof(uint8_t)  , 255ull);
+  printf("max of uint16_t: %llu EV %llu\n", maxof(uint16_t) , 65535ull);
+  printf("max of uint32_t: %llu EV %llu\n", maxof(uint32_t) , 4294967295ull);
+  printf("max of uint64_t: %llu EV %llu\n", maxof(uint64_t) , 18446744073709551615ull);
+  printf("max of int8_t:   %llu EV %llu\n", maxof(int8_t)   , 127ull);
+  printf("max of int16_t:  %llu EV %llu\n", maxof(int16_t)  , 32767ull);
+  printf("max of int32_t:  %llu EV %llu\n", maxof(int32_t)  , 2147483647ull);
+  printf("max of int64_t:  %llu EV %llu\n", maxof(int64_t)  , 9223372036854775807ull);
   
   FORM_LENGTH a_form_length = 2;
   FORM_ELEMENT a_form[2] = {2, 3};
