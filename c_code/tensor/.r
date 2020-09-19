@@ -26,8 +26,6 @@ float    00010011  19
 double   00100011  35
 */
 
-#define typecode(t)  (uint8_t)(isfloat(t) + (issigned(t) << 1) + (sizeof(t) << 2))
-
 
 void save_ELEMENT(uint8_t *buffer, uint64_t *index, ELEMENT datum){
   uint64_t tiny_buffer = *(uint64_t *) &datum;  //dereferencing datum to remove type
