@@ -16,8 +16,9 @@ tensor_r.o: c_code/tensor/.r c_code/tensor/.h c_code/project.h
 	cp c_code/tensor/.r c_code/tensor/r.c
 	$(CC) $(CFLAGS) -c c_code/tensor/r.c -o tensor_r.o
 clean:
-	rm -f test.o test tensor.o tensor_r.o c_code/tensor/r.c snore
+	rm -f test.o test tensor.o tensor_r.o c_code/tensor/r.c D_file
 
 testval:
+	make clean
 	make test
 	valgrind --leak-check=yes ./test

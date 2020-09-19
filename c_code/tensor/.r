@@ -196,20 +196,20 @@ tensor *tensor_read(char *file_name){
   
   if(!file)
     return NULL;
-  printf("AAAAAAAAAA\n"); 
+  
   fseek(file, 0L, SEEK_END);
   uint64_t file_size = ftell(file);
   fseek(file, 0L, SEEK_SET);
-  printf("BBBBBBBBBBBBBB\n");
+  
   if(file_size < 4 + sizeof(FORM_LENGTH)) //Check if type data is in file
     return NULL;
-  printf("CCCCCCCCCCCCC\n");
+  
   uint8_t *buffer = (uint8_t *)calloc(file_size, 1);
   uint64_t index = 0;
-  printf("DDDDDDDDD\n");
+  
   fread(buffer, 1, file_size, file);
   fclose(file);
-  printf("EEEEEEEEEEEE\n");
+  
   bool type_match = true;
   if(buffer[index++] != typecode(ELEMENT))
     type_match = false;
@@ -219,34 +219,33 @@ tensor *tensor_read(char *file_name){
     type_match = false;
   if(buffer[index++] != typecode(DATA_LENGTH))
     type_match = false;
-  printf("FFFFFFFFFFFFFF\n");
+  
   if(!type_match)
     return NULL;
-  printf("GGGGGGGG index %lu\n",index);
+  
   FORM_LENGTH form_length = read_FORM_LENGTH(buffer, &index);
-  printf("form length: %d index %lu\n", form_length, index);
+  
   FORM_ELEMENT *form = (FORM_ELEMENT *)malloc(form_length * sizeof(FORM_ELEMENT));
-  printf("HHHHHHH\n");
+  
   if(file_size - index < form_length*sizeof(FORM_ELEMENT))
     return NULL;
-  printf("IIIIIIIIII\n");
+  
   for(FORM_LENGTH i = 0; i < form_length; i++){
-    printf("%d ", i);
     form[i] = read_FORM_ELEMENT(buffer, &index);
   }
-  printf("JJJJJJJJJJJ\n");
+  
   tensor *t = tensor_create(form, form_length);
   free(form);
-  printf("KKKKKKKKK\n");
+  
   if(!tensor_create_data(t))
     return NULL;
-  printf("LLLLLLL\n");
+  
   for(DATA_LENGTH i = 0; i < t->data_length; i++){
     t->data[i] = read_ELEMENT(buffer, &index);
   }
   
   free(buffer);
-  printf("MMMMMMMM\n");
+  
   
   return t;
 }

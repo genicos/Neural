@@ -41,7 +41,7 @@ tensor *tensor_create(FORM_ELEMENT *form, FORM_LENGTH form_length){
   }
   
   t->form_cascade[form_length-1] = form[form_length-1];
-  t->form[0] = form[0];
+  t->form[0] = form[0];//index of for loop below will not reach 0
   for(FORM_LENGTH i = form_length - 1; i > 0; i--){
     
     t->form[i] = form[i];
