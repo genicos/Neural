@@ -1,7 +1,8 @@
 #include ".h"
 #include <stdlib.h>
-
 #include <stdio.h>
+
+
 
 void tensor_delete_data(tensor *t){
   if(t){
