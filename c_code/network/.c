@@ -28,7 +28,7 @@ void network_delete(network *w){
   free(w);
 }
 
-network *network_create(NODES_LENGTH nodes_length, node *nodes){
+network *network_create(NODES_LENGTH nodes_length, node **nodes){
   if(nodes_length && !nodes){
     return NULL;
   }
@@ -55,10 +55,18 @@ network *network_create(NODES_LENGTH nodes_length, node *nodes){
 }
 
 
+tensor *(*function_table(FUNCTION f))(tensor *, tensor *, tensor *){
+  void *f_table[FUNCTION] = {&add }
+}
+
 bool node_solve(network *w, NODES_LENGTH n){
   if(!w){
     return false;
   }
   
+  if(n >= w->nodes_length){
+    return false;
+  }
   
-};
+  
+}

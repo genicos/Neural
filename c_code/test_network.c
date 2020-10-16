@@ -4,4 +4,5 @@
 
 int main(){
   printf("FFUCKED");
+  return 0;
 }

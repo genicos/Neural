@@ -26,15 +26,20 @@ bool save_network(network *w, char *file_name);
 network *read_network(char *file_name);
 
 
-
+//written
 void node_delete(node *n);
 
+//written
 node *node_create(tensor *t, FUNCTION function, NODES_LENGTH parent_1, NODES_LENGTH parent_2);
 
+//written
 void network_delete(network *w);
 
-network *network_create(NODES_LENGTH nodes_length,node *nodes);
+//written
+network *network_create(NODES_LENGTH nodes_length,node **nodes);
 
+
+tensor *(*function_table(FUNCTION f))(tensor *, tensor *, tensor *);
 
 //n is the node to solve:
 bool node_solve(network *w, NODES_LENGTH n);
