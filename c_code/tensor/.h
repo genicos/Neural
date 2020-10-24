@@ -49,8 +49,6 @@
 #ifndef NEURAL_C_CODE_TENSOR_H
 #define NEURAL_C_CODE_TENSOR_H
 
-#include <inttypes.h>
-#include <stdbool.h>
 #include "../project.h"
 
 typedef float       ELEMENT;              //The type for the TENSOR ELEMENTS
@@ -122,12 +120,7 @@ tensor *tensor_add_d_2(tensor *C, tensor *A, tensor *B);
 //Creates answer tensor to be used in function
 tensor *tensor_add_create(tensor *A, tensor *B);
 
-static tensor *(*tensor_add_table[4])(tensor *, tensor *, tensor *) = {
-  tensor_add,
-  tensor_add_d_1,
-  tensor_add_d_2,
-  (tensor *(*)(tensor *, tensor *, tensor *)) tensor_add_create,
-};
+
 
 /*Subtracts two TENSORs
 Inputs: pointers to TENSORs A and B to be subtracted.
@@ -156,16 +149,16 @@ Returns: pointer to TENSOR C.
   For any COORDINATE M,
     C[M] is equal to A[M] * B
 */
-tensor *tensor_scale(tensor *C, tensor *A, tensor *B);
+tensor *tensor_scl(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial derivative of C with respect to A
-tensor *tensor_scale_d_1(tensor *C, tensor *A, tensor *B);
+tensor *tensor_scl_d_1(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial derivative of C with respect to B
-tensor *tensor_scale_d_2(tensor *C, tensor *A, tensor *B);
+tensor *tensor_scl_d_2(tensor *C, tensor *A, tensor *B);
 
 //Creates answer tensor to be used in function
-tensor *tensor_scale_create(tensor *A, tensor *B);
+tensor *tensor_scl_create(tensor *A, tensor *B);
 
 
 /*Traditional fully connected layer
@@ -177,15 +170,22 @@ Returns: pointer to TENSOR C
   For any COORDINATE M,
     C[M] is equal to the sum of A[i]*B[{i,M}] as i increments
 */
-tensor *tensor_full(tensor *C, tensor *A, tensor *B);
+tensor *tensor_fll(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial derivative of C with respect to A
-tensor *tensor_full_d_1(tensor *C, tensor *A, tensor *B);
+tensor *tensor_fll_d_1(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial derivative of C with respect to B
-tensor *tensor_full_d_2(tensor *C, tensor *A, tensor *B);
+tensor *tensor_fll_d_2(tensor *C, tensor *A, tensor *B);
 
 //Creates answer tensor to be used in function
-tensor *tensor_full_create(tensor *A, tensor *B);
+tensor *tensor_fll_create(tensor *A, tensor *B);
+
+
+#define FUNCTION_CT 4
+
+typedef uint8_t FUNCTION;
+
+tensor *(*function_table(FUNCTION f, uint8_t code))(tensor *, tensor *, tensor *);
 
 #endif

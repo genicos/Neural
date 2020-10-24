@@ -1,7 +1,9 @@
 /*
-This set of macros came from stack overflow
 maxof(t) returns the maximum value of an int type t
 */
+#include <stdlib.h>
+#include <stdbool.h>
+#include <inttypes.h>
 
 #define isfloat(t) ((t)1/2 > 0)
 

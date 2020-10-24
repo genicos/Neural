@@ -44,7 +44,7 @@ network *network_create(NODES_LENGTH nodes_length, node **nodes){
       return NULL;
     }
     
-    for(NODES_LENGTH i; i < nodes_length; i++){
+    for(NODES_LENGTH i = 0; i < nodes_length; i++){
       w->nodes[i] = nodes[i];
     }
   }
@@ -55,9 +55,6 @@ network *network_create(NODES_LENGTH nodes_length, node **nodes){
 }
 
 
-tensor *(*function_table(FUNCTION f))(tensor *, tensor *, tensor *){
-  void *f_table[FUNCTION] = {&add }
-}
 
 bool node_solve(network *w, NODES_LENGTH n){
   if(!w){
@@ -68,5 +65,20 @@ bool node_solve(network *w, NODES_LENGTH n){
     return false;
   }
   
+  node *curr = w->nodes[n];
+
+  if(curr->t->data){
+    return true;
+  }
   
+  //
+  //
+  //
+  return false;
+  
+}
+
+tensor *node_partial_derivative(network *w, NODES_LENGTH n, NODES_LENGTH a){
+  w+= n + n;
+  return NULL;
 }

@@ -4,9 +4,10 @@
 
 #include <inttypes.h>
 #include "../tensor/.h"
+#include "../project.h"
 
-typedef NODES_LENGTH   uint8_t
-typedef FUNCTION       uint8_t
+typedef uint8_t NODES_LENGTH;
+typedef uint8_t FUNCTION;
 
 
 typedef struct node{
@@ -37,9 +38,6 @@ void network_delete(network *w);
 
 //written
 network *network_create(NODES_LENGTH nodes_length,node **nodes);
-
-
-tensor *(*function_table(FUNCTION f))(tensor *, tensor *, tensor *);
 
 //n is the node to solve:
 bool node_solve(network *w, NODES_LENGTH n);

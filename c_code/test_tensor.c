@@ -11,7 +11,7 @@ int main(){
   printf("Authored by Nicolas Ayala, nicoayalamag@gmail.com\n");
   printf("  EV means expected value\n\n");
   
-  printf("----------Test 1/4, macros\n\n");
+  printf("----------Test 1/5, macros\n\n");
 
   printf("max of uint8_t:  %llu EV %llu\n", maxof(uint8_t)  , 255ull);
   printf("max of uint16_t: %llu EV %llu\n", maxof(uint16_t) , 65535ull);
@@ -33,7 +33,7 @@ int main(){
   printf("Type code of float: %u EV %d\n",typecode(float),19);
   printf("Type code of double: %u EV %d\n\n",typecode(double),35);
   
-  printf("----------Test 2/4, Creating and printing tensor\n\n");
+  printf("----------Test 2/5, Creating and printing tensor\n\n");
   
   printf(" Creating Tensor A, A is expected to succeed\n");
   
@@ -57,6 +57,7 @@ int main(){
   }
   printf("\n  EV: 2, 3\n\n");
   
+  
   printf(" Form cascade:\n ");
   for(FORM_LENGTH i = 0; i < A->form_length; i++){
     printf("%d, ", A->form_cascade[i]);
@@ -66,6 +67,7 @@ int main(){
   tensor_print(A, "f");
   printf(" EV: {{-1, 2, -3},\n"); 
   printf("     {4, -5, 6}}\n\n");
+  
   
   printf(" Creating Tensor OF, OF is expected to fail due to form_cascade overflow\n");
   
@@ -82,7 +84,7 @@ int main(){
   }
   printf("\n");
   
-  printf("----------Test 3/4, Tensor operations\n\n");
+  printf("----------Test 3/5, Tensor operations\n\n");
   
   printf("..... Addition, subtraction, and scaling on Tensors A and B resulting in C\n\n");
   
@@ -120,7 +122,7 @@ int main(){
   
   printf("\nScaling of elements of A by first element of B\n");
   printf("tensor_scale(C,A,B):\n");
-  tensor_scale(C,A,B);
+  tensor_scl(C,A,B);
   tensor_print(C, "f");
   
   printf("\n..... Fully connected operation on layer A with parameters D resulting in E\n\n");
@@ -132,9 +134,9 @@ int main(){
     D->data[i] =  i;
   }
    
-  tensor *E = tensor_full_create(A, D);
+  tensor *E = tensor_fll_create(A, D);
   
-  tensor_full(E,A,D);
+  tensor_fll(E,A,D);
   printf("A:\n");
   tensor_print(A, "f");
 
@@ -144,7 +146,7 @@ int main(){
   printf("\nE:\n");
   tensor_print(E, "f");
   
-  printf("\n----------Test 4/4, saving and reading\n\n");
+  printf("\n----------Test 4/5, saving and reading\n\n");
 
   uint8_t test[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   uint64_t index = 1;
@@ -214,11 +216,73 @@ int main(){
     printf("Successfully read D_file into new_D\n");
     printf("new_D:\n");
     tensor_print(new_D, "f");
-  }else
+  }else{
     printf("Failed to read D_file\n");
+  }
+
+
+  printf("\n----------Test 5/5, function_table\n\n"); 
+ 
+  FORM_ELEMENT F_form[1] = {2};
+  ELEMENT F_data[2] = {1,2};
+  
+  FORM_ELEMENT G_form[2] = {2,2};
+  ELEMENT G_data[4] = {1,2,3,4};
   
   
+  tensor *F = tensor_create(F_form,1);
+  tensor *G = tensor_create(G_form,2);
   
+  if(!F || !G){
+    printf("Fail: tensor_create\n");
+    return 1;
+  }
+  
+  F->data = F_data;
+  G->data = G_data;
+  
+  printf("F and G:\n");
+  tensor_print(F, "f");
+  
+
+  for(int i = 0; i < FUNCTION_CT; i++){
+    printf("Function %d\n",i);
+    
+    printf("creating H with function_table(%d, 3)\n", i);
+    tensor *H = function_table(i, 3)(F,G,G);
+    
+    if(!H){
+      tensor_delete(F);
+      tensor_delete(G);
+      printf("Failed to create H\n");
+      return 1;
+    }
+    printf("Successfully created H\n");
+
+    printf("\nfunction_table(%d, 0)(H,F,G)\n", i);
+    function_table(i, 0)(H,F,G);
+    
+    printf("H:\n");
+    tensor_print(H, "f");
+
+    printf("\nfunction_table(%d, 1)(H,F,G)\n", i);
+    function_table(i, 1)(H,F,G);
+    
+    printf("H:\n");
+    tensor_print(H, "f");
+
+    printf("\nfunction_table(%d, 2)(H,F,G)\n", i);
+    function_table(i, 2)(H,F,G);
+    
+    printf("H:\n");
+    tensor_print(H, "f");
+
+    tensor_delete_data(H);
+    tensor_delete(H);
+  }
+  
+  tensor_delete(G);
+  tensor_delete(F); 
   tensor_delete_data(new_D);
   tensor_delete(new_D);
   tensor_delete_data(E);
