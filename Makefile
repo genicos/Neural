@@ -37,7 +37,12 @@ clean:
 	rm -f test_tensor  test_tensor.o  tensor.o  tensor_r.o  c_code/tensor/r.c  D_file
 	rm -f test_network test_network.o network.o network_r.o c_code/network/r.c 
 
-test_tensorval:
+valtest_tensor:
 	make clean
 	make test_tensor
 	valgrind --leak-check=yes ./test_tensor
+
+valtest_network:
+	make clean
+	make test_network
+	valgrind --leak-check=yes ./test_network
