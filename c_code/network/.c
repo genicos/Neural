@@ -1,6 +1,10 @@
 #include ".h"
+#include <stdio.h>
 
 void node_delete(node *n){
+  if(n && n->tensor_responsibility){
+    tensor_delete(n->t);
+  }
   free(n);
 }
 
@@ -11,7 +15,8 @@ node *node_create(tensor *t, FUNCTION function, NODES_LENGTH parent_1, NODES_LEN
   }
   
   n->t = t;
-  
+  n->tensor_responsibility = false;
+
   n->function = function;
 
   n->parent_1 = parent_1;
@@ -65,17 +70,30 @@ bool node_solve(network *w, NODES_LENGTH n){
     return false;
   }
   
-  node *curr = w->nodes[n];
+  node *child = w->nodes[n];
 
-  if(curr->t->data){
+  if(child->t){
+    if(child->t->data){    
+      return true;
+    }
+    
+    tensor_delete(child->t);
+  }
+  
+  if(node_solve(w, child->parent_1) && node_solve(w, child->parent_2)){
+    node *parent_1 = w->nodes[child->parent_1];
+    node *parent_2 = w->nodes[child->parent_2];
+
+    child->t = function_table(child->function, 3)(parent_1->t, parent_2->t, NULL);
+    child->tensor_responsibility = true;
+    
+    function_table(child->function, 0)(child->t, parent_1->t, parent_2->t);
+    
     return true;
   }
   
-  //
-  //
-  //
-  return false;
   
+  return false;
 }
 
 tensor *node_partial_derivative(network *w, NODES_LENGTH n, NODES_LENGTH a){

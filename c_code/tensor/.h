@@ -67,6 +67,7 @@ typedef struct tensor{
   DATA_LENGTH           data_length;
   ELEMENT              *data; //array of ELEMENTS
   //As the last index of form increases by 1, the index in data it corrosponds to increases by 1
+  bool                  data_responsibility; //Marked true when data was created by tensor function, if true: tensor_delete will free data as well
 } tensor;
 
 
@@ -92,8 +93,6 @@ tensor *tensor_read(char *file_name);
 tensor* tensor_create(FORM_ELEMENT *form, FORM_LENGTH form_length);
 
 ELEMENT* tensor_create_data(tensor *t);
-
-void tensor_delete_data(tensor *t);
 
 void tensor_delete(tensor *t);
 

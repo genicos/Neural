@@ -3,7 +3,6 @@
 #include <stdio.h>
 
 int main(){
-  printf("FFUCKED\n");
   printf("Creating the following network Z, consisting of nodes A B C D E\n\n");
   
   printf("    E\n");
@@ -37,7 +36,8 @@ int main(){
 
   node *C = node_create(NULL, 0, 0, 1);
   node *E = node_create(NULL, 2, 2, 3);
-  
+ 
+
   if(!A || !B || !C || !D || !E){
     printf("Failed to create nodes\n");
     return 1;
@@ -46,18 +46,27 @@ int main(){
   
   node *Z_nodes[5] = {A, B, C, D, E};
 
-  network *W = network_create(5, Z_nodes);
+  network *Z = network_create(5, Z_nodes);
 
-  if(!W){
+  if(!Z){
     printf("Failed to create network\n");
     return 1;
   }
-  printf("Successfully created network\n");
+  printf("Successfully created network Z\n\n");
 
-  
+  printf("Applying node_solve to node E in Z\n\n");
 
+  if(!node_solve(Z, 4)){
+    printf("Failed to solve node E in Z\n");
+  }
+  printf("Successfully solved node E in Z\n");
+  for(int i = 0; i < Z->nodes_length; i++){
+    printf("Node %c in Z:\n", 'A' + i);
+    tensor_print(Z->nodes[i]->t, "f");
+  }
+   
   
-  network_delete(W);
+  network_delete(Z);
   node_delete(E);
   node_delete(D);
   node_delete(C);

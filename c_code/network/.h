@@ -12,6 +12,7 @@ typedef uint8_t FUNCTION;
 
 typedef struct node{
   tensor *t;
+  bool tensor_responsibility;
   FUNCTION function;
   NODES_LENGTH parent_1;           //parents are indexes in network->nodes
   NODES_LENGTH parent_2;

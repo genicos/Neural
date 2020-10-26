@@ -277,19 +277,14 @@ int main(){
     printf("H:\n");
     tensor_print(H, "f");
 
-    tensor_delete_data(H);
     tensor_delete(H);
   }
   
   tensor_delete(G);
   tensor_delete(F); 
-  tensor_delete_data(new_D);
   tensor_delete(new_D);
-  tensor_delete_data(E);
   tensor_delete(E);
-  tensor_delete_data(D);
   tensor_delete(D);
-  tensor_delete_data(C);
   tensor_delete(C);
   tensor_delete(B);
   tensor_delete(A);

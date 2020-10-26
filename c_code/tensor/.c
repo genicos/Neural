@@ -4,16 +4,13 @@
 
 
 
-void tensor_delete_data(tensor *t){
-  if(t){
-    free(t->data);
-  }
-}
-
 void tensor_delete(tensor *t){
   if(t){
     free(t->form);
     free(t->form_cascade);
+    if(t->data_responsibility){
+      free(t->data);
+    }
     free(t);
   }
 }
@@ -27,7 +24,9 @@ tensor *tensor_create(FORM_ELEMENT *form, FORM_LENGTH form_length){
   tensor *t = (tensor *)malloc(sizeof(tensor));
   if(!t)
     return NULL;
- 
+  
+  t->data_responsibility = false;
+
   t->form_length = form_length;
   t->form = (FORM_ELEMENT *)malloc(form_length * sizeof(FORM_ELEMENT));
   if(!t->form){
@@ -62,7 +61,7 @@ tensor *tensor_create(FORM_ELEMENT *form, FORM_LENGTH form_length){
   }
   
   t->data_length = (DATA_LENGTH)t->form_cascade[0];
-  
+
   return t;
 }
 
@@ -70,7 +69,10 @@ ELEMENT* tensor_create_data(tensor *t){
   if(!t){
     return NULL;
   }
+  
   t->data = (ELEMENT *)calloc(t->data_length, sizeof(ELEMENT));
+  t->data_responsibility = true;
+
   return t->data;
 }
 
