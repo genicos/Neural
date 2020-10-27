@@ -60,6 +60,15 @@ network *network_create(NODES_LENGTH nodes_length, node **nodes){
 }
 
 
+void network_clean(network *w){
+  for(NODES_LENGTH i = 0; i < w->nodes_length; i++){
+    if(w->nodes[i] && w->nodes[i]->parent_1 != i && w->nodes[i]->t){
+      tensor_delete(w->nodes[i]->t);
+      w->nodes[i]->t = NULL;
+      w->nodes[i]->tensor_responsibility = false;
+    }
+  }
+}
 
 bool node_solve(network *w, NODES_LENGTH n){
   if(!w){

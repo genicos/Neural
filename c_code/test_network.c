@@ -31,8 +31,8 @@ int main(){
   printf("Creating nodes A B D\n");
   
   node *A = node_create(A_tensor, 0,0,0);
-  node *B = node_create(B_tensor, 0,0,0);
-  node *D = node_create(D_tensor, 0,0,0);
+  node *B = node_create(B_tensor, 0,1,0);
+  node *D = node_create(D_tensor, 0,3,0);
 
   node *C = node_create(NULL, 0, 0, 1);
   node *E = node_create(NULL, 2, 2, 3);
@@ -59,12 +59,20 @@ int main(){
   if(!node_solve(Z, 4)){
     printf("Failed to solve node E in Z\n");
   }
-  printf("Successfully solved node E in Z\n");
+  printf("Successfully solved node E in Z\n\n");
+
   for(int i = 0; i < Z->nodes_length; i++){
     printf("Node %c in Z:\n", 'A' + i);
     tensor_print(Z->nodes[i]->t, "f");
   }
+  
+  printf("\nClearing dependent nodes\n\n");
+  network_clean(Z);
    
+  for(int i = 0; i < Z->nodes_length; i++){
+    printf("Node %c in Z:\n", 'A' + i);
+    tensor_print(Z->nodes[i]->t, "f");
+  }
   
   network_delete(Z);
   node_delete(E);

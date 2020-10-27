@@ -40,6 +40,10 @@ void network_delete(network *w);
 //written
 network *network_create(NODES_LENGTH nodes_length,node **nodes);
 
+
+//clears the data for all nodes whos parents are not themselves
+void network_clean(network *w);
+
 //n is the node to solve:
 bool node_solve(network *w, NODES_LENGTH n);
 
