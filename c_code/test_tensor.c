@@ -249,8 +249,7 @@ int main(){
     printf("Function %d\n",i);
     
     printf("creating H with function_table(%d, 3)\n", i);
-    tensor *H = function_table(i, 3)(F,G,G);
-    
+    tensor *H = function_table(i, 3)(F,G,G);    
     if(!H){
       tensor_delete(F);
       tensor_delete(G);
@@ -259,25 +258,48 @@ int main(){
     }
     printf("Successfully created H\n");
 
+
+
     printf("\nfunction_table(%d, 0)(H,F,G)\n", i);
     function_table(i, 0)(H,F,G);
     
     printf("H:\n");
     tensor_print(H, "f");
-
-    printf("\nfunction_table(%d, 1)(H,F,G)\n", i);
-    function_table(i, 1)(H,F,G);
     
-    printf("H:\n");
-    tensor_print(H, "f");
 
-    printf("\nfunction_table(%d, 2)(H,F,G)\n", i);
-    function_table(i, 2)(H,F,G);
+    tensor *cart_HF = tensor_cartesian_product(H,F);
+    if(!cart_HF){
+      tensor_delete(H);
+      tensor_delete(F);
+      tensor_delete(G);
+      printf("Failed to create cart_HF\n");
+    }
+
+    printf("\nfunction_table(%d, 1)(cart_HF,F,G)\n", i);
+    function_table(i, 1)(cart_HF,F,G);
     
-    printf("H:\n");
-    tensor_print(H, "f");
+    printf("cart_HF:\n");
+    tensor_print(cart_HF, "f");
+    
+
+    tensor *cart_HG = tensor_cartesian_product(H,G);
+    if(!cart_HG){
+      tensor_delete(cart_HG);
+      tensor_delete(H);
+      tensor_delete(F);
+      tensor_delete(G);
+      printf("Failed to create cart_HF\n");
+    }
+
+    printf("\nfunction_table(%d, 2)(cart_HG,F,G)\n", i);
+    function_table(i, 2)(cart_HG,F,G);
+    
+    printf("cart_HG:\n");
+    tensor_print(cart_HG, "f");
 
     tensor_delete(H);
+    tensor_delete(cart_HF);
+    tensor_delete(cart_HG);
   }
   
   tensor_delete(G);

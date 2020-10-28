@@ -99,6 +99,16 @@ void tensor_delete(tensor *t);
 void tensor_print(tensor *t, char *printf_element_tag);
 
 
+//Creates a tensor with form {A->data_length, B->data_length}
+tensor *tensor_cartesian_product(tensor *A, tensor *B);
+//
+//
+//
+/////////////////////////////////////////////
+///for all partial derivative functions
+//the answer tensor has to be made with
+//tensor_cartesian_product
+/////////////////////////////////////////////
 
 /*Adds two TENSORs
 Inputs: pointers to TENSORs A and B to be added.
