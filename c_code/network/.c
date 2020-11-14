@@ -105,7 +105,14 @@ bool node_solve(network *w, NODES_LENGTH n){
   return false;
 }
 
+
+
+
+
 tensor *node_partial_derivative(network *w, NODES_LENGTH n, NODES_LENGTH a){
-  w+= n + n;
+  if(!w || !w->nodes){
+    return NULL;
+  }
+  
   return NULL;
 }

@@ -1,6 +1,9 @@
 /* NETWORK
 
 */
+#ifndef NETWORK_H
+#define NETWORK_H
+
 
 #include <inttypes.h>
 #include "../tensor/.h"
@@ -49,3 +52,5 @@ bool node_solve(network *w, NODES_LENGTH n);
 
 //returns partial derivative of n with respect to a
 tensor *node_partial_derivative(network *w, NODES_LENGTH n, NODES_LENGTH a);
+
+#endif

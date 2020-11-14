@@ -1,5 +1,6 @@
 #include "project.h"
 #include "network/.h"
+#include "network/pderivative.h"
 #include <stdio.h>
 
 int main(){
@@ -74,6 +75,68 @@ int main(){
     tensor_print(Z->nodes[i]->t, "f");
   }
   
+  printf("\n\nTesting Partial Derivative\n\n");
+  
+  printf("Test 1/2 pderivative_tree\n");
+  printf("Creating the following network:\n\n");
+  
+  printf("Y------N1--X \n");    
+  printf("|      |     \n");
+  printf("N2     N3--X \n");
+  printf("|      |     \n");
+  printf("N7--X  N4--N6\n");
+  printf("|      |     \n");
+  printf("X      N5    \n");
+  
+  node *Y  = node_create(NULL, 0, 2, 1);
+  node *N1 = node_create(NULL, 0, 3, 8); 
+  node *N2 = node_create(NULL, 0, 7, 2); 
+  node *N3 = node_create(NULL, 0, 4, 8); 
+  node *N4 = node_create(NULL, 0, 5, 6); 
+  node *N5 = node_create(NULL, 0, 5, 5); 
+  node *N6 = node_create(NULL, 0, 6, 6); 
+  node *N7 = node_create(NULL, 0, 8, 8); 
+  node *X  = node_create(NULL, 0, 8, 8);
+  
+  printf("Nodes created \n");
+  
+  node *P_nodes[9] = {Y,N1,N2,N3,N4,N5,N6,N7,X};
+  
+  network *P = network_create(9, P_nodes);
+  
+  if(P){
+    printf("P made successfully\n");
+  }
+  
+  pderivative_tree *T = partial_derivative(P,0, 8, 0, 0);
+  
+  if(!T){
+    printf("Failed to create T");
+    return 1;
+  }
+  
+  printf("lineage_count: %d\n", T->lineage_count);
+  
+  for(NODES_LENGTH i = 0; i < T->lineage_count; i++){
+    printf("\n\nlineage %d\n", i);
+    NODES_LENGTH j = 0;
+    do{
+      printf("%u\n", T->lineages[i][j]);
+      j++;
+    }while(T->lineages[i][j] != 0);
+  }
+  
+  delete_pdtree(T);
+  network_delete(P);
+  node_delete(Y);
+  node_delete(N1);
+  node_delete(N2);
+  node_delete(N3);
+  node_delete(N4);
+  node_delete(N5);
+  node_delete(N6);
+  node_delete(N7);
+  node_delete(X);
   network_delete(Z);
   node_delete(E);
   node_delete(D);

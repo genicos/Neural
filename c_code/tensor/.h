@@ -1,5 +1,5 @@
 /* TENSOR
- *  A TENSOR is structure of data.
+ *  A TENSOR is a structure of data.
  *
  *  A TENSOR is a container of ELEMENTS, with some orderings between the ELEMENTS.
  *  A TENSOR has a natural number, N, of orderings.
@@ -78,8 +78,6 @@ ELEMENT      read_ELEMENT     (uint8_t *buffer, uint64_t *index);
 void         save_FORM_LENGTH (uint8_t *buffer, uint64_t *index, FORM_LENGTH datum);
 FORM_LENGTH  read_FORM_LENGTH (uint8_t *buffer, uint64_t *index);
 
-void         save_FORM_ELEMENT(uint8_t *buffer, uint64_t *index, FORM_ELEMENT datum);
-FORM_ELEMENT read_FORM_ELEMENT(uint8_t *buffer, uint64_t *index);
 
 void         save_DATA_LENGTH (uint8_t *buffer, uint64_t *index, DATA_LENGTH datum);
 DATA_LENGTH  read_DATA_LENGTH (uint8_t *buffer, uint64_t *index);
