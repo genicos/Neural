@@ -120,10 +120,10 @@ Returns: pointer to TENSOR C.
 */
 tensor *tensor_add(tensor *C, tensor *A, tensor *B);
 
-//Returns the partial derivative of C with respect to A
+//Returns the partial with respect to A, and places it into C
 tensor *tensor_add_d_1(tensor *C, tensor *A, tensor *B);
 
-//Returns the partial derivative of C with respect to B
+//Returns the partial with respect to B, and places it into C
 tensor *tensor_add_d_2(tensor *C, tensor *A, tensor *B);
 
 //Creates answer tensor to be used in function
@@ -141,10 +141,10 @@ Returns: pointer to TENSOR C.
 */
 tensor *tensor_sub(tensor *C, tensor *A, tensor *B);
 
-//Returns the partial derivative of C with respect to A
+//Returns the partial with respect to A, and places it into C
 tensor *tensor_sub_d_1(tensor *C, tensor *A, tensor *B);
 
-//Returns the partial derivative of C with respect to B
+//Returns the partial with respect to B, and places it into C
 tensor *tensor_sub_d_2(tensor *C, tensor *A, tensor *B);
 
 //Creates answer tensor to be used in function
@@ -160,10 +160,10 @@ Returns: pointer to TENSOR C.
 */
 tensor *tensor_scl(tensor *C, tensor *A, tensor *B);
 
-//Returns the partial derivative of C with respect to A
+//Returns the partial with respect to A, and places it into C
 tensor *tensor_scl_d_1(tensor *C, tensor *A, tensor *B);
 
-//Returns the partial derivative of C with respect to B
+//Returns the partial with respect to B, and places it into C
 tensor *tensor_scl_d_2(tensor *C, tensor *A, tensor *B);
 
 //Creates answer tensor to be used in function
@@ -181,10 +181,10 @@ Returns: pointer to TENSOR C
 */
 tensor *tensor_fll(tensor *C, tensor *A, tensor *B);
 
-//Returns the partial derivative of C with respect to A
+//Returns the partial with respect to A, and places it into C
 tensor *tensor_fll_d_1(tensor *C, tensor *A, tensor *B);
 
-//Returns the partial derivative of C with respect to B
+//Returns the partial with respect to B, and places it into C
 tensor *tensor_fll_d_2(tensor *C, tensor *A, tensor *B);
 
 //Creates answer tensor to be used in function

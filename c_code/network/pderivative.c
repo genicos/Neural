@@ -1,4 +1,5 @@
 #include "pderivative.h"
+#include <stdio.h>
 
 void delete_pdtree(pderivative_tree *t){
   if(t->lineages_responsibility && t->lineages){
@@ -66,19 +67,23 @@ pderivative_tree *partial_derivative(network *w, NODES_LENGTH derivative_of, NOD
     return NULL;
   }
   
-
   if(curr == with_respect_to){
     return create_pdtree(depth); //Fruit
   }
-  NODES_LENGTH parent_1 = w->nodes[curr]->parent_1;
-  NODES_LENGTH parent_2 = w->nodes[curr]->parent_2;
   
-  if(derivative_of == parent_1 && derivative_of == parent_2){
+  node *curr_node = w->nodes[curr];
+  
+  NODES_LENGTH parent_1 = curr_node->parent_1;
+  NODES_LENGTH parent_2 = curr_node->parent_2;
+  
+  if(curr == parent_1 && curr == parent_2){ //Orphan node
     return NULL; //Dead end
   }
+
+
   pderivative_tree *from_parent_1 = NULL, *from_parent_2 = NULL;
   
-  if(curr != parent_1){
+  if(curr != parent_1){    //recursively looking for the node with_respect_to 
     from_parent_1 = partial_derivative(w, derivative_of, with_respect_to, parent_1, depth+1);
     add_ancestor(from_parent_1, 1, depth);
   }
@@ -86,5 +91,27 @@ pderivative_tree *partial_derivative(network *w, NODES_LENGTH derivative_of, NOD
     from_parent_2 = partial_derivative(w, derivative_of, with_respect_to, parent_2, depth+1);
     add_ancestor(from_parent_2, 2, depth);
   }
+  
+  
+  
+  if(from_parent_1){
+    curr_node->pderivative_1 = tensor_cartesian_product(curr_node->t, w->nodes[parent_1]->t);
+    curr_node->pderivative_1_responsibility = true;
+    
+    if(curr_node->pderivative_1){
+      function_table(curr_node->function, 1)(curr_node->pderivative_1, w->nodes[parent_1]->t, w->nodes[parent_2]->t);
+    }
+  }
+  
+  if(from_parent_2){
+    curr_node->pderivative_2 = tensor_cartesian_product(curr_node->t, w->nodes[parent_2]->t);
+    curr_node->pderivative_2_responsibility = true;
+    
+    if(curr_node->pderivative_2){
+      function_table(curr_node->function, 2)(curr_node->pderivative_2, w->nodes[parent_1]->t, w->nodes[parent_2]->t);
+    }
+  }
+  
+  
   return conjoin_trees(from_parent_1, from_parent_2);
 }
