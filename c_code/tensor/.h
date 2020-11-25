@@ -117,7 +117,7 @@ Returns: pointer to TENSOR C.
   C has the same form as A and B.
   For any COORDINATE M,
     C[M] is equal to A[M] + B[M]
-*/
+
 tensor *tensor_add(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial with respect to A, and places it into C
@@ -131,14 +131,14 @@ tensor *tensor_add_create(tensor *A, tensor *B);
 
 
 
-/*Subtracts two TENSORs
+Subtracts two TENSORs
 Inputs: pointers to TENSORs A and B to be subtracted.
   A and B must have the same FORM.
 Returns: pointer to TENSOR C.
   C has the same form as A and B.
   For any COORDINATE M,
     C[M] is equal to A[M] - B[M]
-*/
+
 tensor *tensor_sub(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial with respect to A, and places it into C
@@ -151,13 +151,13 @@ tensor *tensor_sub_d_2(tensor *C, tensor *A, tensor *B);
 tensor *tensor_sub_create(tensor *A, tensor *B);
 
 
-/*Scales a TENSOR by a scalar ELEMENT
+Scales a TENSOR by a scalar ELEMENT
 Inputs: pointer to TENSOR A to be scaled and ELEMENT B to be the scalar
 Returns: pointer to TENSOR C.
   C has the same form as A.
   For any COORDINATE M,
     C[M] is equal to A[M] * B
-*/
+
 tensor *tensor_scl(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial with respect to A, and places it into C
@@ -170,7 +170,7 @@ tensor *tensor_scl_d_2(tensor *C, tensor *A, tensor *B);
 tensor *tensor_scl_create(tensor *A, tensor *B);
 
 
-/*Traditional fully connected layer
+Traditional fully connected layer
 Inputs: pointers to TENSORs A and B, A is the activation layer and B is the parameter TENSOR
   FORM of A is ignored
   FORM[0] of B is to equal to A->length
@@ -178,7 +178,7 @@ Returns: pointer to TENSOR C
   FORM of C is equal to the FORM of B without the 0th index
   For any COORDINATE M,
     C[M] is equal to the sum of A[i]*B[{i,M}] as i increments
-*/
+
 tensor *tensor_fll(tensor *C, tensor *A, tensor *B);
 
 //Returns the partial with respect to A, and places it into C
@@ -190,7 +190,7 @@ tensor *tensor_fll_d_2(tensor *C, tensor *A, tensor *B);
 //Creates answer tensor to be used in function
 tensor *tensor_fll_create(tensor *A, tensor *B);
 
-
+*/
 #define FUNCTION_CT 4
 
 typedef uint8_t FUNCTION;
