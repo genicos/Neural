@@ -191,7 +191,7 @@ tensor *tensor_fll_d_2(tensor *C, tensor *A, tensor *B);
 tensor *tensor_fll_create(tensor *A, tensor *B);
 
 */
-#define FUNCTION_CT 4
+//#define FUNCTION_CT 4
 
 typedef uint8_t FUNCTION;
 

@@ -1,5 +1,14 @@
 update network:node_solve, so that it uses new function table
 update test_tensor, so that it uses new function table
   
-  move functions from tensor/.c to tensor/functions.c
-  figure out extern
+
+fix this
+	tensor_function_table[1]->f_d_2(cart_HG, F, G)
+	cart_HG:
+	{{ -1, 0, 0, -1}
+	{0, 0, 0, 0}
+
+  it should look like	
+	cart_HG:
+	{{ -1, 0, 0, 0}
+	{0, -1, 0, 0}

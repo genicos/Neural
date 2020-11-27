@@ -48,12 +48,12 @@ const tensor_function full = {
   
   .create = &tensor_full_create,
 
-  .pairwise_to_first  = true,
-  .pairwise_to_second = true,
+  .pairwise_to_first  = false,
+  .pairwise_to_second = false,
 };
 
 
-const tensor_function *tensor_function_table[] = {
+const tensor_function *tensor_function_table[FUNCTION_CT] = {
   &add,
   &sub, 
   &scale, 

@@ -7,7 +7,11 @@
 #include <stdlib.h>
 
 
+
 int main(){
+  
+  //printf("GOOG %d %d\n", tensor_function_table[0]->pairwise_to_first, FUNCTION_CT);
+  
   printf("#################### TENSOR TEST ####################\n\n");
   
   printf("Authored by Nicolas Ayala, nicoayalamag@gmail.com\n");
@@ -246,12 +250,12 @@ int main(){
   printf("F and G:\n");
   tensor_print(F, "f");
   
-  /*
+  //
   for(int i = 0; i < FUNCTION_CT; i++){
     printf("Function %d\n",i);
     
-    printf("creating H with function_table(%d, 3)\n", i);
-    tensor *H = function_table(i, 3)(F,G,G);    
+    printf("creating H with tensor_function_table[%d]->create\n", i);
+    tensor *H = tensor_function_table[i]->create(F,G);    
     if(!H){
       tensor_delete(F);
       tensor_delete(G);
@@ -262,8 +266,8 @@ int main(){
 
 
 
-    printf("\nfunction_table(%d, 0)(H,F,G)\n", i);
-    function_table(i, 0)(H,F,G);
+    printf("\ntensor_function_table[%d]->f(H,F,G)\n", i);
+    tensor_function_table[i]->f(H,F,G);
     
     printf("H:\n");
     tensor_print(H, "f");
@@ -277,8 +281,8 @@ int main(){
       printf("Failed to create cart_HF\n");
     }
 
-    printf("\nfunction_table(%d, 1)(cart_HF,F,G)\n", i);
-    function_table(i, 1)(cart_HF,F,G);
+    printf("\ntensor_function_table[%d]->f_d_1(cart_HF,F,G)\n", i);
+    tensor_function_table[i]->f_d_1(cart_HF,F,G);
     
     printf("cart_HF:\n");
     tensor_print(cart_HF, "f");
@@ -293,8 +297,8 @@ int main(){
       printf("Failed to create cart_HF\n");
     }
 
-    printf("\nfunction_table(%d, 2)(cart_HG,F,G)\n", i);
-    function_table(i, 2)(cart_HG,F,G);
+    printf("\ntensor_function_table[%d]->f_d_2(cart_HG,F,G)\n", i);
+    tensor_function_table[i]->f_d_2(cart_HG,F,G);
     
     printf("cart_HG:\n");
     tensor_print(cart_HG, "f");
@@ -303,7 +307,7 @@ int main(){
     tensor_delete(cart_HF);
     tensor_delete(cart_HG);
   }
-  */
+  //
   
   tensor_delete(G);
   tensor_delete(F); 
