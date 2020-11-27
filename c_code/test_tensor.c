@@ -1,6 +1,7 @@
 #include "project.h"
 #include "tensor/.h"
 #include "tensor/functions.h"
+
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -123,7 +124,7 @@ int main(){
   
   printf("\nScaling of elements of A by first element of B\n");
   printf("tensor_scale(C,A,B):\n");
-  tensor_scl(C,A,B);
+  tensor_scale(C,A,B);
   tensor_print(C, "f");
   
   printf("\n..... Fully connected operation on layer A with parameters D resulting in E\n\n");
@@ -135,9 +136,9 @@ int main(){
     D->data[i] =  i;
   }
    
-  tensor *E = tensor_fll_create(A, D);
+  tensor *E = tensor_full_create(A, D);
   
-  tensor_fll(E,A,D);
+  tensor_full(E,A,D);
   printf("A:\n");
   tensor_print(A, "f");
 
@@ -245,7 +246,7 @@ int main(){
   printf("F and G:\n");
   tensor_print(F, "f");
   
-
+  /*
   for(int i = 0; i < FUNCTION_CT; i++){
     printf("Function %d\n",i);
     
@@ -302,6 +303,7 @@ int main(){
     tensor_delete(cart_HF);
     tensor_delete(cart_HG);
   }
+  */
   
   tensor_delete(G);
   tensor_delete(F); 

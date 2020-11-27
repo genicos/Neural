@@ -40,7 +40,7 @@ tensor_r.o: c_code/tensor/.r c_code/tensor/.h c_code/project.h
 
 clean:
 	rm -f test_tensor  test_tensor.o  tensor.o  tensor_r.o  c_code/tensor/r.c  D_file
-	rm -f test_network test_network.o network.o network_r.o c_code/network/r.c 
+	rm -f test_network test_network.o network.o network_r.o pderivative.o c_code/network/r.c 
 
 valtest_tensor:
 	make clean

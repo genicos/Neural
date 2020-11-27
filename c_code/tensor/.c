@@ -1,4 +1,4 @@
-#include ".h"
+//#include ".h"
 #include "functions.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -268,7 +268,7 @@ tensor* tensor_scale_create(tensor *A, tensor *B){
 
 
 
-tensor* tensor_fill(tensor *C, tensor *A, tensor *B){
+tensor* tensor_full(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->data_length; i++){
     for(DATA_LENGTH h = 0; h < A->data_length; h++){
@@ -282,7 +282,7 @@ tensor* tensor_fill(tensor *C, tensor *A, tensor *B){
 
 
 //test thissss
-tensor* tensor_fill_d_1(tensor *C, tensor *A, tensor *B){
+tensor* tensor_full_d_1(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->form[0]; i++){
     for(DATA_LENGTH h = 0; h < C->form[1]; h++){
@@ -294,7 +294,7 @@ tensor* tensor_fill_d_1(tensor *C, tensor *A, tensor *B){
 }
 
 //test thissss
-tensor* tensor_fill_d_2(tensor *C, tensor *A, tensor *B){
+tensor* tensor_full_d_2(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->form[0]; i++){
     for(DATA_LENGTH j = 0; j < A->data_length; j++){
@@ -305,7 +305,7 @@ tensor* tensor_fill_d_2(tensor *C, tensor *A, tensor *B){
   return C;
 }
 
-tensor* tensor_fill_create(tensor *A, tensor *B){
+tensor* tensor_full_create(tensor *A, tensor *B){
   tensor *C = tensor_create(&B->form[1], B->form_length-1);
   tensor_create_data(C);
   
