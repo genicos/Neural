@@ -22,8 +22,8 @@ pderivative.o: c_code/network/pderivative.c c_code/network/.h c_code/project.h
 
 
 
-test_tensor: test_tensor.o tensor.o tensor_r.o
-	$(CC) test_tensor.o tensor.o tensor_r.o -o test_tensor
+test_tensor:  test_tensor.o tensor.o tensor_r.o tensor_functions.o
+	$(CC) test_tensor.o tensor.o tensor_r.o tensor_functions.o -o test_tensor
 
 
 test_tensor.o: c_code/test_tensor.c c_code/project.h
@@ -36,6 +36,8 @@ tensor_r.o: c_code/tensor/.r c_code/tensor/.h c_code/project.h
 	cp c_code/tensor/.r c_code/tensor/r.c
 	$(CC) $(CFLAGS) -c c_code/tensor/r.c -o tensor_r.o
 
+tensor_functions.o: c_code/tensor/functions.c c_code/tensor/functions.h c_code/tensor/.h c_code/project.h
+	$(CC) $(CFLAGS) -c c_code/tensor/functions.c -o tensor_functions.o
 
 
 clean:

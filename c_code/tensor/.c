@@ -148,7 +148,7 @@ tensor *(*function_table(FUNCTION f, uint8_t code))(tensor *, tensor *, tensor *
 
   return (tensor *(*)(tensor *, tensor *, tensor *)) f_table[f][code];
 }
-*/
+
 
 tensor* tensor_cartesian_product(tensor *A, tensor *B){
   if(!A || !B){
@@ -311,3 +311,4 @@ tensor* tensor_full_create(tensor *A, tensor *B){
   
   return C;
 }
+*/
