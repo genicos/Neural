@@ -1,6 +1,3 @@
-update network:node_solve, so that it uses new function table
-update test_tensor, so that it uses new function table
-  
 
 fix this
 	tensor_function_table[1]->f_d_2(cart_HG, F, G)

@@ -7,6 +7,7 @@
 
 #include <inttypes.h>
 #include "../tensor/.h"
+#include "../tensor/functions.h"
 #include "../project.h"
 
 typedef uint8_t NODES_LENGTH;

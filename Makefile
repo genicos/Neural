@@ -3,8 +3,8 @@ CFLAGS =  -Wpedantic -Wextra -Wall -Werror -Wno-unused-parameter -Wno-unused-var
 
 .phony: clean test_tensorval
 
-test_network: test_network.o network.o network_r.o pderivative.o tensor.o tensor_r.o
-	$(CC) test_network.o network.o network_r.o pderivative.o tensor.o tensor_r.o -o test_network
+test_network: test_network.o network.o network_r.o pderivative.o tensor.o tensor_r.o tensor_functions.o
+	$(CC) test_network.o network.o network_r.o pderivative.o tensor.o tensor_r.o tensor_functions.o -o test_network
 
 
 test_network.o: c_code/test_network.c c_code/project.h

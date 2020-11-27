@@ -105,10 +105,13 @@ bool node_solve(network *w, NODES_LENGTH n){
     node *parent_1 = w->nodes[child->parent_1];
     node *parent_2 = w->nodes[child->parent_2];
 
-    child->t = function_table(child->function, 3)(parent_1->t, parent_2->t, NULL);
+    child->t = tensor_function_table[child->function]->create(parent_1->t, parent_2->t);
+    if(!child->t){
+      return false;
+    }
     child->tensor_responsibility = true;
     
-    function_table(child->function, 0)(child->t, parent_1->t, parent_2->t);
+    tensor_function_table[child->function]->f(child->t, parent_1->t, parent_2->t);
     
     return true;
   }

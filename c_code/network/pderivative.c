@@ -99,7 +99,8 @@ pderivative_tree *partial_derivative(network *w, NODES_LENGTH derivative_of, NOD
     curr_node->pderivative_1_responsibility = true;
     
     if(curr_node->pderivative_1){
-      function_table(curr_node->function, 1)(curr_node->pderivative_1, w->nodes[parent_1]->t, w->nodes[parent_2]->t);
+      tensor_function_table[curr_node->function]->
+        f_d_1(curr_node->pderivative_1, w->nodes[parent_1]->t, w->nodes[parent_2]->t);
     }
   }
   
@@ -108,7 +109,8 @@ pderivative_tree *partial_derivative(network *w, NODES_LENGTH derivative_of, NOD
     curr_node->pderivative_2_responsibility = true;
     
     if(curr_node->pderivative_2){
-      function_table(curr_node->function, 2)(curr_node->pderivative_2, w->nodes[parent_1]->t, w->nodes[parent_2]->t);
+      tensor_function_table[curr_node->function]->
+        f_d_2(curr_node->pderivative_2, w->nodes[parent_1]->t, w->nodes[parent_2]->t);
     }
   }
   
