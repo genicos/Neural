@@ -14,7 +14,6 @@ const tensor_function add = {
 };
 
 
-
 const tensor_function sub = {
   
   .f     = &tensor_sub,
@@ -89,7 +88,7 @@ tensor* tensor_add(tensor *C, tensor *A, tensor *B){
 tensor* tensor_add_d_1(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->form[0]; i++)
-    C->data[i*C->form[0] + i] = 1;
+    C->data[i*C->form[1] + i] = 1;
   
   return C;
 }
@@ -97,7 +96,7 @@ tensor* tensor_add_d_1(tensor *C, tensor *A, tensor *B){
 tensor* tensor_add_d_2(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->form[0]; i++)
-    C->data[i*C->form[0] + i] = 1;
+    C->data[i*C->form[1] + i] = 1;
   
   return C;
 }
@@ -125,7 +124,7 @@ tensor* tensor_sub(tensor *C, tensor *A, tensor *B){
 tensor* tensor_sub_d_1(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->form[0]; i++)
-    C->data[i*C->form[0] + i] = 1;
+    C->data[i*C->form[1] + i] = 1;
   
   return C;
 }
@@ -133,7 +132,7 @@ tensor* tensor_sub_d_1(tensor *C, tensor *A, tensor *B){
 tensor* tensor_sub_d_2(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->form[0]; i++)
-    C->data[i*C->form[0] + i] = -1;
+    C->data[i*C->form[1] + i] = -1;
   
   return C;
 }
@@ -158,7 +157,7 @@ tensor* tensor_scale(tensor *C, tensor *A, tensor *B){
 tensor* tensor_scale_d_1(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->form[0]; i++)
-    C->data[i*C->form[i] + i] = B->data[0];
+    C->data[i*C->form[1] + i] = B->data[0];
   
   return C;
 }
@@ -166,7 +165,7 @@ tensor* tensor_scale_d_1(tensor *C, tensor *A, tensor *B){
 tensor* tensor_scale_d_2(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->form[0]; i++)
-    C->data[i*C->form[i]] = A->data[i];
+    C->data[i*C->form[1]] = A->data[i];
   
   return C;
 }
@@ -193,7 +192,7 @@ tensor* tensor_full(tensor *C, tensor *A, tensor *B){
 }
 
 
-//test thissss
+
 tensor* tensor_full_d_1(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->form[0]; i++){
@@ -205,7 +204,7 @@ tensor* tensor_full_d_1(tensor *C, tensor *A, tensor *B){
   return C;
 }
 
-//test thissss
+
 tensor* tensor_full_d_2(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->form[0]; i++){

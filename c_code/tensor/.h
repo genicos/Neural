@@ -100,7 +100,7 @@ void tensor_print(tensor *t, char *printf_element_tag);
 
 
 //Creates a tensor with form {A->data_length, B->data_length}
-tensor *tensor_cartesian_product(tensor *A, tensor *B);
+//tensor *tensor_cartesian_product(tensor *A, tensor *B);
 //
 //
 //

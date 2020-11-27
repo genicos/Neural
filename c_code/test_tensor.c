@@ -247,8 +247,11 @@ int main(){
   F->data = F_data;
   G->data = G_data;
   
-  printf("F and G:\n");
+  printf("F:\n");
   tensor_print(F, "f");
+
+  printf("G:\n");
+  tensor_print(G, "f");
   
   //
   for(int i = 0; i < FUNCTION_CT; i++){
