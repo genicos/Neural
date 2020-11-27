@@ -41,7 +41,7 @@ tensor_functions.o: c_code/tensor/functions.c c_code/tensor/functions.h c_code/t
 
 
 clean:
-	rm -f test_tensor  test_tensor.o  tensor.o  tensor_r.o  c_code/tensor/r.c  D_file
+	rm -f test_tensor  test_tensor.o  tensor.o  tensor_r.o tensor_functions.o c_code/tensor/r.c  D_file
 	rm -f test_network test_network.o network.o network_r.o pderivative.o c_code/network/r.c 
 
 valtest_tensor:
