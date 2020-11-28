@@ -2,7 +2,7 @@
 #define PDERIVATIVE_H
 
 #include "../project.h"
-#include ".h"
+#include "network.h"
 
 typedef struct pderivative_tree{
   NODES_LENGTH lineage_count;

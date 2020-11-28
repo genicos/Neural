@@ -1,55 +1,55 @@
 CC = clang
 CFLAGS =  -Wpedantic -Wextra -Wall -Werror -Wno-unused-parameter -Wno-unused-variable 
 
-.phony: clean test_tensorval
-
-test_network: test_network.o network.o network_r.o pderivative.o tensor.o tensor_r.o tensor_functions.o
-	$(CC) test_network.o network.o network_r.o pderivative.o tensor.o tensor_r.o tensor_functions.o -o test_network
+.phony: clean valtest_tensor valtest_network
 
 
-test_network.o: c_code/test_network.c c_code/project.h
-	$(CC) $(CFLAGS) -c c_code/test_network.c
-
-network.o: c_code/network/.c c_code/network/.h c_code/project.h
-	$(CC) $(CFLAGS) -c c_code/network/.c -o network.o
-
-network_r.o: c_code/network/.r c_code/network/.h c_code/project.h
-	cp c_code/network/.r c_code/network/r.c
-	$(CC) $(CFLAGS) -c c_code/network/r.c -o network_r.o
-
-pderivative.o: c_code/network/pderivative.c c_code/network/.h c_code/project.h
-	$(CC) $(CFLAGS) -c c_code/network/pderivative.c
+test_network: obj/test_network.o  obj/network.o obj/network_r.o obj/network_pderivative.o obj/tensor.o obj/tensor_r.o obj/tensor_functions.o
+	$(CC) $^ -o bin/test_network
 
 
+obj/test_network.o: src/test/test_network.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-test_tensor:  test_tensor.o tensor.o tensor_r.o tensor_functions.o
-	$(CC) test_tensor.o tensor.o tensor_r.o tensor_functions.o -o test_tensor
+obj/network.o: src/network/network.c src/network/network.h src/project.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+obj/network_r.o: src/network/r.c src/network/network.h src/project.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+obj/network_pderivative.o: src/network/pderivative.c src/network/pderivative.h src/network/network.h src/project.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 
-test_tensor.o: c_code/test_tensor.c c_code/project.h
-	$(CC) $(CFLAGS) -c c_code/test_tensor.c
+#
+test_tensor:  obj/test_tensor.o obj/tensor.o obj/tensor_r.o obj/tensor_functions.o
+	$(CC) $^ -o bin/test_tensor
 
-tensor.o: c_code/tensor/.c c_code/tensor/.h c_code/project.h
-	$(CC) $(CFLAGS) -c c_code/tensor/.c -o tensor.o
 
-tensor_r.o: c_code/tensor/.r c_code/tensor/.h c_code/project.h
-	cp c_code/tensor/.r c_code/tensor/r.c
-	$(CC) $(CFLAGS) -c c_code/tensor/r.c -o tensor_r.o
+obj/test_tensor.o: src/test/test_tensor.c
+	$(CC) $(CFLAGS) -c $< -o $@ 
 
-tensor_functions.o: c_code/tensor/functions.c c_code/tensor/functions.h c_code/tensor/.h c_code/project.h
-	$(CC) $(CFLAGS) -c c_code/tensor/functions.c -o tensor_functions.o
+obj/tensor.o: src/tensor/tensor.c src/tensor/tensor.h src/project.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+obj/tensor_r.o: src/tensor/r.c src/tensor/tensor.h src/project.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+obj/tensor_functions.o: src/tensor/functions.c src/tensor/functions.h src/tensor/tensor.h src/project.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 
 clean:
-	rm -f test_tensor  test_tensor.o  tensor.o  tensor_r.o tensor_functions.o c_code/tensor/r.c  D_file
-	rm -f test_network test_network.o network.o network_r.o pderivative.o c_code/network/r.c 
+	rm -f D_file
+	rm -f obj/*
+	rm -f bin/*
 
 valtest_tensor:
 	make clean
 	make test_tensor
-	valgrind --leak-check=yes ./test_tensor
+	valgrind --leak-check=yes bin/test_tensor
 
 valtest_network:
 	make clean
 	make test_network
-	valgrind --leak-check=yes ./test_network
+	valgrind --leak-check=yes bin/test_network

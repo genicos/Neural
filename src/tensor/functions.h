@@ -1,7 +1,7 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 #include <stdbool.h>
-#include ".h"
+#include "tensor.h"
 
 typedef struct tensor_function{
 

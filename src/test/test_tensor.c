@@ -1,6 +1,6 @@
-#include "project.h"
-#include "tensor/.h"
-#include "tensor/functions.h"
+#include "../project.h"
+#include "../tensor/tensor.h"
+#include "../tensor/functions.h"
 
 #include <inttypes.h>
 #include <stdio.h>

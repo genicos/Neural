@@ -1,6 +1,6 @@
-#include "project.h"
-#include "network/.h"
-#include "network/pderivative.h"
+#include "../project.h"
+#include "../network/network.h"
+#include "../network/pderivative.h"
 #include <stdio.h>
 
 int main(){
