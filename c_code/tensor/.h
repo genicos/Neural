@@ -193,8 +193,8 @@ tensor *tensor_fll_create(tensor *A, tensor *B);
 */
 //#define FUNCTION_CT 4
 
-typedef uint8_t FUNCTION;
+//typedef uint8_t FUNCTION;
 
-tensor *(*function_table(FUNCTION f, uint8_t code))(tensor *, tensor *, tensor *);
+//tensor *(*function_table(FUNCTION f, uint8_t code))(tensor *, tensor *, tensor *);
 
 #endif
