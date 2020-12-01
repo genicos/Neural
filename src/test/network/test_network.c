@@ -1,6 +1,6 @@
-#include "../project.h"
-#include "../network/network.h"
-#include "../network/pderivative.h"
+#include "../../project.h"
+#include "../../network/network.h"
+#include "../../network/pderivative.h"
 #include <stdio.h>
 
 int main(){
@@ -14,9 +14,9 @@ int main(){
   
   FORM_ELEMENT shared_form[2] = {2,2};
   
-  tensor *A_tensor = tensor_create(shared_form, 2);
-  tensor *B_tensor = tensor_create(shared_form, 2);
-  tensor *D_tensor = tensor_create(shared_form, 2);
+  tensor *A_tensor = tensor_create(2,shared_form);
+  tensor *B_tensor = tensor_create(2,shared_form);
+  tensor *D_tensor = tensor_create(2,shared_form);
   
   if(!A_tensor || !B_tensor || !D_tensor){
     printf("Failed to create tensors\n");

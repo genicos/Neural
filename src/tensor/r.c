@@ -234,7 +234,7 @@ tensor *tensor_read(char *file_name){
     form[i] = read_FORM_ELEMENT(buffer, &index);
   }
   
-  tensor *t = tensor_create(form, form_length);
+  tensor *t = tensor_create(form_length, form);
   free(form);
   
   if(!tensor_create_data(t))

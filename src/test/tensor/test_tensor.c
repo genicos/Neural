@@ -1,6 +1,6 @@
-#include "../project.h"
-#include "../tensor/tensor.h"
-#include "../tensor/functions.h"
+#include "../../project.h"
+#include "../../tensor/tensor.h"
+#include "../../tensor/functions.h"
 
 #include <inttypes.h>
 #include <stdio.h>
@@ -10,6 +10,17 @@
 
 int main(){
   
+  FORM_LENGTH  E_1a_form_length = 2;
+  FORM_ELEMENT E_1a_form[2]     = {2,2};
+  ELEMENT      E_1a_data[4]     = {1,2,3,4};
+  tensor      *E_1a             = tensor_create(2, E_1a_form);
+  E_1a->data = E_1a_data;
+  
+  
+  
+  
+  tensor_delete(E_1a);
+    
   //printf("GOOG %d %d\n", tensor_function_table[0]->pairwise_to_first, FUNCTION_CT);
   
   printf("#################### TENSOR TEST ####################\n\n");
@@ -49,7 +60,7 @@ int main(){
   ELEMENT a_data[6] = {-1, 2,-3,
                         4,-5, 6};
 
-  tensor *A = tensor_create(a_form, a_form_length);
+  tensor *A = tensor_create(a_form_length, a_form);
   if(!A){
     printf(" Failed to create A\n");
     return 1;
@@ -80,7 +91,7 @@ int main(){
   FORM_LENGTH OF_form_length = 4;
   FORM_ELEMENT OF_form[4] = {maxof(FORM_ELEMENT),maxof(FORM_ELEMENT),maxof(FORM_ELEMENT),maxof(FORM_ELEMENT)};
   
-  tensor *OF = tensor_create(OF_form, OF_form_length);
+  tensor *OF = tensor_create(OF_form_length, OF_form);
   
   if(!OF){
     printf(" OF Failed\n");
@@ -101,7 +112,7 @@ int main(){
   ELEMENT b_data[6] = { 2,-3, 4,
                        -5, 6,-7};
   
-  tensor *B = tensor_create(b_form, b_form_length);
+  tensor *B = tensor_create(b_form_length, b_form);
   if(!B){
     printf("Failed to create B\n");
     return 1;
@@ -113,7 +124,7 @@ int main(){
   printf("Tensor B:\n");
   tensor_print(B, "f");
   
-  tensor *C = tensor_create(a_form, a_form_length);
+  tensor *C = tensor_create(a_form_length, a_form);
   tensor_create_data(C);  
   
   printf("\nPairwise sum of elements from A and B\n");
@@ -133,7 +144,7 @@ int main(){
   
   printf("\n..... Fully connected operation on layer A with parameters D resulting in E\n\n");
   FORM_ELEMENT D_form[3] = {A->data_length, 2, 2};
-  tensor *D = tensor_create(D_form, 3);
+  tensor *D = tensor_create(3,D_form);
   tensor_create_data(D);
   
   for(DATA_LENGTH i = 0; i < D->data_length; i++){
@@ -236,8 +247,8 @@ int main(){
   ELEMENT G_data[4] = {1,2,3,4};
   
   
-  tensor *F = tensor_create(F_form,1);
-  tensor *G = tensor_create(G_form,2);
+  tensor *F = tensor_create(1,F_form);
+  tensor *G = tensor_create(2,G_form);
   
   if(!F || !G){
     printf("Fail: tensor_create\n");

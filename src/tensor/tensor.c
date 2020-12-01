@@ -17,7 +17,7 @@ void tensor_delete(tensor *t){
 }
 
 //Does not allocate nor initialize data 
-tensor *tensor_create(FORM_ELEMENT *form, FORM_LENGTH form_length){
+tensor *tensor_create(FORM_LENGTH form_length, FORM_ELEMENT *form){
   if(!form || !form_length){
     return NULL;
   }
@@ -126,6 +126,25 @@ void tensor_print(tensor *t, char* printf_element_tag){
 }
 
 
+bool tensor_equal(tensor *A, tensor *B){
+  if(!A || !B)
+    return false;
+  
+  if(A->form_length != B->form_length)
+    return false;
+  
+  for(FORM_LENGTH i = 0; i < A->form_length; i++){
+    if(A->form[i] != B->form[i])
+      return false;
+  }
+  
+  for(DATA_LENGTH i = 0; i < A->data_length; i++){
+    if(A->data[i] != B->data[i])
+      return false;
+  }
+  
+  return true;
+}
 
 
 

@@ -6,7 +6,7 @@
 
 
 #include <inttypes.h>
-#include "../tensor/.h"
+#include "../tensor/tensor.h"
 #include "../tensor/functions.h"
 #include "../project.h"
 

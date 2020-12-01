@@ -67,7 +67,7 @@ tensor* tensor_cartesian_product(tensor *A, tensor *B){
   }
   FORM_ELEMENT c_form[2] = {A->data_length, B->data_length};
 
-  tensor *C = tensor_create(c_form, 2);
+  tensor *C = tensor_create(2, c_form);
   tensor_create_data(C); 
 
   return C;
@@ -102,7 +102,7 @@ tensor* tensor_add_d_2(tensor *C, tensor *A, tensor *B){
 }
 
 tensor* tensor_add_create(tensor *A, tensor *B){
-  tensor *C = tensor_create(A->form, A->form_length);
+  tensor *C = tensor_create(A->form_length, A->form);
   tensor_create_data(C);
   
   return C;
@@ -138,7 +138,7 @@ tensor* tensor_sub_d_2(tensor *C, tensor *A, tensor *B){
 }
 
 tensor* tensor_sub_create(tensor *A, tensor *B){
-  tensor *C = tensor_create(A->form, A->form_length);
+  tensor *C = tensor_create(A->form_length, A->form);
   tensor_create_data(C);
   
   return C;
@@ -171,7 +171,7 @@ tensor* tensor_scale_d_2(tensor *C, tensor *A, tensor *B){
 }
 
 tensor* tensor_scale_create(tensor *A, tensor *B){
-  tensor *C = tensor_create(A->form, A->form_length);
+  tensor *C = tensor_create(A->form_length, A->form);
   tensor_create_data(C);
   
   return C;
@@ -191,8 +191,6 @@ tensor* tensor_full(tensor *C, tensor *A, tensor *B){
   return C;
 }
 
-
-
 tensor* tensor_full_d_1(tensor *C, tensor *A, tensor *B){
   
   for(DATA_LENGTH i = 0; i < C->form[0]; i++){
@@ -203,7 +201,6 @@ tensor* tensor_full_d_1(tensor *C, tensor *A, tensor *B){
 
   return C;
 }
-
 
 tensor* tensor_full_d_2(tensor *C, tensor *A, tensor *B){
   
@@ -217,7 +214,11 @@ tensor* tensor_full_d_2(tensor *C, tensor *A, tensor *B){
 }
 
 tensor* tensor_full_create(tensor *A, tensor *B){
-  tensor *C = tensor_create(&B->form[1], B->form_length-1);
+
+  if(B->form_length < 2)
+    return false;
+
+  tensor *C = tensor_create(B->form_length-1, &B->form[1]); //test for correct form
   tensor_create_data(C);
   
   return C;

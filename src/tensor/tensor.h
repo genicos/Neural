@@ -53,7 +53,7 @@
 
 typedef float       ELEMENT;              //The type for the TENSOR ELEMENTS
 typedef uint8_t     FORM_LENGTH;          //Size of FORM length type
-//size(FORM_ELEMENT) <= size(DATA_LENGTH_STORE), product of all FORM elements is equal to DATA length
+//size(FORM_ELEMENT) <= size(DATA_LENGTH), product of all FORM elements is equal to DATA length
 typedef uint32_t    FORM_ELEMENT;         //The type for the FORM ELEMENTS
 typedef uint32_t    DATA_LENGTH;          //Size of DATA length type
 typedef DATA_LENGTH FORM_CASCADE_ELEMENT; //Element of form cascade
@@ -90,7 +90,7 @@ tensor *tensor_read(char *file_name);
 
 
 
-tensor* tensor_create(FORM_ELEMENT *form, FORM_LENGTH form_length);
+tensor* tensor_create(FORM_LENGTH form_length, FORM_ELEMENT *form);
 
 ELEMENT* tensor_create_data(tensor *t);
 
@@ -98,6 +98,12 @@ void tensor_delete(tensor *t);
 
 void tensor_print(tensor *t, char *printf_element_tag);
 
+//returns true if
+//both tensors are non-null,
+//they have the same form_length,
+//they have the same form element values, and
+//they have the same data element values
+bool tensor_equal(tensor *A, tensor *B);
 
 //Creates a tensor with form {A->data_length, B->data_length}
 //tensor *tensor_cartesian_product(tensor *A, tensor *B);
