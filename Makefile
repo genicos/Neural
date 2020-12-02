@@ -41,6 +41,7 @@ obj/tensor_functions.o: src/tensor/functions.c src/tensor/functions.h src/tensor
 
 clean:
 	rm -f D_file
+	rm -f TENSOR_TEST_SAVE
 	rm -f obj/*
 	rm -f bin/*
 

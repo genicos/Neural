@@ -87,7 +87,7 @@ void tensor_print(tensor *t, char* printf_element_tag){
   for(FORM_LENGTH b = 0; b < t->form_length; b++){
     putchar('{');
   }
-  
+   
   char *datum_string = (char *)calloc(7,1);
   sprintf(datum_string, " %%%s,",printf_element_tag);
   
@@ -127,6 +127,9 @@ void tensor_print(tensor *t, char* printf_element_tag){
 
 
 bool tensor_equal(tensor *A, tensor *B){
+  if(A == B)
+    return true;
+  
   if(!A || !B)
     return false;
   

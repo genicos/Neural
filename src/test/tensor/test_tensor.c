@@ -5,22 +5,255 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-
+#include <dirent.h>
+#include <string.h>
 
 int main(){
   
+  //Creating 4 pairs of identical tensors, to test tensor_equal
+
   FORM_LENGTH  E_1a_form_length = 2;
   FORM_ELEMENT E_1a_form[2]     = {2,2};
   ELEMENT      E_1a_data[4]     = {1,2,3,4};
   tensor      *E_1a             = tensor_create(2, E_1a_form);
   E_1a->data = E_1a_data;
+
+  FORM_LENGTH  E_1b_form_length = 2;
+  FORM_ELEMENT E_1b_form[2]     = {2,2};
+  ELEMENT      E_1b_data[4]     = {1,2,3,4};
+  tensor      *E_1b             = tensor_create(2, E_1b_form);
+  E_1b->data = E_1b_data;
+
+
+  FORM_LENGTH  E_2a_form_length = 3;
+  FORM_ELEMENT E_2a_form[3]     = {2,1,2};
+  ELEMENT      E_2a_data[4]     = {88,20,6.5,4};
+  tensor      *E_2a             = tensor_create(3, E_2a_form);
+  E_2a->data = E_2a_data;
   
+  FORM_LENGTH  E_2b_form_length = 3;
+  FORM_ELEMENT E_2b_form[3]     = {2,1,2};
+  ELEMENT      E_2b_data[4]     = {88,20,6.5,4};
+  tensor      *E_2b             = tensor_create(3, E_2b_form);
+  E_2b->data = E_2b_data;
+
+
+  FORM_LENGTH  E_3a_form_length = 3;
+  FORM_ELEMENT E_3a_form[3]     = {3,4,2};
+  ELEMENT      E_3a_data[24]    = 
+    {-3,4,43,9,0.5,-9,55.3,89.2,-54.2,7,12,-39,90,0.043,65.3,83,-48.3,30,4,-2,3.3,55,-4,6.7};
+  tensor      *E_3a             = tensor_create(3, E_3a_form);
+  E_3a->data = E_3a_data;
+
+  FORM_LENGTH  E_3b_form_length = 3;
+  FORM_ELEMENT E_3b_form[3]     = {3,4,2};
+  ELEMENT      E_3b_data[24]    = 
+    {-3,4,43,9,0.5,-9,55.3,89.2,-54.2,7,12,-39,90,0.043,65.3,83,-48.3,30,4,-2,3.3,55,-4,6.7};
+  tensor      *E_3b             = tensor_create(3, E_3b_form);
+  E_3b->data = E_3b_data;
+
+
+  FORM_LENGTH  E_4a_form_length = 1;
+  FORM_ELEMENT E_4a_form[1]     = {6};
+  ELEMENT      E_4a_data[6]     = {8,-39,9.9,0,82,3.2};
+  tensor      *E_4a             = tensor_create(1, E_4a_form);
+  E_4a->data = E_4a_data;
+
+  FORM_LENGTH  E_4b_form_length = 1;
+  FORM_ELEMENT E_4b_form[1]     = {6};
+  ELEMENT      E_4b_data[6]     = {8,-39,9.9,0,82,3.2};
+  tensor      *E_4b             = tensor_create(1, E_4b_form);
+  E_4b->data = E_4b_data;
   
+
+  //Comparing equal pairs
+  bool E1 = tensor_equal(E_1a,E_1b);
+  bool E2 = tensor_equal(E_2a,E_2b);
+  bool E3 = tensor_equal(E_3a,E_3b);
+  bool E4 = tensor_equal(E_4a,E_4b);
   
+  if(!E1 || !E2 || !E3 || !E4){
+    printf("tensor_equal failed to call equal tensors equal ! ! ! ! ! !");
+    printf("FAIL\n");
+    return 1;
+  }
+  
+  //Altering data of b sides of pairs, so that pairs are no longer equal
+  E_1b->data[0]++;
+  E_2b->data[0]++;
+  E_3b->data[0]++;
+  E_4b->data[0]++;
+  
+  bool NE1 = tensor_equal(E_1a,E_1b);
+  bool NE2 = tensor_equal(E_2a,E_2b);
+  bool NE3 = tensor_equal(E_3a,E_3b);
+  bool NE4 = tensor_equal(E_4a,E_4b);
+  
+  if(NE1 || NE2 || NE3 || NE4){
+    printf("tensor_equal failed to call unequal tensors unequal ! ! ! ! ! !\n");
+    printf("FAIL\n");
+    return 1;
+  }
+  
+  if(!tensor_equal(NULL,NULL) || tensor_equal(E_1a, NULL) || tensor_equal(NULL, E_1a)){
+    printf("tensor_equal failed to account for NULL pointers ! ! ! ! ! ! !\n");
+    printf("FAIL\n");
+    return 1;
+  }
   
   tensor_delete(E_1a);
+  tensor_delete(E_1b);
+  tensor_delete(E_2a);
+  tensor_delete(E_2b);
+  tensor_delete(E_3a);
+  tensor_delete(E_3b);
+  tensor_delete(E_4a);
+  tensor_delete(E_4b);
+  
+  printf("tensor_equal passed.\n");
+
+
+  //Saving and recovering a tensor  
+  
+  FORM_LENGTH  IO_form_length = 3;
+  FORM_ELEMENT IO_form[3]     = {2,2,2};
+  tensor      *IO             = tensor_create(IO_form_length, IO_form);
+  ELEMENT      IO_data[8]     = {23.23,45.2,123.5,87.3,3.67,87.3,65.25,34.66};
+  IO->data                    = IO_data;
+  
+  if(!tensor_save("TENSOR_TEST_SAVE",IO)){
+    printf("tensor_save failed ! ! ! ! ! ! ! ! ! ! ! !\n");
+    printf("FAIL\n");
+    return 2;
+  }
+  
+  tensor *IO_recovered = tensor_read("TENSOR_TEST_SAVE");
+  
+  if(!tensor_equal(IO,IO_recovered)){
+    printf("tensor_save or tensor_read failed, recovered tensor is altered ! ! ! ! ! !\n");
+    printf("FAIL\n");
+    return 1;
+  }
+  
+  tensor_delete(IO);
+  tensor_delete(IO_recovered);
+ 
+  printf("tensor_save and tensor_read passed\n");
+  
+  
+
+  FORM_ELEMENT T_form[2]     = {4,16};
+  tensor      *T             = tensor_create(2, T_form);
+  ELEMENT      T_data[64]     =
+  {1,0,0,0,2,0,0,0,3,0,0,0,4,0,0,0,
+   0,1,0,0,0,2,0,0,0,3,0,0,0,4,0,0,
+   0,0,1,0,0,0,2,0,0,0,3,0,0,0,4,0,
+   0,0,0,1,0,0,0,2,0,0,0,3,0,0,0,4};
+  T->data                    = T_data;
+  
+  //tensor_save("src/test/tensor/OUT/3/AD_d2",T);
+  tensor_print(T, "f"); 
+  tensor_delete(T);
+  
+  //testing every function 
+  
+  char *IN_path  = "src/test/tensor/IN";
+  char *OUT_path = "src/test/tensor/OUT";
+  char buffer[256];
+  struct dirent *dir;
+   
+  DIR *OUT = opendir(OUT_path);
+  if(!OUT){
+    printf("Missing directory neccessary for testing: src/test/tensor/OUT ! ! ! ! ! ! ! !\n");
+    printf("FAIL\n");
+    return 1;
+  }
+
+  DIR *IN = opendir(IN_path);
+  if(!IN){
+    printf("Missing directory neccessary for testing: src/test/tensor/IN ! ! ! ! ! ! ! !\n");
+    printf("FAIL\n");
+    return 1;
+  }
+  
+  
+  while((dir = readdir(OUT)) != NULL){ //Finding directories with function output examples
     
+    if(dir->d_type == DT_DIR && dir->d_name[0] != '.'){
+      
+      uint64_t func_num = atoi(dir->d_name);
+      
+      snprintf(buffer, sizeof(buffer), "%s/%s", OUT_path, dir->d_name);//loading full path into buffer
+      printf("RR %s\n", buffer);
+      
+      DIR *func = opendir(buffer);
+      if(!func){
+        printf("Failed to find directory that should exist, test_tensor is at fault ! ! ! ! ! !\n");
+        printf("FAIL\n");
+        return 1;
+      }
+      
+      char buffer_2[256];
+      
+      while((dir = readdir(func)) != NULL){ //Looping through given output examples, trying to replicate them
+        if(dir->d_type == DT_REG){
+          printf("  %s \n", dir->d_name);
+
+           
+          snprintf(buffer_2, sizeof(buffer_2),"%s/%c", IN_path, dir->d_name[0]);
+          tensor *arg_1 = tensor_read(buffer_2);
+          printf(" buffer_2 %s\n", buffer_2);
+
+          snprintf(buffer_2, sizeof(buffer_2),"%s/%c", IN_path, dir->d_name[1]);
+          tensor *arg_2 = tensor_read(buffer_2);
+          printf(" buffer_2 %s\n", buffer_2);
+
+          printf(" buffer %s\n", buffer); 
+          snprintf(buffer_2, sizeof(buffer_2),"%s/%s", buffer, dir->d_name);
+          tensor *ans = tensor_read(buffer_2);
+          printf(" buffer_2 %s\n", buffer_2);
+          
+           
+          if(!(ans && arg_1 && arg_2)){
+            printf("Failed to read example tensors, test_tensor is at fault ! ! ! ! !\n");
+            printf("FAIL\n");
+            return 1;
+          }
+          
+          
+          tensor *my_ans = tensor_function_table[func_num]->create(arg_1, arg_2);
+         
+          if(dir->d_name[2] == '_'){ //partial derivative test
+            
+            //tensor *my_partial = tensor_cartesian_product(my_ans, 
+          }else{
+            tensor_function_table[func_num]->f(my_ans,arg_1,arg_2);
+            
+            if(!tensor_equal(ans,my_ans)){  
+              printf("Failed on function %lu, example %s\n", func_num, buffer_2);
+              printf("Program tensor:\n");
+              tensor_print(my_ans, "f");
+              printf("Ground truth:\n");
+              tensor_print(ans, "f");
+
+              return 1;
+            }
+          }
+          tensor_delete(my_ans);
+          
+          tensor_delete(ans);
+          tensor_delete(arg_1);
+          tensor_delete(arg_2);
+        }
+      }
+      closedir(func);
+    }
+  }
+  closedir(OUT);
+  closedir(IN);
+  
+  
+  
   //printf("GOOG %d %d\n", tensor_function_table[0]->pairwise_to_first, FUNCTION_CT);
   
   printf("#################### TENSOR TEST ####################\n\n");
