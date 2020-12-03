@@ -204,9 +204,9 @@ tensor* tensor_full_d_1(tensor *C, tensor *A, tensor *B){
 
 tensor* tensor_full_d_2(tensor *C, tensor *A, tensor *B){
   
-  for(DATA_LENGTH i = 0; i < C->form[0]; i++){
-    for(DATA_LENGTH j = 0; j < A->data_length; j++){
-      C->data[i*C->form[0] + j*C->form[0] + i] = A->data[j];
+  for(DATA_LENGTH i = 0; i < A->data_length; i++){
+    for(DATA_LENGTH j = 0; j < C->form[0]; j++){
+      C->data[j*C->form[1] + j + i*C->form[0]] = A->data[i];
     }
   }
 
