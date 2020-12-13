@@ -18,6 +18,8 @@ typedef struct tensor_function{
 
 tensor *tensor_cartesian_product(tensor *A, tensor *B);
 
+tensor *tensor_chain_rule(tensor *AB, tensor *BC);
+
 #define FUNCTION_CT 4
 
 extern const tensor_function *tensor_function_table[FUNCTION_CT];

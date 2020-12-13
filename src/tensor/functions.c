@@ -1,5 +1,5 @@
 #include "functions.h"
-
+//#include <stdio.h>
 
 const tensor_function add = {
   
@@ -73,7 +73,31 @@ tensor* tensor_cartesian_product(tensor *A, tensor *B){
   return C;
 }
 
-
+tensor* tensor_chain_rule(tensor *AB, tensor *BC){
+  if(!AB || !BC){
+    return NULL;
+  }
+  FORM_ELEMENT AC_form[2] = {AB->form[0], BC->form[1]};
+  
+  tensor *AC = tensor_create(2, AC_form);
+  tensor_create_data(AC);
+  
+  if(!AC){
+    return NULL;
+  }
+  
+  for(FORM_ELEMENT a = 0; a < AC->form[0]; a++){
+    for(FORM_ELEMENT b = 0; b < AB->form[1]; b++){
+      for(FORM_ELEMENT c = 0; c < BC->form[1]; c++){
+        AC->data[a*AC->form[1] + c] +=
+          AB->data[a*AB->form[1] + b] *
+          BC->data[b*BC->form[1] + c];
+      }
+    }
+  }
+  
+  return AC;
+}
 
 
 

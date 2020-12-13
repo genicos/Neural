@@ -75,7 +75,7 @@ int main(){
   bool E4 = tensor_equal(E_4a,E_4b);
   
   if(!E1 || !E2 || !E3 || !E4){
-    printf("tensor_equal failed to call equal tensors equal ! ! ! ! ! !");
+    printf("tensor_equal failed to call equal tensors equal ! ! ! ! ! !\n");
     printf("FAIL\n");
     return 1;
   }
@@ -147,10 +147,10 @@ int main(){
   FORM_ELEMENT T_form[2]     = {4,4};
   tensor      *T             = tensor_create(2, T_form);
   ELEMENT      T_data[16]     =
-  {4,0,0,0,3,0,0,0,2,0,0,0,1,0,0,0};
+  {90,100,110,120,202,228,254,280,314,356,398,440,426,484,542,600};
   T->data                    = T_data;
   
-  //tensor_save("src/test/tensor/OUT/2/BC_d2",T);
+  tensor_save("src/test/tensor/OUT/c/DD",T);
   tensor_print(T, "f"); 
   tensor_delete(T);
   */
@@ -179,10 +179,12 @@ int main(){
   
   
   while((dir = readdir(OUT)) != NULL){ //Finding directories with function output examples
+
     
-    if(dir->d_type == DT_DIR && dir->d_name[0] != '.'){
+    if(dir->d_type == DT_DIR && dir->d_name[0] != '.'){ //Ensuring files are not dot directories
       
-      uint64_t func_num = atoi(dir->d_name);
+      uint64_t func_num = atoi(dir->d_name);   //Functions are either numbered, or special
+      char special_func = dir->d_name[0];      //
       
       snprintf(buffer, sizeof(buffer), "%s/%s", OUT_path, dir->d_name);//loading full path into buffer
       
@@ -217,11 +219,28 @@ int main(){
           
           
           tensor *my_ans = tensor_function_table[func_num]->create(arg_1, arg_2);
-         
-          if(dir->d_name[2] == '_'){       //partial derivative test
+          
+          if(special_func == 'c'){                 //chain rule test
+            
+            tensor *chain = tensor_chain_rule(arg_1, arg_2);
+            
+            if(!tensor_equal(ans, chain)){
+              printf("Failed on chain rule, example %s\n ! ! ! ! ! ! ! ! !\n", buffer_2);
+              printf("Program tensor:\n");
+              tensor_print(chain, "f");
+              printf("Ground truth:\n");
+              tensor_print(ans, "f");
+              return 1;
+            }
+            
+            
+            tensor_delete(chain);
+            
+          }else if(dir->d_name[2] == '_'){       //partial derivative test
+            
             tensor *my_partial;
             
-            if(dir->d_name[4] == '1'){                                            //In terms of arg 1
+            if(dir->d_name[4] == '1'){                                          //In terms of arg 1
               my_partial = tensor_cartesian_product(my_ans, arg_1);
               tensor_function_table[func_num]->f_d_1(my_partial, arg_1, arg_2);
             }else{                                                              //In terms of arg 2
@@ -230,7 +249,7 @@ int main(){
             } 
             
             if(!tensor_equal(ans,my_partial)){  
-              printf("Failed on function %lu, example %s\n ! ! ! ! ! ! ! ! !", func_num, buffer_2);
+              printf("Failed on function %lu, example %s\n ! ! ! ! ! ! ! ! !\n", func_num, buffer_2);
               printf("Program tensor:\n");
               tensor_print(my_partial, "f");
               printf("Ground truth:\n");
@@ -244,7 +263,7 @@ int main(){
             tensor_function_table[func_num]->f(my_ans,arg_1,arg_2);
             
             if(!tensor_equal(ans,my_ans)){  
-              printf("Failed on function %lu, example %s\n ! ! ! ! ! ! ! ! !", func_num, buffer_2);
+              printf("Failed on function %lu, example %s\n ! ! ! ! ! ! ! ! !\n", func_num, buffer_2);
               printf("Program tensor:\n");
               tensor_print(my_ans, "f");
               printf("Ground truth:\n");
@@ -260,7 +279,12 @@ int main(){
         }
       }
       
-      printf("Function %lu passed.\n", func_num);
+      if(special_func == 'c'){
+        printf("Chain rule passed.\n");
+      }else{
+        printf("Function %lu passed.\n", func_num);
+      }
+      
       closedir(func);
     }
   }
