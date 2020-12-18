@@ -30,9 +30,15 @@ typedef struct node{
 } node;
 
 //no cycles may exists in the network
+//Only leaf nodes may have more that one parent
+//network is responsible for node array, but not for nodes
 typedef struct network{
   NODES_LENGTH nodes_length;
   node** nodes;
+  
+  NODES_LENGTH error; //usually is a scalar, ie has a form of {1}
+  tensor** derivatives; //The partial derivatives of error with respect to
+    //the other nodes, calculated as needed. 
 } network;
 
 bool save_network(network *w, char *file_name);

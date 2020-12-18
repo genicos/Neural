@@ -117,3 +117,30 @@ pderivative_tree *partial_derivative(network *w, NODES_LENGTH derivative_of, NOD
   
   return conjoin_trees(from_parent_1, from_parent_2);
 }
+
+
+
+bool propogate_error(network *w, NODES_LENGTH *prameters){
+  
+  node *error;
+  
+  if(!(error = w->nodes[w->error])){
+    return false;
+  }
+  
+  node *parent_1, *parent_2;
+  
+  if((parent_1 = w->nodes[error->parent_1]) != error){
+    
+  }
+
+  if((parent_2 = w->nodes[error->parent_2]) != error){
+  
+  }
+
+  return false;
+}
+
+bool back_propogate(network *w, NODES_LENGTH *parameters, node *curr, tensor *derv){
+  return false;
+}

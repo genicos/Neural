@@ -28,4 +28,11 @@ pderivative_tree *conjoin_trees(pderivative_tree *of_parent_1, pderivative_tree 
 
 pderivative_tree *partial_derivative(network *w, NODES_LENGTH derivative_of, NODES_LENGTH with_respect_to, NODES_LENGTH curr, NODES_LENGTH depth);
 
+
+
+
+bool propogate_error(network *w, NODES_LENGTH *parameters);
+
+bool back_propogate(network *w, NODES_LENGTH *parameters, node *curr, tensor *derv);
+
 #endif

@@ -18,7 +18,7 @@ node *node_create(tensor *t, FUNCTION function, NODES_LENGTH parent_1, NODES_LEN
   node *n = (node *)malloc(sizeof(node));
   if(!n){
     return NULL;
-  }
+  } 
   
   n->t = t;
   n->tensor_responsibility = false;
@@ -41,6 +41,7 @@ node *node_create(tensor *t, FUNCTION function, NODES_LENGTH parent_1, NODES_LEN
 void network_delete(network *w){
   if(w){
     free(w->nodes);
+    free(w->derivatives);
   }
   free(w);
 }
@@ -58,6 +59,11 @@ network *network_create(NODES_LENGTH nodes_length, node **nodes){
   if(nodes_length){
     w->nodes = (node **) malloc(nodes_length * sizeof(node *));
     if(!w->nodes){
+      return NULL;
+    }
+    
+    w->derivatives = (tensor **)calloc(nodes_length, sizeof(tensor *));
+    if(!w->derivatives){
       return NULL;
     }
     
