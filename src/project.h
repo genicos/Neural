@@ -19,4 +19,3 @@ maxof(t) returns the maximum value of an int type t
 
 #define typecode(t) (uint8_t)(isfloat(t) + (issigned(t) << 1) + (sizeof(t) << 2))
 
-#define size(t) sizeof(t)/sizeof(t*)

@@ -36,7 +36,7 @@ typedef struct network{
   NODES_LENGTH nodes_length;
   node** nodes;
   
-  NODES_LENGTH error; //usually is a scalar, ie has a form of {1}
+  node* error; //usually is a scalar, ie has a form of {1}
   tensor** derivatives; //The partial derivatives of error with respect to
     //the other nodes, calculated as needed. 
 } network;

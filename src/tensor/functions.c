@@ -99,6 +99,30 @@ tensor* tensor_chain_rule(tensor *AB, tensor *BC){
   return AC;
 }
 
+tensor *tensor_zero(FORM_LENGTH form_length, FORM_ELEMENT *form){
+  tensor *ans = tensor_create(form_length, form);
+  tensor_create_data(ans);
+  
+  return ans;
+}
+
+tensor *tensor_identity(FORM_ELEMENT s){
+  
+  FORM_ELEMENT form[2] = {s,s};  //A matrix
+  
+  tensor *ans = tensor_zero(2, form);  //zero matrix
+  if(!ans)
+    return NULL;
+
+  for(FORM_ELEMENT i = 0; i < s; i++){  //with 1's on main diagonal
+    ans->data[i*s + i] = 1;
+  }
+  
+  return ans;
+}
+
+
+
 
 
 tensor* tensor_add(tensor *C, tensor *A, tensor *B){

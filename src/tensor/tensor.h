@@ -89,9 +89,11 @@ bool    tensor_save(char *file_name, tensor *t);
 tensor *tensor_read(char *file_name);
 
 
-
+//Creates a tensor without data
 tensor* tensor_create(FORM_LENGTH form_length, FORM_ELEMENT *form);
 
+//Allocates memory for tensor data
+//memory is initialized to zero
 ELEMENT* tensor_create_data(tensor *t);
 
 void tensor_delete(tensor *t);

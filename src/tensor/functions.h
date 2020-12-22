@@ -16,15 +16,32 @@ typedef struct tensor_function{
 
 } tensor_function;
 
+//must create a tensor with this to calculate partial derivatives
 tensor *tensor_cartesian_product(tensor *A, tensor *B);
 
+//Inputs:
+// AB: Partial derivative of A with respect to B
+// BC: Partial derivative of B with respect to C
+//Returns:
+// Partial derivative of A with respect to C
 tensor *tensor_chain_rule(tensor *AB, tensor *BC);
+
+//Creates all zero tensor
+tensor *tensor_zero(FORM_LENGTH form_length, FORM_ELEMENT *form);
+
+//Creates an Identity matrix, 
+// a tensor with form {s,s}
+// which is filled with 0's
+// except for the main diagonal, which is full of 1's
+tensor *tensor_identity(FORM_ELEMENT s);
 
 #define FUNCTION_CT 4
 
 extern const tensor_function *tensor_function_table[FUNCTION_CT];
 
 
+
+//i should change C A B
 
 
 tensor *tensor_add    (tensor *C, tensor *A, tensor *B);

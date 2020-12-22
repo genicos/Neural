@@ -67,6 +67,8 @@ int main(){
   tensor      *E_4b             = tensor_create(1, E_4b_form);
   E_4b->data = E_4b_data;
   
+  
+
 
   //Comparing equal pairs
   bool E1 = tensor_equal(E_1a,E_1b);
