@@ -35,9 +35,9 @@ bool back_propogate(network *w, NODES_LENGTH parameter_length, NODES_LENGTH *par
     tensor_function_table[curr->function]->f_d_1(given_derv, parent_1->t, parent_2->t); 
     
     tensor *next_derv = tensor_chain_rule(derv, given_derv);
-    tensor_delete(derv);
     tensor_delete(given_derv);
     if(!next_derv){
+      tensor_delete(derv);
       return false;
     }
     
@@ -59,9 +59,9 @@ bool back_propogate(network *w, NODES_LENGTH parameter_length, NODES_LENGTH *par
     tensor_function_table[curr->function]->f_d_2(given_derv, parent_1->t, parent_2->t); 
     
     tensor *next_derv = tensor_chain_rule(derv, given_derv);
-    tensor_delete(derv);
     tensor_delete(given_derv);
     if(!next_derv){
+      tensor_delete(derv);
       return false;
     }
     

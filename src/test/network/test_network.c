@@ -23,7 +23,7 @@ int main(){
     return 1;
   }
   
-  ELEMENT shared_data[4] = {2,3,4,5};
+  ELEMENT shared_data[4] = {3,4,5,6};
 
   A_tensor->data = shared_data;
   B_tensor->data = shared_data;
@@ -81,7 +81,7 @@ int main(){
   Z->error = 4;
   node_solve(Z,Z->error);
   
-  //propogate_error(Z, 3, params);
+  propogate_error(Z, 3, params);
   for(int i = 0; i < 3; i++){
     printf("Node %d\n", params[i]);
     tensor_print(Z->derivatives[params[i]] , "f");
