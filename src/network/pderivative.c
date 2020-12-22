@@ -5,14 +5,15 @@
 //derv is derivative of error with respect to parent
 bool node_propogate(network *w, NODES_LENGTH parameters_length, NODES_LENGTH *parameters, node *curr, node *parent, tensor *derv){
   
-    for(NODES_LENGTH i = 0; i < parameters_length; i++){ //Checking if parent is a parameter
-      if(parent == w->nodes[parameters[i]]){             //
-        tensor_add(w->derivatives[parameters[i]], w->derivatives[parameters[i]], derv); //Adding to derivative
-        return true;
-      }
+  for(NODES_LENGTH i = 0; i < parameters_length; i++){ //Checking if parent is a parameter
+    if(parent == w->nodes[parameters[i]]){             //
+      tensor_add(w->derivatives[parameters[i]], w->derivatives[parameters[i]], derv); //Adding to derivative
+      tensor_delete(derv);
+      return true;
     }
+  }
     
-    return back_propogate(w, parameters_length, parameters, parent, derv);
+  return back_propogate(w, parameters_length, parameters, parent, derv);
 }
 
 
@@ -26,18 +27,22 @@ bool back_propogate(network *w, NODES_LENGTH parameter_length, NODES_LENGTH *par
     
     tensor *given_derv = tensor_cartesian_product(curr->t, parent_1->t);
     if(!given_derv){
+      tensor_delete(derv);
       return false;
     }
     
     //calculating partial derivative
     tensor_function_table[curr->function]->f_d_1(given_derv, parent_1->t, parent_2->t); 
     
-    tensor *next_derv;
-    if(!(next_derv = tensor_chain_rule(derv, given_derv)) ){
+    tensor *next_derv = tensor_chain_rule(derv, given_derv);
+    tensor_delete(derv);
+    tensor_delete(given_derv);
+    if(!next_derv){
       return false;
     }
     
     if(!node_propogate(w, parameter_length, parameters, curr, parent_1, next_derv)){
+      tensor_delete(next_derv);
       return false;
     } 
   }
@@ -46,22 +51,27 @@ bool back_propogate(network *w, NODES_LENGTH parameter_length, NODES_LENGTH *par
     
     tensor *given_derv = tensor_cartesian_product(curr->t, parent_2->t);
     if(!given_derv){
+      tensor_delete(derv);
       return false;
     }
     
     //calculating partial derivative
     tensor_function_table[curr->function]->f_d_2(given_derv, parent_1->t, parent_2->t); 
     
-    tensor *next_derv;
-    if(!(next_derv = tensor_chain_rule(derv, given_derv)) ){
+    tensor *next_derv = tensor_chain_rule(derv, given_derv);
+    tensor_delete(derv);
+    tensor_delete(given_derv);
+    if(!next_derv){
       return false;
     }
     
     if(!node_propogate(w, parameter_length, parameters, curr, parent_2, next_derv)){
+      tensor_delete(next_derv);
       return false;
     }
   }
-
+  
+  tensor_delete(derv);
   return true;
 }
 
@@ -73,7 +83,7 @@ bool propogate_error(network *w, NODES_LENGTH parameters_length, NODES_LENGTH *p
   }
 
   node *error;  
-  if(!(error = w->error)){ //Ensuring that error node exists
+  if(w->error >= w->nodes_length || !(error = w->nodes[w->error])){ //Ensuring that error node exists
     return false;
   }
   

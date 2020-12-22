@@ -5,12 +5,7 @@ void node_delete(node *n){
   if(n->tensor_responsibility){
     tensor_delete(n->t);
   }
-  if(n->pderivative_1_responsibility){
-    tensor_delete(n->pderivative_1);
-  }
-  if(n->pderivative_2_responsibility){
-    tensor_delete(n->pderivative_2);
-  }
+  
   free(n);
 }
 
@@ -22,12 +17,6 @@ node *node_create(tensor *t, FUNCTION function, NODES_LENGTH parent_1, NODES_LEN
   
   n->t = t;
   n->tensor_responsibility = false;
-
-  n->pderivative_1 = NULL;
-  n->pderivative_1_responsibility = false;
-
-  n->pderivative_2 = NULL;
-  n->pderivative_2_responsibility = false;
   
   n->function = function;
 
@@ -41,6 +30,9 @@ node *node_create(tensor *t, FUNCTION function, NODES_LENGTH parent_1, NODES_LEN
 void network_delete(network *w){
   if(w){
     free(w->nodes);
+    for(NODES_LENGTH i = 0; i < w->nodes_length; i++){
+      tensor_delete(w->derivatives[i]);
+    }
     free(w->derivatives);
   }
   free(w);
@@ -127,17 +119,3 @@ bool node_solve(network *w, NODES_LENGTH n){
 }
 
 
-
-
-
-tensor *node_partial_derivative(network *w, NODES_LENGTH n, NODES_LENGTH a){
-  if(!w || !w->nodes){
-    return NULL;
-  }
-  
-  if(!node_solve(w, n)){
-    return NULL;
-  }
-  //this is gonna be complicated
-  return NULL;
-}

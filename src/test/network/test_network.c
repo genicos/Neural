@@ -31,12 +31,12 @@ int main(){
 
   printf("Creating nodes A B D\n");
   
-  node *A = node_create(A_tensor, 0,0,0);
-  node *B = node_create(B_tensor, 0,1,0);
-  node *D = node_create(D_tensor, 0,3,0);
+  node *A = node_create(A_tensor, 0,  0,0);
+  node *B = node_create(B_tensor, 0,  1,0);
+  node *D = node_create(D_tensor, 0,  3,0);
 
-  node *C = node_create(NULL, 0, 0, 1);
-  node *E = node_create(NULL, 2, 2, 3);
+  node *C = node_create(NULL, 0,  0,1);
+  node *E = node_create(NULL, 2,  2,3);
  
 
   if(!A || !B || !C || !D || !E){
@@ -76,7 +76,18 @@ int main(){
   }
   
   printf("\nTesting partial derivatives, by calculating partial derivatives of E with respect to A,B,D \n\n"); 
-
+  
+  NODES_LENGTH params[3] = {0,1,3};
+  Z->error = 4;
+  node_solve(Z,Z->error);
+  
+  //propogate_error(Z, 3, params);
+  for(int i = 0; i < 3; i++){
+    printf("Node %d\n", params[i]);
+    tensor_print(Z->derivatives[params[i]] , "f");
+  }
+   
+    
   network_delete(Z);
   node_delete(E);
   node_delete(D);

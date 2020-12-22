@@ -14,15 +14,10 @@ typedef uint8_t NODES_LENGTH;
 typedef uint8_t FUNCTION;
 
 
+//A leaf node is indicated by a node whose parent_1 is themselves
 typedef struct node{
   tensor *t;
   bool tensor_responsibility;
-  
-  tensor *pderivative_1;
-  bool pderivative_1_responsibility;
-  
-  tensor *pderivative_2;
-  bool pderivative_2_responsibility;
   
   FUNCTION function;
   NODES_LENGTH parent_1;           //parents are indexes in network->nodes
@@ -36,7 +31,7 @@ typedef struct network{
   NODES_LENGTH nodes_length;
   node** nodes;
   
-  node* error; //usually is a scalar, ie has a form of {1}
+  NODES_LENGTH error; //index of error node, usually is a scalar, ie has a form of {1}
   tensor** derivatives; //The partial derivatives of error with respect to
     //the other nodes, calculated as needed. 
 } network;
@@ -59,13 +54,11 @@ void network_delete(network *w);
 network *network_create(NODES_LENGTH nodes_length,node **nodes);
 
 
-//clears the data for all nodes whos parents are not themselves
+//clears the data for all non-leaf nodes
 void network_clean(network *w);
 
 //n is the node to solve:
 bool node_solve(network *w, NODES_LENGTH n);
 
-//returns partial derivative of n with respect to a
-tensor *node_partial_derivative(network *w, NODES_LENGTH n, NODES_LENGTH a);
 
 #endif
