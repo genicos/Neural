@@ -1,1 +1,7 @@
 A C library for Neural Networks
+
+Tests:
+  
+  make valtest_network
+  
+  make valtest_tensor

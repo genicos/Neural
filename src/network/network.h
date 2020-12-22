@@ -32,6 +32,7 @@ typedef struct network{
   node** nodes;
   
   NODES_LENGTH error; //index of error node, usually is a scalar, ie has a form of {1}
+  
   tensor** derivatives; //The partial derivatives of error with respect to
     //the other nodes, calculated as needed. 
 } network;
@@ -41,24 +42,73 @@ bool save_network(network *w, char *file_name);
 network *read_network(char *file_name);
 
 
-//written
+//destructor for node
+//
+// `n: node to be deleted
 void node_delete(node *n);
 
-//written
+//constructor for node
+//
+// `t: tensor held by node. `t may be NULL, in which case the tensor will be calculated
+//     by applying the binary tensor function `function to (`parent_1, `parent_2)
+// `function: binary tensor function which would be applied to (`parent_1,`parent_2) to
+//     result in `t 
+// `parent_1:  first argument passed to `function to give `t, expressed as an index for some networks `nodes
+// `parent_2: second argument passed to `function to give `t, expressed as an index for some networks `nodes
+//
+// `node_create: container for `t, `function, `parent_1, `parent_2
 node *node_create(tensor *t, FUNCTION function, NODES_LENGTH parent_1, NODES_LENGTH parent_2);
 
-//written
+//determines if two nodes are equal
+//
+//Two nodes are equal if:
+//  Their tensors are equal
+//  They have the same `function
+//  They have the same `parent_1 and `parent_2
+// 
+// `n:  first node to be compared
+// `o: second node to be compared
+//
+// `node_equal: true if `n and `o are equal, false if they are not
+bool node_equal(node *n, node *o);
+
+//destructor for network
+//
+// `w: network to be deleted
 void network_delete(network *w);
 
-//written
+//constructor for network
+//
+// `nodes_length: length of `nodes
+// `nodes: array of pointers to nodes of the network
+//
+// `network_create: container for `nodes array, along with an index for the error tensor
+//     and an array of tensors 
 network *network_create(NODES_LENGTH nodes_length,node **nodes);
 
 
-//clears the data for all non-leaf nodes
+//clears the data for the tensors of all non-leaf nodes, and the derivatives array
+//
+// `w: network to be cleaned
 void network_clean(network *w);
 
-//n is the node to solve:
+//calculates a node from a network
+//
+// `w: network containing node
+// `n: index of node in `w->nodes
 bool node_solve(network *w, NODES_LENGTH n);
 
-
+//determines if two networks are equal
+//
+//Two networks are equal if:
+//  They have the same `nodes_length
+//  For each index of `nodes:
+//    the two nodes pointed to are equal
+//  They have the same `error
+//
+// `w:  first network to be compared
+// `x: second network to be compared
+//
+// `network_equal: true if `w and `x are equal, and false if they are not
+bool network_equal(network *w, network *x);
 #endif

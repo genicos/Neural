@@ -26,6 +26,27 @@ node *node_create(tensor *t, FUNCTION function, NODES_LENGTH parent_1, NODES_LEN
   return n;
 }
 
+bool node_equal(node *n, node *o){
+  
+  if(!n || !o)
+    return false;
+  
+  if((n->t == NULL) ^ (o->t == NULL))
+    return false;
+  
+  if(n->t)
+    if(!tensor_equal(n->t, o->t))
+     return false;
+  
+  if(n->function != o->function)
+    return false;
+  
+  if(n->parent_1 != o->parent_1 || n->parent_2 != o->parent_2)
+    return false;
+  
+  return true;
+}
+
 
 void network_delete(network *w){
   if(w){
@@ -69,6 +90,24 @@ network *network_create(NODES_LENGTH nodes_length, node **nodes){
   return w;
 }
 
+bool network_equal(network *w, network *x){
+  
+  if(!w || !x)
+    return false;
+  
+  if(w->nodes_length != x->nodes_length)
+    return false;
+
+  for(NODES_LENGTH i = 0; i < w->nodes_length; i++){
+    if(!node_equal(w->nodes[i], x->nodes[i]))
+      return false;
+  }
+  
+  if(w->error != x->error)
+    return false;
+  
+  return true;
+}
 
 void network_clean(network *w){
   for(NODES_LENGTH i = 0; i < w->nodes_length; i++){
