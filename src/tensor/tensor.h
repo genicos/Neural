@@ -89,6 +89,24 @@ bool    tensor_save(char *file_name, tensor *t);
 tensor *tensor_read(char *file_name);
 
 
+void         newsave_ELEMENT     (uint8_t *buffer, uint64_t *index, ELEMENT datum);
+ELEMENT      newread_ELEMENT     (uint8_t *buffer, uint64_t *index);
+
+void         newsave_FORM_LENGTH (uint8_t *buffer, uint64_t *index, FORM_LENGTH datum);
+FORM_LENGTH  newread_FORM_LENGTH (uint8_t *buffer, uint64_t *index);
+
+void         newsave_FORM_ELEMENT(uint8_t *buffer, uint64_t *index, FORM_ELEMENT datum);
+FORM_ELEMENT newread_FORM_ELEMENT(uint8_t *buffer, uint64_t *index);
+
+void         newsave_DATA_LENGTH (uint8_t *buffer, uint64_t *index, DATA_LENGTH datum);
+DATA_LENGTH  newread_DATA_LENGTH (uint8_t *buffer, uint64_t *index);
+
+
+bool    newtensor_save(char *file_name, tensor *t);
+tensor *newtensor_read(char *file_name);
+
+
+
 //Creates a tensor without data
 tensor* tensor_create(FORM_LENGTH form_length, FORM_ELEMENT *form);
 

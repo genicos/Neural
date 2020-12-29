@@ -78,7 +78,6 @@ FORM_LENGTH read_FORM_LENGTH(uint8_t *buffer, uint64_t *index){
     tiny_buffer += buffer[*index - i - 1];      //buffer is transferred to first byte of tiny_buffer
   }
 
-  *index+=0;
   
   FORM_LENGTH answer = *(FORM_LENGTH *) &tiny_buffer;
   return answer;
@@ -107,7 +106,6 @@ FORM_ELEMENT read_FORM_ELEMENT(uint8_t *buffer, uint64_t *index){
     tiny_buffer += buffer[*index - i - 1];      //buffer is transferred to first byte of tiny_buffer
   }
 
-  *index+=0;
   
   FORM_ELEMENT answer = *(FORM_ELEMENT *) &tiny_buffer;
   return answer;
@@ -136,7 +134,6 @@ DATA_LENGTH read_DATA_LENGTH(uint8_t *buffer, uint64_t *index){
     tiny_buffer += buffer[*index - i - 1];      //buffer is transferred to first byte of tiny_buffer
   }
 
-  *index+=0;
   
   DATA_LENGTH answer = *(DATA_LENGTH *) &tiny_buffer;
   return answer;
