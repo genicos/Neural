@@ -89,21 +89,24 @@ bool    tensor_save(char *file_name, tensor *t);
 tensor *tensor_read(char *file_name);
 
 
-void         newsave_ELEMENT     (uint8_t *buffer, uint64_t *index, ELEMENT datum);
-ELEMENT      newread_ELEMENT     (uint8_t *buffer, uint64_t *index);
+void         newsave_ELEMENT     (FILE *F, ELEMENT datum);
+ELEMENT      newread_ELEMENT     (FILE *F);
 
-void         newsave_FORM_LENGTH (uint8_t *buffer, uint64_t *index, FORM_LENGTH datum);
-FORM_LENGTH  newread_FORM_LENGTH (uint8_t *buffer, uint64_t *index);
+void         newsave_FORM_LENGTH (FILE *F, FORM_LENGTH datum);
+FORM_LENGTH  newread_FORM_LENGTH (FILE *F);
 
-void         newsave_FORM_ELEMENT(uint8_t *buffer, uint64_t *index, FORM_ELEMENT datum);
-FORM_ELEMENT newread_FORM_ELEMENT(uint8_t *buffer, uint64_t *index);
+void         newsave_FORM_ELEMENT(FILE *F, FORM_ELEMENT datum);
+FORM_ELEMENT newread_FORM_ELEMENT(FILE *F);
 
-void         newsave_DATA_LENGTH (uint8_t *buffer, uint64_t *index, DATA_LENGTH datum);
-DATA_LENGTH  newread_DATA_LENGTH (uint8_t *buffer, uint64_t *index);
+void         newsave_DATA_LENGTH (FILE *F, DATA_LENGTH datum);
+DATA_LENGTH  newread_DATA_LENGTH (FILE *F);
 
 
-bool    newtensor_save(char *file_name, tensor *t);
-tensor *newtensor_read(char *file_name);
+
+bool    newtensor_save(char *file_name, tensor *t);  //Creates a file, appends tensor to it, closes file
+bool    newtensor_append(FILE *F, tensor *t);        //Append tensor to file
+tensor *newtensor_extrct(FILE *F);                   //Extract next tensor from file
+tensor *newtensor_read(char *file_name);             //Opens file, extracts tensor, closes file
 
 
 
