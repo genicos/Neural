@@ -4,6 +4,7 @@ maxof(t) returns the maximum value of an int type t
 #include <stdlib.h>
 #include <stdbool.h>
 #include <inttypes.h>
+#include <stdio.h>
 
 #define isfloat(t) ((t)1/2 > 0)
 

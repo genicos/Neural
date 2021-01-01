@@ -104,8 +104,8 @@ DATA_LENGTH  newread_DATA_LENGTH (FILE *F);
 
 
 bool    newtensor_save(char *file_name, tensor *t);  //Creates a file, appends tensor to it, closes file
-bool    newtensor_append(FILE *F, tensor *t);        //Append tensor to file
-tensor *newtensor_extrct(FILE *F);                   //Extract next tensor from file
+bool    tensor_append(FILE *F, tensor *t);        //Append tensor to file
+tensor *tensor_extrct(FILE *F);                   //Extract next tensor from file
 tensor *newtensor_read(char *file_name);             //Opens file, extracts tensor, closes file
 
 

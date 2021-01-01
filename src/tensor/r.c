@@ -27,6 +27,116 @@ double   00100011  35
 */
 
 
+void newsave_ELEMENT(FILE *F, ELEMENT datum){
+  uint64_t buffer = *(uint64_t *)(&datum);
+
+  for(uint8_t i = 0; i < sizeof(ELEMENT); i++){
+    putc(buffer, F);
+    buffer >>= 8;
+  }
+  
+}
+
+ELEMENT newread_ELEMENT(FILE *F){
+  uint64_t datum = 0;
+  
+  int c = 0;
+  
+  for(uint8_t i = 0; i < sizeof(ELEMENT); i++){
+    datum <<= 8;
+    if((c = getc(F)) == EOF)
+      return 0;
+    datum += c;
+  }
+  
+  return *(ELEMENT *)(&datum);
+}
+
+
+void newsave_FORM_LENGTH(FILE *F, FORM_LENGTH datum){
+  uint64_t buffer = *(uint64_t *)(&datum);
+
+  for(uint8_t i = 0; i < sizeof(FORM_LENGTH); i++){
+    putc(buffer, F);
+    buffer >>= 8;
+  }
+  
+}
+
+FORM_LENGTH newread_FORM_LENGTH(FILE *F){
+  uint64_t datum = 0;
+  
+  int c = 0;
+  
+  for(uint8_t i = 0; i < sizeof(FORM_LENGTH); i++){
+    datum <<= 8;
+    if((c = getc(F)) == EOF)
+      return 0;
+    datum += c;
+  }
+  
+  return *(FORM_LENGTH *)(&datum);
+}
+
+
+void newsave_FORM_ELEMENT(FILE *F, FORM_ELEMENT datum){
+  uint64_t buffer = *(uint64_t *)(&datum);
+
+  for(uint8_t i = 0; i < sizeof(FORM_ELEMENT); i++){
+    putc(buffer, F);
+    buffer >>= 8;
+  }
+  
+}
+
+FORM_ELEMENT newread_FORM_ELEMENT(FILE *F){
+  uint64_t datum = 0;
+  
+  int c = 0;
+  
+  for(uint8_t i = 0; i < sizeof(FORM_ELEMENT); i++){
+    datum <<= 8;
+    if((c = getc(F)) == EOF)
+      return 0;
+    datum += c;
+  }
+  
+  return *(FORM_LENGTH *)(&datum);
+}
+
+
+void newsave_DATA_LENGTH(FILE *F, DATA_LENGTH datum){
+  uint64_t buffer = *(uint64_t *)(&datum);
+  
+  for(uint8_t i = 0; i < sizeof(DATA_LENGTH); i++){
+    putc(buffer, F);
+    buffer >>= 8;
+  }
+  
+}
+
+DATA_LENGTH newread_DATA_LENGTH(FILE *F){
+  uint64_t datum = 0;
+  
+  int c = 0;
+  
+  for(uint8_t i = 0; i < sizeof(DATA_LENGTH); i++){
+    datum <<= 8;
+    if((c = getc(F)) == EOF)
+      return 0;
+    datum += c;
+  }
+  
+  return *(DATA_LENGTH *)(&datum);
+}
+
+
+
+
+
+
+
+
 void save_ELEMENT(uint8_t *buffer, uint64_t *index, ELEMENT datum){
   uint64_t tiny_buffer = *(uint64_t *) &datum;  //dereferencing datum to remove type
   
@@ -67,6 +177,7 @@ void save_FORM_LENGTH(uint8_t *buffer, uint64_t *index, FORM_LENGTH datum){
 
   *index+=sizeof(FORM_LENGTH);
 }
+
 
 FORM_LENGTH read_FORM_LENGTH(uint8_t *buffer, uint64_t *index){
   uint64_t tiny_buffer = 0; 
@@ -244,5 +355,109 @@ tensor *tensor_read(char *file_name){
   free(buffer);
   
   
+  return t;
+}
+
+
+
+bool newtensor_save(char *file_name, tensor *t){
+  if(!file_name || !t)
+    return false;
+  
+  FILE *F = fopen(file_name, "w");
+  if(!F)
+    return false;
+  
+  putc(typecode(ELEMENT),      F);
+  putc(typecode(FORM_LENGTH),  F);
+  putc(typecode(FORM_ELEMENT), F);
+  putc(typecode(DATA_LENGTH),  F);
+
+  if(!tensor_append(F, t))
+    return false;
+  
+  fclose(F);
+  
+  return true;
+}
+
+bool tensor_append(FILE *F, tensor *t){
+  if(!F || !t)
+    return false;
+  
+  newsave_FORM_LENGTH(F, t->form_length);
+  
+  for(FORM_LENGTH i = 0; i < t->form_length; i++){
+    newsave_FORM_ELEMENT(F, t->form[i]);
+  }
+  
+  for(DATA_LENGTH i = 0; i < t->data_length; i++){
+    newsave_ELEMENT(F, t->data[i]); 
+  }
+  
+  return true;
+}
+
+tensor *tensor_extrct(FILE *F){
+  if(!F)
+    return NULL;
+  
+  FORM_LENGTH form_length = newread_FORM_LENGTH(F);
+  
+  FORM_ELEMENT *form = (FORM_ELEMENT *)malloc(form_length * sizeof(FORM_ELEMENT));
+  if(!form)
+    return NULL;
+  
+  for(FORM_LENGTH i = 0; i < form_length; i++){
+    form[i] = newread_FORM_ELEMENT(F);
+  }
+  
+  tensor *t = tensor_create(form_length, form);
+  free(form);
+  if(!t)
+    return NULL;
+  
+  if(!tensor_create_data(t))
+    return NULL;
+
+  for(DATA_LENGTH i = 0; i < t->data_length; i++){
+    t->data[i] = newread_ELEMENT(F);
+  }
+  
+  return t;
+}
+
+tensor *newtensor_read(char *file_name){
+  if(!file_name)
+    return NULL;
+  
+  FILE *F = fopen(file_name, "r");
+  if(!F)
+    return NULL;
+  
+  bool typematch = true;
+  
+  if(getc(F) != typecode(ELEMENT))
+    typematch = false;
+  if(getc(F) != typecode(FORM_LENGTH))
+    typematch = false;
+  if(getc(F) != typecode(FORM_ELEMENT))
+    typematch = false;
+  if(getc(F) != typecode(DATA_LENGTH))
+    typematch = false;
+  
+  if(!typematch){
+    fclose(F);
+    return NULL;
+  }
+  
+  tensor *t = tensor_extrct(F);
+  
+  fclose(F);
+  
+  if(!t){
+    return NULL;
+  }
+   
   return t;
 }
