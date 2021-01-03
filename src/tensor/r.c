@@ -33,8 +33,7 @@ void save_ELEMENT(FILE *F, ELEMENT datum){
   for(uint8_t i = 0; i < sizeof(ELEMENT); i++){
     putc(buffer, F);
     buffer >>= 8;
-  }
-  
+  } 
 }
 
 ELEMENT read_ELEMENT(FILE *F){
@@ -223,10 +222,6 @@ tensor *tensor_read(char *file_name){
   tensor *t = tensor_extrct(F);
   
   fclose(F);
-  
-  if(!t){
-    return NULL;
-  }
    
   return t;
 }

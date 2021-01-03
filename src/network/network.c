@@ -19,7 +19,7 @@ node *node_create(tensor *t, FUNCTION function, NODES_LENGTH parent_1, NODES_LEN
   n->tensor_responsibility = false;
   
   n->function = function;
-
+  
   n->parent_1 = parent_1;
   n->parent_2 = parent_2; 
   

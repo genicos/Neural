@@ -38,7 +38,21 @@ void         save_DATA_LENGTH (FILE *F, DATA_LENGTH datum);
 DATA_LENGTH  read_DATA_LENGTH (FILE *F);
 
 
-
+//tensor byte representation
+//
+//  typcode is definde in project.h
+//  so() means sizeof()
+// 
+//  bytes                           meaning        representation
+//  -------------------------------------------------------------
+//  1                               ELEMENT        typecode       \
+//  1                               FORM_LENGTH    typecode       |-preamble
+//  1                               FORM_ELEMENT   typecode       |
+//  1                               DATA_LENGTH    typecode       /
+//  so(FORM_LENGTH)                 form_length    FORM_LENGTH
+//  form_length * so(FORM_ELEMENT)  form           contiguous array of FORM_ELEMENT
+//  data_length * so(ELEMENT)       data           contiguous array of ELEMENT
+//
 bool    tensor_save(char *file_name, tensor *t);  //Creates a file, appends tensor to it, closes file
 bool    tensor_append(FILE *F, tensor *t);        //Append tensor to file
 tensor *tensor_extrct(FILE *F);                   //Extract next tensor from file

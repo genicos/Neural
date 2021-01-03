@@ -13,7 +13,6 @@
 typedef uint8_t NODES_LENGTH;
 typedef uint8_t FUNCTION;
 
-
 //A leaf node is indicated by a node whose parent_1 is themselves
 typedef struct node{
   tensor *t;
@@ -37,9 +36,52 @@ typedef struct network{
     //the other nodes, calculated as needed. 
 } network;
 
-bool save_network(network *w, char *file_name);
 
-network *read_network(char *file_name);
+
+
+
+void         save_NODES_LENGTH(FILE *F, NODES_LENGTH datum);
+NODES_LENGTH read_NODES_LENGTH(FILE *F);
+
+void         save_FUNCTION    (FILE *F, FUNCTION datum);
+FUNCTION     read_FUNCTION    (FILE *F);
+
+
+
+
+//network byte representation
+//
+//  typecode is defined in project.h
+//  so() means sizeof()
+//
+//  bytes              meaning        representation
+//  ------------------------------------------------
+//  1                  NODES_LENGTH   typecode        \
+//  1                  FUNCTION       typecode        |
+//  1                  ELEMENT        typecode        |--preamble
+//  1                  FORM_LENGTH    typecode        |
+//  1                  FORM_ELEMENT   typecode        |
+//  1                  DATA_LENGTH    typecode        /
+//  so(NODES_LENGTH)   nodes_length   NODES_LENGTH
+//  so(NODES_LENGTH)   error          NODES_LENGTH
+//  indeterminate      nodes          nodes_length # of node representations
+//  
+//
+//  node byte representation
+//  
+//  bytes              meaning        representation
+//  ------------------------------------------------
+//  1                  tensor exists  0 for false, 1 for true
+//  so(FUNCTION)       function       FUNCTION
+//  so(NODES_LENGTH)   parent_1       NODES_LENGTH
+//  so(NODES_LENGTH)   parent_2       NODES_LENGTH
+//  indeterminate      tensor         tensor representation without preamble
+//
+bool     network_save(char *file_name, network *w);  //Creates file, appends network to it, closes file
+bool     network_append(FILE *F, network *w);        //Append network to file
+network *network_extrct(FILE *F);                    //Extract next network from file
+network *network_read(char *file_name);              //Opens file, extracts network, closes file
+
 
 
 //destructor for node
