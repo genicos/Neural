@@ -43,10 +43,9 @@ ELEMENT newread_ELEMENT(FILE *F){
   int c = 0;
   
   for(uint8_t i = 0; i < sizeof(ELEMENT); i++){
-    datum <<= 8;
     if((c = getc(F)) == EOF)
       return 0;
-    datum += c;
+    datum += (c << 8*i);
   }
   
   return *(ELEMENT *)(&datum);
@@ -69,10 +68,9 @@ FORM_LENGTH newread_FORM_LENGTH(FILE *F){
   int c = 0;
   
   for(uint8_t i = 0; i < sizeof(FORM_LENGTH); i++){
-    datum <<= 8;
     if((c = getc(F)) == EOF)
       return 0;
-    datum += c;
+    datum += (c << 8*i);
   }
   
   return *(FORM_LENGTH *)(&datum);
@@ -95,13 +93,12 @@ FORM_ELEMENT newread_FORM_ELEMENT(FILE *F){
   int c = 0;
   
   for(uint8_t i = 0; i < sizeof(FORM_ELEMENT); i++){
-    datum <<= 8;
     if((c = getc(F)) == EOF)
       return 0;
-    datum += c;
+    datum += (c << 8*i);
   }
   
-  return *(FORM_LENGTH *)(&datum);
+  return *(FORM_ELEMENT *)(&datum);
 }
 
 
@@ -121,10 +118,9 @@ DATA_LENGTH newread_DATA_LENGTH(FILE *F){
   int c = 0;
   
   for(uint8_t i = 0; i < sizeof(DATA_LENGTH); i++){
-    datum <<= 8;
     if((c = getc(F)) == EOF)
       return 0;
-    datum += c;
+    datum += (c << 8*i);
   }
   
   return *(DATA_LENGTH *)(&datum);
@@ -411,7 +407,7 @@ tensor *tensor_extrct(FILE *F){
   for(FORM_LENGTH i = 0; i < form_length; i++){
     form[i] = newread_FORM_ELEMENT(F);
   }
-  
+
   tensor *t = tensor_create(form_length, form);
   free(form);
   if(!t)
