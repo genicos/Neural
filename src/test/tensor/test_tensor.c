@@ -125,15 +125,14 @@ int main(){
   ELEMENT      IO_data[8]     = {23.23,45.2,123.5,87.3,3.67,87.3,65.25,34.66};
   IO->data                    = IO_data;
   
-  tensor_save("TENSOR_TEST_SAVE2", IO);
   
-  if(!newtensor_save("TENSOR_TEST_SAVE",IO)){
+  if(!tensor_save("TENSOR_TEST_SAVE",IO)){
     printf("tensor_save failed ! ! ! ! ! ! ! ! ! ! ! !\n");
     printf("FAIL\n");
     return 2;
   }
   
-  tensor *IO_recovered = newtensor_read("TENSOR_TEST_SAVE");
+  tensor *IO_recovered = tensor_read("TENSOR_TEST_SAVE");
   
   if(!tensor_equal(IO,IO_recovered)){
     printf("tensor_save or tensor_read failed, recovered tensor is altered ! ! ! ! ! !\n");

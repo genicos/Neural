@@ -1,51 +1,3 @@
-/* TENSOR
- *  A TENSOR is a structure of data.
- *
- *  A TENSOR is a container of ELEMENTS, with some orderings between the ELEMENTS.
- *  A TENSOR has a natural number, N, of orderings.
- *  The FORM of a tensor, is an ordered array of natural numbers greater than zero
- *    which determine the orderings between the elements
- *  The FORM has a length of N, each index of the FORM corrosponds to an ordering
- *    of the TENSOR
- *  The number J at index K of the FORM indicates the number of distinct values
- *    the ELEMENTS can have under ordering K within the TENSOR. 
- *    FORM[K] = J
- *  The COORDINATES of an ELEMENT are a list of N indicies, where the Kth index
- *    has FORM[K] number of possibilities, every ELEMENT in tensor has a unique
- *    COORDINATE. 
- *    C[M] is the ELEMENT in TENSOR C with COORDINATE M
- *
- *  
- *  Consider the following notation:
- *    X / O  This means that there is some order between X and O, denoted by /
- *    O \ X  This statement is equivalent to the above
- *    X /4 O There may be different orderings existing between X and O, so they
- *             are distinguished by a natural number
- *    X /-a O = X \a O 
- *  
- *  The following is true of the orderings of the elements of a TENSOR:
- *    a and b are integers
- *    
- *    (X /a O) ^ (O /a H) -> (X /a H)
- *      This is to say that all the orderings of a TENSOR are transative.
- *
- *    (X /a X)
- *      This is to say that all the orderings of a TENSOR are reflexive.
- *      This and the last fact imply that the orderings are partial orderings.
- *
- *    (a != b) ^ E(c): (X !=c O) -> !((X /a O) -> (X /b O))
- *      This is to say that knowledge of one ordering is independent of knowledge
- *      of another. Unless it is the same ordering. If b = -a, then two distict
- *      ELEMENTS cannot share the same directionality under both orderings, that is
- *      to say that no ordering is symmetric
- *
- *    E(X) ^ E(O) ^ E(a) ^ E(b) -> E(I): (X /a I) ^ (O /a I) ^ (X /b I) ^ (O /b I)
- *      This means that for every pair of ELEMENTS, and for every pair of orderings
- *      there exists an ELEMENT that is ordered beyond them in both orderings.
- *
- *    (X /a O) v (O /a X) 
- *      This means that every pair of ELEMENTS has some ordering under every ordering
- */
 #ifndef NEURAL_C_CODE_TENSOR_H
 #define NEURAL_C_CODE_TENSOR_H
 
@@ -72,41 +24,25 @@ typedef struct tensor{
 
 
 
-void         save_ELEMENT     (uint8_t *buffer, uint64_t *index, ELEMENT datum);
-ELEMENT      read_ELEMENT     (uint8_t *buffer, uint64_t *index);
 
-void         save_FORM_LENGTH (uint8_t *buffer, uint64_t *index, FORM_LENGTH datum);
-FORM_LENGTH  read_FORM_LENGTH (uint8_t *buffer, uint64_t *index);
+void         save_ELEMENT     (FILE *F, ELEMENT datum);
+ELEMENT      read_ELEMENT     (FILE *F);
 
-void         save_FORM_ELEMENT(uint8_t *buffer, uint64_t *index, FORM_ELEMENT datum);
-FORM_ELEMENT read_FORM_ELEMENT(uint8_t *buffer, uint64_t *index);
+void         save_FORM_LENGTH (FILE *F, FORM_LENGTH datum);
+FORM_LENGTH  read_FORM_LENGTH (FILE *F);
 
-void         save_DATA_LENGTH (uint8_t *buffer, uint64_t *index, DATA_LENGTH datum);
-DATA_LENGTH  read_DATA_LENGTH (uint8_t *buffer, uint64_t *index);
+void         save_FORM_ELEMENT(FILE *F, FORM_ELEMENT datum);
+FORM_ELEMENT read_FORM_ELEMENT(FILE *F);
 
-
-bool    tensor_save(char *file_name, tensor *t);
-tensor *tensor_read(char *file_name);
-
-
-void         newsave_ELEMENT     (FILE *F, ELEMENT datum);
-ELEMENT      newread_ELEMENT     (FILE *F);
-
-void         newsave_FORM_LENGTH (FILE *F, FORM_LENGTH datum);
-FORM_LENGTH  newread_FORM_LENGTH (FILE *F);
-
-void         newsave_FORM_ELEMENT(FILE *F, FORM_ELEMENT datum);
-FORM_ELEMENT newread_FORM_ELEMENT(FILE *F);
-
-void         newsave_DATA_LENGTH (FILE *F, DATA_LENGTH datum);
-DATA_LENGTH  newread_DATA_LENGTH (FILE *F);
+void         save_DATA_LENGTH (FILE *F, DATA_LENGTH datum);
+DATA_LENGTH  read_DATA_LENGTH (FILE *F);
 
 
 
-bool    newtensor_save(char *file_name, tensor *t);  //Creates a file, appends tensor to it, closes file
+bool    tensor_save(char *file_name, tensor *t);  //Creates a file, appends tensor to it, closes file
 bool    tensor_append(FILE *F, tensor *t);        //Append tensor to file
 tensor *tensor_extrct(FILE *F);                   //Extract next tensor from file
-tensor *newtensor_read(char *file_name);             //Opens file, extracts tensor, closes file
+tensor *tensor_read(char *file_name);             //Opens file, extracts tensor, closes file
 
 
 
