@@ -1,11 +1,11 @@
 CC = clang
-CFLAGS =  -Wpedantic -Wextra -Wall -Werror -Wno-unused-parameter -Wno-unused-variable 
+CFLAGS =  -Wpedantic -Wextra -Wall -Werror -Wno-unused-parameter -Wno-unused-variable
 
 .phony: clean valtest_tensor valtest_network
 
 
 test_network: obj/test_network.o  obj/network.o obj/network_r.o obj/network_pderivative.o obj/tensor.o obj/tensor_r.o obj/tensor_functions.o
-	$(CC) $^ -o bin/test_network
+	$(CC) $(CFLAGS) $^ -o bin/test_network
 
 
 obj/test_network.o: src/test/network/test_network.c

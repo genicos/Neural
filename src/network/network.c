@@ -88,7 +88,9 @@ network *network_create(NODES_LENGTH nodes_length, node **nodes){
   }
   
   w->nodes_length = nodes_length;
-
+  
+  w->error = 0;
+  
   return w;
 }
 
@@ -98,18 +100,18 @@ bool network_equal(network *w, network *x){
  
   if(!w || !x)
     return false;
-  
+  printf("AA\n"); 
   if(w->nodes_length != x->nodes_length)
     return false;
-
+  printf("BB\n");
   for(NODES_LENGTH i = 0; i < w->nodes_length; i++){
     if(!node_equal(w->nodes[i], x->nodes[i]))
       return false;
   }
-  
+  printf("CC\n");
   if(w->error != x->error)
     return false;
-  
+  printf("D\n");
   return true;
 }
 

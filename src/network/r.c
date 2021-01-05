@@ -65,18 +65,20 @@ bool network_save(char *file_name, network *w){
   putc(typecode(FORM_LENGTH), F);
   putc(typecode(FORM_ELEMENT), F);
   putc(typecode(DATA_LENGTH), F);
-  
+  printf("DOOO\n");
   if(!network_append(F, w))
     return false;
-  
+  printf("NNNNNNN\n");
   fclose(F);
    
-  return false;
+  printf("OOOOOOOO\n");
+  return true;
 }
 
 bool network_append(FILE *F, network *w){
   if(!F || !w)
     return false;
+  printf("JJJJJJ\n");
    
   save_NODES_LENGTH(F, w->nodes_length);
   save_NODES_LENGTH(F, w->error);
@@ -94,7 +96,7 @@ bool network_append(FILE *F, network *w){
         return false;
     }
   }
-  
+  printf("AAAAAAA\n");
   return true;
 }
 
@@ -134,18 +136,19 @@ network *network_extrct(FILE *F){
     return NULL;
   
   w->error = error;
-  
+ 
+  printf("SSSSSSSSSSSSSS\n");
   return w;
 }
 
 network *network_read(char *file_name){
   if(!file_name)
     return NULL;
-  
+  printf("A\n");
   FILE *F = fopen(file_name, "r");
   if(!F)
     return NULL;
-  
+  printf("B\n");
   bool typematch = true;
   
   if(getc(F) != typecode(NODES_LENGTH))
@@ -165,7 +168,7 @@ network *network_read(char *file_name){
     fclose(F);
     return NULL;
   }
-
+  printf("C\n");
   network *w = network_extrct(F);
   
   fclose(F);
