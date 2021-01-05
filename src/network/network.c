@@ -27,6 +27,8 @@ node *node_create(tensor *t, FUNCTION function, NODES_LENGTH parent_1, NODES_LEN
 }
 
 bool node_equal(node *n, node *o){
+  if(n == o)
+    return true;
   
   if(!n || !o)
     return false;
@@ -91,7 +93,9 @@ network *network_create(NODES_LENGTH nodes_length, node **nodes){
 }
 
 bool network_equal(network *w, network *x){
-  
+  if(w == x)
+    return true;
+ 
   if(!w || !x)
     return false;
   

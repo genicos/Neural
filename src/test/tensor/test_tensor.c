@@ -88,12 +88,12 @@ int main(){
   E_3b->data[0]++;
   E_4b->data[0]++;
   
-  bool NE1 = tensor_equal(E_1a,E_1b);
-  bool NE2 = tensor_equal(E_2a,E_2b);
-  bool NE3 = tensor_equal(E_3a,E_3b);
-  bool NE4 = tensor_equal(E_4a,E_4b);
+  bool nE1 = tensor_equal(E_1a,E_1b);
+  bool nE2 = tensor_equal(E_2a,E_2b);
+  bool nE3 = tensor_equal(E_3a,E_3b);
+  bool nE4 = tensor_equal(E_4a,E_4b);
   
-  if(NE1 || NE2 || NE3 || NE4){
+  if(nE1 || nE2 || nE3 || nE4){
     printf("tensor_equal failed to call unequal tensors unequal ! ! ! ! ! !\n");
     printf("FAIL\n");
     return 1;
