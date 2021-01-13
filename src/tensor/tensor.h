@@ -4,6 +4,7 @@
 #include "../project.h"
 
 typedef float       ELEMENT;              //The type for the TENSOR ELEMENTS
+// ELEMENT must be float or double
 typedef uint8_t     FORM_LENGTH;          //Size of FORM length type
 //size(FORM_ELEMENT) <= size(DATA_LENGTH), product of all FORM elements is equal to DATA length
 typedef uint32_t    FORM_ELEMENT;         //The type for the FORM ELEMENTS
@@ -40,7 +41,7 @@ DATA_LENGTH  read_DATA_LENGTH (FILE *F);
 
 //tensor byte representation
 //
-//  typcode is definde in project.h
+//  typecode is defined in project.h
 //  so() means sizeof()
 // 
 //  bytes                           meaning        representation

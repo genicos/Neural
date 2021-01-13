@@ -173,7 +173,10 @@ int main(){
   
   
   //Creating the following network, Z
-   
+  //
+  //
+  //      F
+  //      |
   //      E
   //     / \
   //    C   D
@@ -190,13 +193,13 @@ int main(){
     printf("FAIL\n");
     return 1;
   }
-  
+   
   ELEMENT shared_data[4] = {3,4,5,6};
-
+  
   A_tensor->data = shared_data;
   B_tensor->data = shared_data;
   D_tensor->data = shared_data;
-
+  
   
   
   node *A = node_create(A_tensor, 0,  0,0);
@@ -205,16 +208,16 @@ int main(){
 
   node *C = node_create(NULL, 0,  0,1);
   node *E = node_create(NULL, 2,  2,3);
- 
+  node *F = node_create(NULL, 4,  4,0);
 
-  if(!A || !B || !C || !D || !E){
+  if(!A || !B || !C || !D || !E || !F){
     printf("Failed to create nodes\n");
     return 1;
   }
   
-  node *Z_nodes[5] = {A, B, C, D, E};
+  node *Z_nodes[6] = {A, B, C, D, E, F};
 
-  network *Z = network_create(5, Z_nodes);
+  network *Z = network_create(6, Z_nodes);
 
   if(!Z){
     printf("Failed to create network\n");
@@ -236,16 +239,21 @@ int main(){
     return 1;
   }
   
+  network_save("NETWORK_TEST_SAVE2", Z_recovered);
+  
   network_delete(Z_recovered);
-
-
-
-
-
-  if(!node_solve(Z, 4)){
-    printf("Failed to solve node E in Z\n");
+  
+  printf("network_save and network_read passed\n");
+  
+  
+  
+  
+  
+  
+  if(!node_solve(Z, 5)){
+    printf("Failed to solve node F in Z\n");
   }
-  printf("Successfully solved node E in Z\n\n");
+  printf("Successfully solved node F in Z\n\n");
 
   for(int i = 0; i < Z->nodes_length; i++){
     printf("Node %c in Z:\n", 'A' + i);
@@ -263,7 +271,7 @@ int main(){
   printf("\nTesting partial derivatives, by calculating partial derivatives of E with respect to A,B,D \n\n"); 
   
   NODES_LENGTH params[3] = {0,1,3};
-  Z->error = 4;
+  Z->error = 5;
   node_solve(Z,Z->error);
   
   propogate_error(Z, 3, params);
@@ -271,9 +279,26 @@ int main(){
     printf("Node %d\n", params[i]);
     tensor_print(Z->derivatives[params[i]] , "f");
   }
-   
+  
+  printf("\nApplying gradient decent\n");
+  
+  if(!gradient_decent(Z, 1, 0)){
+    printf("GRADIENT DECENT FAILED ! ! ! ! ! ! ! ! ! \n");
+  }
+  
+  printf("Gradient decent has been applied\n");
+  
+  for(int i = 0; i < Z->nodes_length; i++){
+    printf("Node %c in Z:\n", 'A' + i);
+    tensor_print(Z->nodes[i]->t, "f");
+  }
+  
+  
+  /*
+  */ 
     
   network_delete(Z);
+  node_delete(F);
   node_delete(E);
   node_delete(D);
   node_delete(C);

@@ -101,3 +101,49 @@ bool propogate_error(network *w, NODES_LENGTH parameters_length, NODES_LENGTH *p
   
   return back_propogate(w, parameters_length, parameters, error, derv);
 }
+
+
+
+
+
+bool gradient_decent(network *w, double scale, double stochastic){
+  if(!w){
+    return false;
+  }
+  if(w->nodes[w->error]->t->data_length != 1){
+    return false;
+  }
+  
+  double scaling = scale * (1 - stochastic + 2*((double)rand()/RAND_MAX));
+  printf("DED %f\n", scaling);
+  
+  FORM_ELEMENT scalar_form[1] = {1};
+  
+  tensor *scalar = tensor_create(1, scalar_form);
+  if(!scalar)
+    return false;
+  
+  if(!tensor_create_data(scalar))
+    return false;
+  
+  scalar->data[0] = (ELEMENT)scaling;
+  
+  
+  for(NODES_LENGTH i = 0; i < w->nodes_length; i++){
+    if(w->derivatives[i]){
+      tensor *scaled_derivative = tensor_scale_create(w->derivatives[i], scalar);
+      if(!scaled_derivative)
+        return false;
+      
+      tensor_scale(scaled_derivative, w->derivatives[i], scalar);
+      
+      //Adding scaled derivative to parameter
+      tensor_add(w->nodes[i]->t, w->nodes[i]->t, scaled_derivative);
+      tensor_delete(scaled_derivative);
+    }
+  }
+  
+  tensor_delete(scalar);
+   
+  return true;
+}

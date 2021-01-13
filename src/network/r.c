@@ -65,20 +65,21 @@ bool network_save(char *file_name, network *w){
   putc(typecode(FORM_LENGTH), F);
   putc(typecode(FORM_ELEMENT), F);
   putc(typecode(DATA_LENGTH), F);
-  printf("DOOO\n");
-  if(!network_append(F, w))
+ 
+  if(!network_append(F, w)){
+    fclose(F);
     return false;
-  printf("NNNNNNN\n");
-  fclose(F);
-   
-  printf("OOOOOOOO\n");
+  }
+
+  fclose(F); 
+  
   return true;
 }
 
 bool network_append(FILE *F, network *w){
   if(!F || !w)
     return false;
-  printf("JJJJJJ\n");
+
    
   save_NODES_LENGTH(F, w->nodes_length);
   save_NODES_LENGTH(F, w->error);
@@ -96,7 +97,7 @@ bool network_append(FILE *F, network *w){
         return false;
     }
   }
-  printf("AAAAAAA\n");
+
   return true;
 }
 
@@ -121,34 +122,44 @@ network *network_extrct(FILE *F){
 
     if(tensor_present){
       t = tensor_extrct(F);
-      if(!t)
+      if(!t){
+        free(nodes);
         return NULL;
+      }
     }
     
     nodes[n] = node_create(t, function, parent_1, parent_2);
-    if(!nodes[n])
+    if(!nodes[n]){
+      free(nodes);
       return NULL;
+    }
+    
+    if(t)
+      nodes[n]->tensor_responsibility = true;
     
   } 
   
   network *w = network_create(nodes_length, nodes);
-  if(!w)
+  if(!w){
+    free(nodes);
     return NULL;
-  
+  }
+  free(nodes);
+  w->nodes_responsibility = true; 
   w->error = error;
  
-  printf("SSSSSSSSSSSSSS\n");
+
   return w;
 }
 
 network *network_read(char *file_name){
   if(!file_name)
     return NULL;
-  printf("A\n");
+
   FILE *F = fopen(file_name, "r");
   if(!F)
     return NULL;
-  printf("B\n");
+
   bool typematch = true;
   
   if(getc(F) != typecode(NODES_LENGTH))
@@ -168,7 +179,7 @@ network *network_read(char *file_name){
     fclose(F);
     return NULL;
   }
-  printf("C\n");
+
   network *w = network_extrct(F);
   
   fclose(F);

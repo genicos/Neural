@@ -8,4 +8,6 @@ bool propogate_error(network *w, NODES_LENGTH parameter_length, NODES_LENGTH *pa
 
 bool back_propogate(network *w, NODES_LENGTH parameter_length, NODES_LENGTH *parameters, node *curr, tensor *derv);
 
+bool gradient_decent(network *w, double scale, double stochastic);
+
 #endif

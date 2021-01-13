@@ -51,12 +51,24 @@ const tensor_function full = {
   .pairwise_to_second = false,
 };
 
+const tensor_function amass = {
+  
+  .f     = &tensor_amass,
+  .f_d_1 = &tensor_amass_d_1,
+  .f_d_2 = &tensor_amass_d_2,
+  
+  .create = &tensor_amass_create,
+
+  .pairwise_to_first  = false,
+  .pairwise_to_second = false,
+};
 
 const tensor_function *tensor_function_table[FUNCTION_CT] = {
   &add,
   &sub, 
   &scale, 
   &full,
+  &amass,
 };
 
 
@@ -272,3 +284,35 @@ tensor* tensor_full_create(tensor *A, tensor *B){
   return C;
 }
 
+
+
+tensor *tensor_amass(tensor *C, tensor *A, tensor *B){
+  
+  for(DATA_LENGTH i = 0; i < A->data_length; i++){
+    C->data[0] += A->data[i];
+  }
+  
+  return C;
+}
+
+tensor *tensor_amass_d_1(tensor *C, tensor *A, tensor *B){
+  
+  for(DATA_LENGTH i = 0; i < A->data_length; i++){
+    C->data[i] = A->data[i];
+  }
+  
+  return C;
+}
+
+tensor *tensor_amass_d_2(tensor *C, tensor *A, tensor *B){
+  return C;
+}
+
+tensor *tensor_amass_create(tensor *A, tensor *B){
+
+  FORM_ELEMENT scalar_form[1] = {1};
+  tensor *C = tensor_create(1,scalar_form);
+  tensor_create_data(C);
+
+  return C;
+}

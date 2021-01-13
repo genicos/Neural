@@ -140,6 +140,8 @@ int main(){
     return 1;
   }
   
+  tensor_save("TENSOR_TEST_SAVE2", IO_recovered);
+  
   tensor_delete(IO);
   tensor_delete(IO_recovered);
  
@@ -147,16 +149,16 @@ int main(){
   
   
   /*                                      //To add new tests
-  FORM_ELEMENT T_form[2]     = {4,4};
-  tensor      *T             = tensor_create(2, T_form);
-  ELEMENT      T_data[16]     =
-  {90,100,110,120,202,228,254,280,314,356,398,440,426,484,542,600};
+  FORM_ELEMENT T_form[1]     = {1};
+  tensor      *T             = tensor_create(1, T_form);
+  ELEMENT      T_data[1]     =
+  {136};
   T->data                    = T_data;
   
-  tensor_save("src/test/tensor/OUT/c/DD",T);
+  tensor_save("src/test/tensor/OUT/4/DA",T);
   tensor_print(T, "f"); 
-  tensor_delete(T);
-  */
+  tensor_delete(T);*/
+  
 
 
   //testing every function 
@@ -252,7 +254,7 @@ int main(){
             } 
             
             if(!tensor_equal(ans,my_partial)){  
-              printf("Failed on function %lu, example %s\n ! ! ! ! ! ! ! ! !\n", func_num, buffer_2);
+              printf("Failed on derivative of function %lu, example %s\n ! ! ! ! ! ! ! ! !\n", func_num, buffer_2);
               printf("Program tensor:\n");
               tensor_print(my_partial, "f");
               printf("Ground truth:\n");

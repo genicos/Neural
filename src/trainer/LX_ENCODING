@@ -1,0 +1,34 @@
+LX files representations
+LX files are learning example files, they contain a long list of training examples
+Each example consists of a list of tensors, where the last tensor is the expected
+  output, and the ones before it are the inputs
+If there are N inputs, then the first N tensors in the nodes array of a network
+  should correspond with those inputs
+The output corresponds with the root of the network
+
+
+
+LX byte representation
+
+  typecode is defined in project.h
+  so() means sizeof()
+
+  bytes       meaning         representation
+  ----------------------------------------------------------------
+  1           EXAMPLES_COUNT  typecode
+  1           INPUTS_COUNT    typecode
+  1           ELEMENT         typecode
+  1           FORM_LENGTH     typecode
+  1           FORM_ELEMENT    typecode
+  1           DATA_LENGTH     typecode
+  4           examples_count  EXAMPLES_COUNT
+  4           inputs_count    INPUTS_COUNT
+  ??          examples        examples_count # of example representations
+  
+  
+  example representation
+
+  bytes       meaning         representation
+  -------------------------------------------------------------
+  ??          input tensors   inputs_count # of tensor representations without preamble
+  ??          output tensor   tensor representation without preamble    

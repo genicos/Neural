@@ -29,6 +29,7 @@ typedef struct node{
 typedef struct network{
   NODES_LENGTH nodes_length;
   node** nodes;
+  bool nodes_responsibility; //if true, network is responsible for deleting every node
   
   NODES_LENGTH error; //index of error node, usually is a scalar, ie has a form of {1}
   

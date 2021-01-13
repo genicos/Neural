@@ -35,7 +35,7 @@ tensor *tensor_zero(FORM_LENGTH form_length, FORM_ELEMENT *form);
 // except for the main diagonal, which is full of 1's
 tensor *tensor_identity(FORM_ELEMENT s);
 
-#define FUNCTION_CT 4
+#define FUNCTION_CT 5
 
 extern const tensor_function *tensor_function_table[FUNCTION_CT];
 
@@ -82,6 +82,21 @@ tensor *tensor_full_d_1(tensor *C, tensor *A, tensor *B);
 tensor *tensor_full_d_2(tensor *C, tensor *A, tensor *B);
 
 tensor *tensor_full_create        (tensor *A, tensor *B);
+
+
+
+
+
+
+
+
+tensor *tensor_amass    (tensor *C, tensor *A, tensor *B);
+tensor *tensor_amass_d_1(tensor *C, tensor *A, tensor *B);
+tensor *tensor_amass_d_2(tensor *C, tensor *A, tensor *B);
+
+tensor *tensor_amass_create        (tensor *A, tensor *B);
+
+
 
 
 
