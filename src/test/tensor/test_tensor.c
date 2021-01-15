@@ -105,6 +105,15 @@ int main(){
     return 1;
   }
   
+  tensor *copy = tensor_copy(E_1a);
+  if(!tensor_equal(copy, E_1a)){
+    printf("Tensor copy failed ! ! ! ! ! ! ! ! \n");
+    printf("FAIL\n");
+    return 1;
+  }
+  printf("tensor_copy passed.\n");
+  tensor_delete(copy);
+  
   tensor_delete(E_1a);
   tensor_delete(E_1b);
   tensor_delete(E_2a);

@@ -70,6 +70,11 @@ ELEMENT* tensor_create_data(tensor *t);
 
 void tensor_delete(tensor *t);
 
+
+
+//Returns a tensor with the same form, and the same elements
+tensor *tensor_copy(tensor *t);
+
 void tensor_print(tensor *t, char *printf_element_tag);
 
 //returns true if

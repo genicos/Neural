@@ -185,10 +185,8 @@ int main(){
   FORM_ELEMENT shared_form[2] = {2,2};
   
   tensor *A_tensor = tensor_create(2,shared_form);
-  tensor *B_tensor = tensor_create(2,shared_form);
-  tensor *D_tensor = tensor_create(2,shared_form);
   
-  if(!A_tensor || !B_tensor || !D_tensor){
+  if(!A_tensor){
     printf("Failed to create tensors\n");
     printf("FAIL\n");
     return 1;
@@ -197,8 +195,9 @@ int main(){
   ELEMENT shared_data[4] = {3,4,5,6};
   
   A_tensor->data = shared_data;
-  B_tensor->data = shared_data;
-  D_tensor->data = shared_data;
+  
+  tensor *B_tensor = tensor_copy(A_tensor);
+  tensor *D_tensor = tensor_copy(A_tensor);
   
   
   
@@ -287,6 +286,9 @@ int main(){
   }
   
   printf("Gradient decent has been applied\n");
+  
+  network_clean(Z);
+  node_solve(Z, Z->error); //WHy is this doing nothing
   
   for(int i = 0; i < Z->nodes_length; i++){
     printf("Node %c in Z:\n", 'A' + i);

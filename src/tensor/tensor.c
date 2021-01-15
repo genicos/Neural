@@ -126,6 +126,23 @@ void tensor_print(tensor *t, char* printf_element_tag){
 }
 
 
+tensor *tensor_copy(tensor *t){
+  if(!t)
+    return NULL;
+  
+  tensor *copy = tensor_create(t->form_length, t->form);
+  if(!copy)
+    return NULL;
+  
+  tensor_create_data(copy);
+  
+  for(DATA_LENGTH i = 0; i < t->data_length; i++){
+    copy->data[i] = t->data[i];
+  }
+  
+  return copy;
+}
+
 bool tensor_equal(tensor *A, tensor *B){
   if(A == B)
     return true;
