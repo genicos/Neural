@@ -105,7 +105,7 @@ bool propogate_error(network *w, NODES_LENGTH parameters_length, NODES_LENGTH *p
 
 
 
-//Minimizer
+//Minimizes the absolute value of the error
 bool gradient_decent(network *w, double scale, double stochastic){
   if(!w){
     return false;
@@ -114,7 +114,13 @@ bool gradient_decent(network *w, double scale, double stochastic){
     return false;
   }
   
-  double scaling = -scale * (1 + stochastic*(-1 + 2*((double)rand()/RAND_MAX)));
+  double scaling = scale * (1 + stochastic*(-1 + 2*((double)rand()/RAND_MAX)));
+  
+  //this ensures that the procedure minimizes the absolute value of the error
+  if(w->nodes[w->error]->t->data[0] > 0){
+    printf("why not\n");
+    scaling = -scaling;
+  }
   printf("DED %f\n", scaling);
   
   FORM_ELEMENT scalar_form[1] = {1};

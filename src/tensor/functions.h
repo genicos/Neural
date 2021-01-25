@@ -103,4 +103,17 @@ tensor *tensor_amass_create        (tensor *A, tensor *B);
 
 
 
+tensor *tensor_softmax    (tensor *C, tensor *A, tensor *B);
+tensor *tensor_softmax_d_1(tensor *C, tensor *A, tensor *B);
+tensor *tensor_softmax_d_2(tensor *C, tensor *A, tensor *B);
+
+tensor *tensor_softmax_create        (tensor *A, tensor *B);
+
+
+
+
+
+
+
+
 #endif

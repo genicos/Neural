@@ -176,12 +176,13 @@ int main(){
   //
   //
   //      F
-  //      |
-  //      E
+  //      ^
+  //      E     tensor_amass
   //     / \
-  //    C   D
+  //    C *.D   tensor_scale
   //   / \
-  //  A   B  
+  //  A + B     tensor_add 
+  //
   FORM_ELEMENT shared_form[2] = {2,2};
   
   tensor *A_tensor = tensor_create(2,shared_form);
@@ -281,14 +282,26 @@ int main(){
   
   printf("\nApplying gradient decent\n");
   
-  if(!gradient_decent(Z, 1, 0)){
-    printf("GRADIENT DECENT FAILED ! ! ! ! ! ! ! ! ! \n");
+  for(int i = 0; i < 30; i++){ 
+    if(!gradient_decent(Z, 0.002908, 0.01)){   //bad things happen when scale is >=0.01
+      printf("GRADIENT DECENT FAILED ! ! ! ! ! ! ! ! ! \n");
+    }
+    
+    if(i < 4){
+      for(int j = 0; j < 3; j++){
+        tensor_print(Z->derivatives[params[j]], "f");
+      }
+    }
+    
+    printf("           %f\n", Z->nodes[Z->error]->t->data[0]);
+    network_clean(Z);
+    node_solve(Z, Z->error);
+    propogate_error(Z, 3, params);
   }
-  
   printf("Gradient decent has been applied\n");
   
   network_clean(Z);
-  node_solve(Z, Z->error); //WHy is this doing nothing
+  node_solve(Z, Z->error);
   
   for(int i = 0; i < Z->nodes_length; i++){
     printf("Node %c in Z:\n", 'A' + i);

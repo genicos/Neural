@@ -5,7 +5,7 @@ CFLAGS =  -Wpedantic -Wextra -Wall -Werror -Wno-unused-parameter -Wno-unused-var
 
 
 test_network: obj/test_network.o  obj/network.o obj/network_r.o obj/network_pderivative.o obj/tensor.o obj/tensor_r.o obj/tensor_functions.o
-	$(CC) $(CFLAGS) $^ -o bin/test_network
+	$(CC) $(CFLAGS) $^ -o bin/test_network -lm
 
 
 obj/test_network.o: src/test/network/test_network.c
@@ -23,7 +23,7 @@ obj/network_pderivative.o: src/network/pderivative.c src/network/pderivative.h s
 
 
 trainer: obj/trainer.o obj/lx.o obj/lx_r.o obj/tensor.o obj/tensor_r.o
-	$(CC) $^ -o bin/trainer
+	$(CC) $^ -o bin/trainer -lm
 
 obj/trainer.o: src/trainer/trainer.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -37,7 +37,7 @@ obj/lx_r.o: src/trainer/r.c src/trainer/lx.h src/project.h
 
 
 test_tensor:  obj/test_tensor.o obj/tensor.o obj/tensor_r.o obj/tensor_functions.o
-	$(CC) $^ -o bin/test_tensor
+	$(CC) $^ -o bin/test_tensor -lm
 
 
 obj/test_tensor.o: src/test/tensor/test_tensor.c

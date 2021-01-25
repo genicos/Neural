@@ -1,4 +1,5 @@
 #include "functions.h"
+#include <math.h>
 //#include <stdio.h>
 
 const tensor_function add = {
@@ -314,5 +315,52 @@ tensor *tensor_amass_create(tensor *A, tensor *B){
   tensor *C = tensor_create(1,scalar_form);
   tensor_create_data(C);
 
+  return C;
+}
+
+
+
+tensor *tensor_softmax(tensor *C, tensor *A, tensor *B){
+  
+  ELEMENT exponent_sum = 0;
+  
+  for(DATA_LENGTH i = 0; i < A->data_length; i++){
+    exponent_sum += exp(A->data[i]);
+  }
+  
+  for(DATA_LENGTH i = 0; i < A->data_length; i++){
+    C->data[i] = exp(A->data[i])/exponent_sum;
+  }
+  
+  return C;
+}
+
+tensor *tensor_softmax_d1(tensor *C, tensor *A, tensor *B){
+  
+  tensor *ans = tensor_softmax_create(A, B);
+  tensor_softmax(ans, A, B);
+  
+  for(DATA_LENGTH i = 0; i < C->form[0]; i++){
+    for(DATA_LENGTH j = 0; j < C->form[1]; j++){
+      if(i == j){
+        C->data[i*C->form[0] + j] = ans->data[i] * (1 - ans->data[j]);
+      }else{
+        C->data[i*C->form[0] + j] = -ans->data[i] * ans->data[j];
+      }
+    }
+  }
+  
+  return C;
+}
+
+tensor *tensor_softmax_d2(tensor *C, tensor *A, tensor *B){
+  return C;
+}
+
+tensor *tensor_softmax_create(tensor *A, tensor *B){
+  
+  tensor *C = tensor_create(A->form_length, A->form);
+  tensor_create_data(C);
+  
   return C;
 }
