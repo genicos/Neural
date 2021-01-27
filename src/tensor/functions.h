@@ -35,13 +35,14 @@ tensor *tensor_zero(FORM_LENGTH form_length, FORM_ELEMENT *form);
 // except for the main diagonal, which is full of 1's
 tensor *tensor_identity(FORM_ELEMENT s);
 
-#define FUNCTION_CT 5
+#define FUNCTION_CT 6
 
 extern const tensor_function *tensor_function_table[FUNCTION_CT];
 
 
 
 //i should change C A B
+//why should i do that? i dont remember
 
 
 tensor *tensor_add    (tensor *C, tensor *A, tensor *B);

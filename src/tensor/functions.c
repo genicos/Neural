@@ -64,12 +64,25 @@ const tensor_function amass = {
   .pairwise_to_second = false,
 };
 
+const tensor_function softmax = {
+  
+  .f     = &tensor_softmax,
+  .f_d_1 = &tensor_softmax_d_1,
+  .f_d_2 = &tensor_softmax_d_2,
+  
+  .create = &tensor_softmax_create,
+
+  .pairwise_to_first  = false,
+  .pairwise_to_second = false,
+};
+
 const tensor_function *tensor_function_table[FUNCTION_CT] = {
   &add,
   &sub, 
   &scale, 
   &full,
   &amass,
+  &softmax,
 };
 
 
@@ -335,7 +348,7 @@ tensor *tensor_softmax(tensor *C, tensor *A, tensor *B){
   return C;
 }
 
-tensor *tensor_softmax_d1(tensor *C, tensor *A, tensor *B){
+tensor *tensor_softmax_d_1(tensor *C, tensor *A, tensor *B){
   
   tensor *ans = tensor_softmax_create(A, B);
   tensor_softmax(ans, A, B);
@@ -350,10 +363,12 @@ tensor *tensor_softmax_d1(tensor *C, tensor *A, tensor *B){
     }
   }
   
+  tensor_delete(ans);
+  
   return C;
 }
 
-tensor *tensor_softmax_d2(tensor *C, tensor *A, tensor *B){
+tensor *tensor_softmax_d_2(tensor *C, tensor *A, tensor *B){
   return C;
 }
 
