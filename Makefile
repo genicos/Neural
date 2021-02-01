@@ -53,10 +53,26 @@ obj/tensor_functions.o: src/tensor/functions.c src/tensor/functions.h src/tensor
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
+test_io: obj/test_io.o obj/io.o
+	$(CC) $^ -o bin/test_io 
+
+
+obj/test_io.o: src/test/io/test_io.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+obj/io.o: src/io.c src/io.h src/project.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+
 clean:
 	rm -f *_TEST_SAVE*
 	rm -f obj/*
 	rm -f bin/*
+
+valtest_io:
+	make clean
+	make test_io
+	valgrind --leak-check=yes bin/test_io
 
 valtest_tensor:
 	make clean
