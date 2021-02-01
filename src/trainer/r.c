@@ -60,25 +60,31 @@ bool lx_save(char *file_name, lx *x){
   if(!F)
     return false;
   
-  putc(typecode(EXAMPLES_COUNT), F);
-  putc(typecode(INPUTS_COUNT), F);
+  IO *io = io_create(F);
   
-  putc(typecode(ELEMENT), F);
-  putc(typecode(FORM_LENGTH), F);
-  putc(typecode(FORM_ELEMENT), F);
-  putc(typecode(DATA_LENGTH), F);
+  save_1_byte(io, typecode(EXAMPLES_COUNT));
+  save_1_byte(io, typecode(INPUTS_COUNT));
 
+  save_1_byte(io, typecode(ELEMENT));
+  save_1_byte(io, typecode(FORM_LENGTH));
+  save_1_byte(io, typecode(FORM_ELEMENT));
+  save_1_byte(io, typecode(DATA_LENGTH));
+  
+  
   if(!lx_append(F, x)){
+    io_close(F);
     fclose(F);
     return false;
   }
   
+  io_flush(io);
+  io_close(io);
   fclose(F);
   
   return true;
 }
 
-bool lx_append(FILE *F, lx *x){
+bool lx_append(FILE *F, lx *x){// bad... i should start by converting tensor
   if(!F || !x)
     return false;
   

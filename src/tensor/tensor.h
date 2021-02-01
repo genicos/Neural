@@ -2,6 +2,7 @@
 #define NEURAL_C_CODE_TENSOR_H
 
 #include "../project.h"
+#include "../io.h"
 
 typedef float       ELEMENT;              //The type for the TENSOR ELEMENTS
 // ELEMENT must be float or double
@@ -26,17 +27,17 @@ typedef struct tensor{
 
 
 
-void         save_ELEMENT     (FILE *F, ELEMENT datum);
-ELEMENT      read_ELEMENT     (FILE *F);
+void         save_ELEMENT     (IO *io, ELEMENT datum);
+ELEMENT      read_ELEMENT     (IO *io);
 
-void         save_FORM_LENGTH (FILE *F, FORM_LENGTH datum);
-FORM_LENGTH  read_FORM_LENGTH (FILE *F);
+void         save_FORM_LENGTH (IO *io, FORM_LENGTH datum);
+FORM_LENGTH  read_FORM_LENGTH (IO *io);
 
-void         save_FORM_ELEMENT(FILE *F, FORM_ELEMENT datum);
-FORM_ELEMENT read_FORM_ELEMENT(FILE *F);
+void         save_FORM_ELEMENT(IO *io, FORM_ELEMENT datum);
+FORM_ELEMENT read_FORM_ELEMENT(IO *io);
 
-void         save_DATA_LENGTH (FILE *F, DATA_LENGTH datum);
-DATA_LENGTH  read_DATA_LENGTH (FILE *F);
+void         save_DATA_LENGTH (IO *io, DATA_LENGTH datum);
+DATA_LENGTH  read_DATA_LENGTH (IO *io);
 
 
 //tensor byte representation
@@ -55,8 +56,8 @@ DATA_LENGTH  read_DATA_LENGTH (FILE *F);
 //  data_length * so(ELEMENT)       data           contiguous array of ELEMENT
 //
 bool    tensor_save(char *file_name, tensor *t);  //Creates a file, appends tensor to it, closes file
-bool    tensor_append(FILE *F, tensor *t);        //Append tensor to file
-tensor *tensor_extrct(FILE *F);                   //Extract next tensor from file
+bool    tensor_append(IO *io, tensor *t);         //Append tensor to file
+tensor *tensor_extrct(IO *io);                    //Extract next tensor from file
 tensor *tensor_read(char *file_name);             //Opens file, extracts tensor, closes file
 
 

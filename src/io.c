@@ -16,14 +16,6 @@ IO *io_create(FILE *F){
   
   io->end = io->needle = io->buffer;
   
-  //io->end = io->buffer + fread(io->buffer, 1, BLOCK_SIZE, F);
-  /*
-  if( io->end == io->buffer){
-    io_delete(io);
-    return NULL;
-  }*/
-  printf("\nHERE IT BE: io:%p buffer:%p \n", (void *)io, (void *)io->buffer); 
-  
   return io;
 }
 

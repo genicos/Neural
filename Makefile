@@ -36,7 +36,7 @@ obj/lx_r.o: src/trainer/r.c src/trainer/lx.h src/project.h
 
 
 
-test_tensor:  obj/test_tensor.o obj/tensor.o obj/tensor_r.o obj/tensor_functions.o
+test_tensor:  obj/test_tensor.o obj/tensor.o obj/tensor_r.o obj/tensor_functions.o obj/io.o
 	$(CC) $^ -o bin/test_tensor -lm
 
 
@@ -46,7 +46,7 @@ obj/test_tensor.o: src/test/tensor/test_tensor.c
 obj/tensor.o: src/tensor/tensor.c src/tensor/tensor.h src/project.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-obj/tensor_r.o: src/tensor/r.c src/tensor/tensor.h src/project.h
+obj/tensor_r.o: src/tensor/r.c src/tensor/tensor.h src/io.c src/project.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 obj/tensor_functions.o: src/tensor/functions.c src/tensor/functions.h src/tensor/tensor.h src/project.h
