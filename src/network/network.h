@@ -9,6 +9,7 @@
 #include "../tensor/tensor.h"
 #include "../tensor/functions.h"
 #include "../project.h"
+#include "../io.h"
 
 typedef uint8_t NODES_LENGTH;
 typedef uint8_t FUNCTION;
@@ -41,11 +42,11 @@ typedef struct network{
 
 
 
-void         save_NODES_LENGTH(FILE *F, NODES_LENGTH datum);
-NODES_LENGTH read_NODES_LENGTH(FILE *F);
+void         save_NODES_LENGTH(IO *io, NODES_LENGTH datum);
+NODES_LENGTH read_NODES_LENGTH(IO *io);
 
-void         save_FUNCTION    (FILE *F, FUNCTION datum);
-FUNCTION     read_FUNCTION    (FILE *F);
+void         save_FUNCTION    (IO *io, FUNCTION datum);
+FUNCTION     read_FUNCTION    (IO *io);
 
 
 
@@ -79,8 +80,8 @@ FUNCTION     read_FUNCTION    (FILE *F);
 //  indeterminate      tensor         tensor representation without preamble
 //
 bool     network_save(char *file_name, network *w);  //Creates file, appends network to it, closes file
-bool     network_append(FILE *F, network *w);        //Append network to file
-network *network_extrct(FILE *F);                    //Extract next network from file
+bool     network_append(IO *io, network *w);        //Append network to file
+network *network_extrct(IO *io);                    //Extract next network from file
 network *network_read(char *file_name);              //Opens file, extracts network, closes file
 
 

@@ -1,50 +1,84 @@
 #include "network.h"
 
-void save_NODES_LENGTH(FILE *F, NODES_LENGTH datum){
+void save_NODES_LENGTH(IO *io, NODES_LENGTH datum){
   uint64_t buffer = *(uint64_t *)(&datum);
-  
-  for(uint8_t i = 0; i < sizeof(NODES_LENGTH); i++){
-    putc(buffer, F);
-    buffer >>= 8;
+ 
+  switch (sizeof(NODES_LENGTH)){
+    case 1:
+      save_1_byte(io, (uint8_t)buffer);
+    break;
+    case 2:
+      save_2_byte(io, (uint16_t)buffer);
+    break;
+    case 4:
+      save_4_byte(io, (uint32_t)buffer);
+    break;
+    case 8:
+      save_8_byte(io, (uint64_t)buffer);
+    break;
   }
 }
 
-NODES_LENGTH read_NODES_LENGTH(FILE *F){
+NODES_LENGTH read_NODES_LENGTH(IO *io){
   uint64_t datum = 0;
-  
-  int c = 0;
 
-  for(uint8_t i = 0; i < sizeof(NODES_LENGTH); i++){
-    if((c = getc(F)) == EOF)
-      return 0;
-    datum += (c << 8*i);
-  } 
+  switch (sizeof(NODES_LENGTH)){
+    case 1:
+      datum = read_1_byte(io);
+    break;
+    case 2:
+      datum = read_2_byte(io);
+    break;
+    case 4:
+      datum = read_4_byte(io);
+    break;
+    case 8:
+      datum = read_8_byte(io);
+    break;
+  }
 
-  return *(NODES_LENGTH *)(&datum); 
+  return *(NODES_LENGTH *)(&datum);
 }
 
 
-void save_FUNCTION(FILE *F, FUNCTION datum){
+void save_FUNCTION(IO *io, FUNCTION datum){
   uint64_t buffer = *(uint64_t *)(&datum);
-  
-  for(uint8_t i = 0; i < sizeof(FUNCTION); i++){
-    putc(buffer, F);
-    buffer >>= 8;
+ 
+  switch (sizeof(FUNCTION)){
+    case 1:
+      save_1_byte(io, (uint8_t)buffer);
+    break;
+    case 2:
+      save_2_byte(io, (uint16_t)buffer);
+    break;
+    case 4:
+      save_4_byte(io, (uint32_t)buffer);
+    break;
+    case 8:
+      save_8_byte(io, (uint64_t)buffer);
+    break;
   }
 }
 
-FUNCTION read_FUNCTION(FILE *F){
+FUNCTION read_FUNCTION(IO *io){
   uint64_t datum = 0;
-  
-  int c = 0;
 
-  for(uint8_t i = 0; i < sizeof(FUNCTION); i++){
-    if((c = getc(F)) == EOF)
-      return 0;
-    datum += (c << 8*i);
-  } 
+  switch (sizeof(FUNCTION)){
+    case 1:
+      datum = read_1_byte(io);
+    break;
+    case 2:
+      datum = read_2_byte(io);
+    break;
+    case 4:
+      datum = read_4_byte(io);
+    break;
+    case 8:
+      datum = read_8_byte(io);
+    break;
+  }
 
-  return *(FUNCTION *)(&datum); 
+  return *(FUNCTION *)(&datum);
 }
 
 
@@ -58,42 +92,48 @@ bool network_save(char *file_name, network *w){
   if(!F)
     return false;
   
-  putc(typecode(NODES_LENGTH), F);
-  putc(typecode(FUNCTION), F);
+  IO *io = io_create(F);
   
-  putc(typecode(ELEMENT), F);
-  putc(typecode(FORM_LENGTH), F);
-  putc(typecode(FORM_ELEMENT), F);
-  putc(typecode(DATA_LENGTH), F);
- 
-  if(!network_append(F, w)){
+  save_1_byte(io, typecode(NODES_LENGTH));
+  save_1_byte(io, typecode(FUNCTION));
+  
+  save_1_byte(io, typecode(ELEMENT));
+  save_1_byte(io, typecode(FORM_LENGTH));
+  save_1_byte(io, typecode(FORM_ELEMENT));
+  save_1_byte(io, typecode(DATA_LENGTH));
+  
+  
+  if(!network_append(io, w)){
+    io_delete(io);
     fclose(F);
     return false;
   }
-
+  
+  io_flush(io);
+  io_delete(io);
   fclose(F); 
   
   return true;
 }
 
-bool network_append(FILE *F, network *w){
-  if(!F || !w)
+bool network_append(IO *io, network *w){
+  if(!io || !w)
     return false;
 
    
-  save_NODES_LENGTH(F, w->nodes_length);
-  save_NODES_LENGTH(F, w->error);
+  save_NODES_LENGTH(io, w->nodes_length);
+  save_NODES_LENGTH(io, w->error);
   
   for(NODES_LENGTH n = 0; n < w->nodes_length; n++){
     node *curr = w->nodes[n];
     
-    putc((int)((curr->t) != NULL), F);
-    save_FUNCTION(F, curr->function);
-    save_NODES_LENGTH(F, curr->parent_1);
-    save_NODES_LENGTH(F, curr->parent_2);
+    save_1_byte(io, (uint8_t)((curr->t) != NULL));
+    save_FUNCTION(io, curr->function);
+    save_NODES_LENGTH(io, curr->parent_1);
+    save_NODES_LENGTH(io, curr->parent_2);
     
     if(curr->t){
-      if(!tensor_append(F, curr->t))
+      if(!tensor_append(io, curr->t))
         return false;
     }
   }
@@ -102,26 +142,26 @@ bool network_append(FILE *F, network *w){
 }
 
 
-network *network_extrct(FILE *F){
-  if(!F)
+network *network_extrct(IO *io){
+  if(!io)
     return NULL;
   
-  NODES_LENGTH nodes_length = read_NODES_LENGTH(F);
-  NODES_LENGTH error        = read_NODES_LENGTH(F);
+  NODES_LENGTH nodes_length = read_NODES_LENGTH(io);
+  NODES_LENGTH error        = read_NODES_LENGTH(io);
   
   node **nodes = (node **)calloc(nodes_length, sizeof(node *));  
   
   for(NODES_LENGTH n = 0; n < nodes_length; n++){
-    bool tensor_present = (getc(F) == 1);
+    bool tensor_present = (read_1_byte(io) == 1);
     
-    FUNCTION function = read_FUNCTION(F);
-    NODES_LENGTH parent_1 = read_NODES_LENGTH(F);
-    NODES_LENGTH parent_2 = read_NODES_LENGTH(F);
+    FUNCTION function = read_FUNCTION(io);
+    NODES_LENGTH parent_1 = read_NODES_LENGTH(io);
+    NODES_LENGTH parent_2 = read_NODES_LENGTH(io);
     
     tensor *t = NULL;
 
     if(tensor_present){
-      t = tensor_extrct(F);
+      t = tensor_extrct(io);
       if(!t){
         free(nodes);
         return NULL;
@@ -159,29 +199,33 @@ network *network_read(char *file_name){
   FILE *F = fopen(file_name, "r");
   if(!F)
     return NULL;
-
+  
+  IO *io = io_create(F); 
+  
   bool typematch = true;
   
-  if(getc(F) != typecode(NODES_LENGTH))
+  if(read_1_byte(io) != typecode(NODES_LENGTH))
     typematch = false;
-  if(getc(F) != typecode(FUNCTION))
+  if(read_1_byte(io) != typecode(FUNCTION))
     typematch = false;
-  if(getc(F) != typecode(ELEMENT))
+  if(read_1_byte(io) != typecode(ELEMENT))
     typematch = false;
-  if(getc(F) != typecode(FORM_LENGTH))
+  if(read_1_byte(io) != typecode(FORM_LENGTH))
     typematch = false;
-  if(getc(F) != typecode(FORM_ELEMENT))
+  if(read_1_byte(io) != typecode(FORM_ELEMENT))
     typematch = false;
-  if(getc(F) != typecode(DATA_LENGTH))
+  if(read_1_byte(io) != typecode(DATA_LENGTH))
     typematch = false;
   
   if(!typematch){
+    io_delete(io);
     fclose(F);
     return NULL;
   }
 
-  network *w = network_extrct(F);
+  network *w = network_extrct(io);
   
+  io_delete(io);
   fclose(F);
    
   return w;

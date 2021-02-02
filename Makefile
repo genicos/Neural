@@ -4,7 +4,7 @@ CFLAGS =  -Wpedantic -Wextra -Wall -Werror -Wno-unused-parameter -Wno-unused-var
 .phony: clean valtest_tensor valtest_network
 
 
-test_network: obj/test_network.o  obj/network.o obj/network_r.o obj/network_pderivative.o obj/tensor.o obj/tensor_r.o obj/tensor_functions.o
+test_network: obj/test_network.o  obj/network.o obj/network_r.o obj/network_pderivative.o obj/tensor.o obj/tensor_r.o obj/tensor_functions.o obj/io.o
 	$(CC) $(CFLAGS) $^ -o bin/test_network -lm
 
 
@@ -14,7 +14,7 @@ obj/test_network.o: src/test/network/test_network.c
 obj/network.o: src/network/network.c src/network/network.h src/project.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-obj/network_r.o: src/network/r.c src/network/network.h src/project.h
+obj/network_r.o: src/network/r.c src/network/network.h src/io.c src/project.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 obj/network_pderivative.o: src/network/pderivative.c src/network/pderivative.h src/network/network.h src/project.h
