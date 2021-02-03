@@ -1,53 +1,85 @@
 #include "lx.h"
 
-void save_EXAMPLES_COUNT(FILE *F, EXAMPLES_COUNT datum){
+ void save_EXAMPLES_COUNT(IO *io, EXAMPLES_COUNT datum){
   uint64_t buffer = *(uint64_t *)(&datum);
   
-  for(uint8_t i = 0; i < sizeof(EXAMPLES_COUNT); i++){
-    putc(buffer, F);
-    buffer >>= 8;
+  switch (sizeof(EXAMPLES_COUNT)){
+    case 1:
+      save_1_byte(io, (uint8_t)buffer);
+    break;
+    case 2:
+      save_2_byte(io, (uint16_t)buffer);
+    break;
+    case 4:
+      save_4_byte(io, (uint32_t)buffer);
+    break;
+    case 8:
+      save_8_byte(io, (uint64_t)buffer);
+    break;
   }
 }
 
-EXAMPLES_COUNT read_EXAMPLES_COUNT(FILE *F){
+EXAMPLES_COUNT read_EXAMPLES_COUNT(IO *io){
   uint64_t datum = 0;
   
-  int c = 0;
-  
-  for(uint8_t i = 0; i < sizeof(EXAMPLES_COUNT); i++){
-    if((c = getc(F)) == EOF)
-      return 0;
-    datum += (c << 8*i);
+  switch (sizeof(EXAMPLES_COUNT)){
+    case 1:
+      datum = read_1_byte(io);
+    break;
+    case 2:
+      datum = read_2_byte(io);
+    break;
+    case 4:
+      datum = read_4_byte(io);
+    break;
+    case 8:
+      datum = read_8_byte(io);
+    break;
   }
-  
+ 
   return *(EXAMPLES_COUNT *)(&datum);
 }
 
 
-void save_INPUTS_COUNT(FILE *F, INPUTS_COUNT datum){
+void save_INPUTS_COUNT(IO *io, INPUTS_COUNT datum){
   uint64_t buffer = *(uint64_t *)(&datum);
   
-  for(uint8_t i = 0; i < sizeof(INPUTS_COUNT); i++){
-    putc(buffer, F);
-    buffer >>= 8;
+  switch (sizeof(INPUTS_COUNT)){
+    case 1:
+      save_1_byte(io, (uint8_t)buffer);
+    break;
+    case 2:
+      save_2_byte(io, (uint16_t)buffer);
+    break;
+    case 4:
+      save_4_byte(io, (uint32_t)buffer);
+    break;
+    case 8:
+      save_8_byte(io, (uint64_t)buffer);
+    break;
   }
 }
 
-INPUTS_COUNT read_INPUTS_COUNT(FILE *F){
+INPUTS_COUNT read_INPUTS_COUNT(IO *io){
   uint64_t datum = 0;
   
-  int c = 0;
-  
-  for(uint8_t i = 0; i < sizeof(INPUTS_COUNT); i++){
-    if((c = getc(F)) == EOF)
-      return 0;
-    datum += (c << 8*i);
+  switch (sizeof(INPUTS_COUNT)){
+    case 1:
+      datum = read_1_byte(io);
+    break;
+    case 2:
+      datum = read_2_byte(io);
+    break;
+    case 4:
+      datum = read_4_byte(io);
+    break;
+    case 8:
+      datum = read_8_byte(io);
+    break;
   }
-  
+ 
   return *(INPUTS_COUNT *)(&datum);
 }
-
-
 
 
 
@@ -71,44 +103,44 @@ bool lx_save(char *file_name, lx *x){
   save_1_byte(io, typecode(DATA_LENGTH));
   
   
-  if(!lx_append(F, x)){
-    io_close(F);
+  if(!lx_append(io, x)){
+    io_delete(io);
     fclose(F);
     return false;
   }
   
   io_flush(io);
-  io_close(io);
+  io_delete(io);
   fclose(F);
   
   return true;
 }
 
-bool lx_append(FILE *F, lx *x){// bad... i should start by converting tensor
-  if(!F || !x)
+bool lx_append(IO *io, lx *x){
+  if(!io || !x)
     return false;
   
-  save_EXAMPLES_COUNT(F, x->examples_count);
-  save_INPUTS_COUNT(F, x->inputs_count);
+  save_EXAMPLES_COUNT(io, x->examples_count);
+  save_INPUTS_COUNT(io, x->inputs_count);
     
   for(EXAMPLES_COUNT i = 0; i < x->examples_count*(x->inputs_count +1); i++){
-    if(!tensor_append(F, x->examples[i]))
+    if(!tensor_append(io, x->examples[i]))
       return false;
   }
   
   return true;
 }
 
-lx *lx_extrct(FILE *F){
-  if(!F)
+lx *lx_extrct(IO *io){
+  if(!io)
     return NULL;
   
   lx *x = (lx *)calloc(1, sizeof(lx));
   if(!x)
     return NULL;
   
-  x->examples_count = read_EXAMPLES_COUNT(F);
-  x->inputs_count   = read_INPUTS_COUNT(F);
+  x->examples_count = read_EXAMPLES_COUNT(io);
+  x->inputs_count   = read_INPUTS_COUNT(io);
   
   x->examples = (tensor **)calloc(x->examples_count*(x->inputs_count +1), sizeof(tensor *));
   if(!x->examples){
@@ -119,7 +151,7 @@ lx *lx_extrct(FILE *F){
   x->examples_responsibility = true;
   
   for(EXAMPLES_COUNT i = 0; i < x->examples_count*(x->inputs_count +1); i++){
-    tensor *t = tensor_extrct(F);
+    tensor *t = tensor_extrct(io);
     if(!t){
       lx_delete(x);
       return NULL;
@@ -138,28 +170,36 @@ lx *lx_read(char *file_name){
   if(!F)
     return NULL;
   
-  bool typematch = true;
-  
-  if(getc(F) != typecode(EXAMPLES_COUNT))
-    typematch = false;
-  if(getc(F) != typecode(INPUTS_COUNT))   
-    typematch = false;
-  if(getc(F) != typecode(ELEMENT))
-    typematch = false;
-  if(getc(F) != typecode(FORM_LENGTH))
-    typematch = false;
-  if(getc(F) != typecode(FORM_ELEMENT))
-    typematch = false;
-  if(getc(F) != typecode(DATA_LENGTH))
-    typematch = false;
-  
-  if(!typematch){
+  IO *io = io_create(F);
+  if(!io){
     fclose(F);
     return NULL;
   }
   
-  lx *x = lx_extrct(F);
+  bool typematch = true;
   
+  if(read_1_byte(io) != typecode(EXAMPLES_COUNT))
+    typematch = false;
+  if(read_1_byte(io) != typecode(INPUTS_COUNT))   
+    typematch = false;
+  if(read_1_byte(io) != typecode(ELEMENT))
+    typematch = false;
+  if(read_1_byte(io) != typecode(FORM_LENGTH))
+    typematch = false;
+  if(read_1_byte(io) != typecode(FORM_ELEMENT))
+    typematch = false;
+  if(read_1_byte(io) != typecode(DATA_LENGTH))
+    typematch = false;
+  
+  if(!typematch){
+    io_delete(io);
+    fclose(F);
+    return NULL;
+  }
+  
+  lx *x = lx_extrct(io);
+  
+  io_delete(io);
   fclose(F);
   
   return x;

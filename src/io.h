@@ -4,7 +4,7 @@
 #include "project.h"
 #include <stdlib.h>
 
-#define BLOCK_SIZE   4096  //will load in chunks of size BLOCK_SIZE bytes
+#define BLOCK_SIZE   65792  //will load in chunks of size BLOCK_SIZE bytes
 #define LARGEST_ATOM 8     //size of largest atomic type
 
 //BLOCK_SIZE must be larger than LARGEST_ATOM

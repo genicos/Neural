@@ -26,6 +26,12 @@ tensor *tensor_cartesian_product(tensor *A, tensor *B);
 // Partial derivative of A with respect to C
 tensor *tensor_chain_rule(tensor *AB, tensor *BC);
 
+
+//Scales each element E to at most E*(1+stochastic) and
+// at least E*(1-stochastic)
+tensor *tensor_perturb    (tensor *A, double stoachastic);
+
+
 //Creates all zero tensor
 tensor *tensor_zero(FORM_LENGTH form_length, FORM_ELEMENT *form);
 
@@ -109,6 +115,13 @@ tensor *tensor_softmax_d_1(tensor *C, tensor *A, tensor *B);
 tensor *tensor_softmax_d_2(tensor *C, tensor *A, tensor *B);
 
 tensor *tensor_softmax_create        (tensor *A, tensor *B);
+
+
+
+
+
+
+
 
 
 

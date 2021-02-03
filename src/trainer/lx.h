@@ -1,5 +1,6 @@
 #include "../project.h"
 #include "../network/pderivative.h"
+#include "../io.h"
 
 typedef uint32_t EXAMPLES_COUNT;
 typedef uint32_t INPUTS_COUNT;
@@ -26,15 +27,15 @@ tensor *lx_example_output(lx *x, uint32_t example);
 
 
 
-void           save_EXAMPLES_COUNT(FILE *F, EXAMPLES_COUNT datum);
-EXAMPLES_COUNT read_EXAMPLES_COUNT(FILE *F);
+void           save_EXAMPLES_COUNT(IO *io, EXAMPLES_COUNT datum);
+EXAMPLES_COUNT read_EXAMPLES_COUNT(IO *io);
 
-void           save_INPUTS_COUNT  (FILE *F, INPUTS_COUNT datum);
-INPUTS_COUNT   read_INPUTS_COUNT  (FILE *F);
+void           save_INPUTS_COUNT  (IO *io, INPUTS_COUNT datum);
+INPUTS_COUNT   read_INPUTS_COUNT  (IO *io);
 
 
 
 bool lx_save(char *file_name, lx *x);
-bool lx_append(FILE *F, lx *x);
-lx  *lx_extrct(FILE *F);
+bool lx_append(IO *io, lx *x);
+lx  *lx_extrct(IO *io);
 lx  *lx_read(char *file_name);
