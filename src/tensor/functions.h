@@ -27,9 +27,9 @@ tensor *tensor_cartesian_product(tensor *A, tensor *B);
 tensor *tensor_chain_rule(tensor *AB, tensor *BC);
 
 
-//Scales each element E to at most E*(1+stochastic) and
+//Scales each element E to at most E*scale*(1+stochastic) and
 // at least E*(1-stochastic)
-tensor *tensor_perturb    (tensor *A, double stoachastic);
+tensor *tensor_perturb    (tensor *A, double scale, double stoachastic);
 
 
 //Creates all zero tensor

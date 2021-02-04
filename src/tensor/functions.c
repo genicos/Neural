@@ -125,11 +125,11 @@ tensor* tensor_chain_rule(tensor *AB, tensor *BC){
   return AC;
 }
 
-tensor *tensor_perturb(tensor *A, double stochastic){
+tensor *tensor_perturb(tensor *A, double scale, double stochastic){
   
   
   for(DATA_LENGTH i = 0; i < A->data_length; i++){
-    A->data[i] = A->data[i] * (1 + stochastic*(-1 + 2*((double)rand()/RAND_MAX)));
+    A->data[i] = A->data[i] * scale * (1 + stochastic*(-1 + 2*((double)rand()/RAND_MAX)));
   }
   
   return A;
