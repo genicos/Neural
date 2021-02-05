@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "tensor.h"
 
+
 typedef struct tensor_function{
 
   tensor *(*f)     (tensor *, tensor *, tensor *);
@@ -41,7 +42,7 @@ tensor *tensor_zero(FORM_LENGTH form_length, FORM_ELEMENT *form);
 // except for the main diagonal, which is full of 1's
 tensor *tensor_identity(FORM_ELEMENT s);
 
-#define FUNCTION_CT 6
+#define FUNCTION_CT 7
 
 extern const tensor_function *tensor_function_table[FUNCTION_CT];
 
@@ -115,6 +116,26 @@ tensor *tensor_softmax_d_1(tensor *C, tensor *A, tensor *B);
 tensor *tensor_softmax_d_2(tensor *C, tensor *A, tensor *B);
 
 tensor *tensor_softmax_create        (tensor *A, tensor *B);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+tensor *tensor_squared_dist    (tensor *C, tensor *A, tensor *B);
+tensor *tensor_squared_dist_d_1(tensor *C, tensor *A, tensor *B);
+tensor *tensor_squared_dist_d_2(tensor *C, tensor *A, tensor *B);
+
+tensor *tensor_squared_dist_create        (tensor *A, tensor *B);
 
 
 

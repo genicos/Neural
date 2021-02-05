@@ -1,0 +1,7 @@
+To add a new tensor function, first add the declarations to functions.h
+add the definitions in functions.c
+create a new tensor_function struct instance for it in functions.h
+add a reference to that struct in tensor_function_table in functions.h
+update FUNCTION_CT to reflect the new number of functions
+
+go to src/test/tensor and add tests for the function

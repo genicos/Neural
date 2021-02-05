@@ -2,8 +2,8 @@ demo.c:
   make function that draws options in uniform way
   if mnist.lx is not present, create it (take code from trainer.c)
 
-network/pderivatives.c:
-  Make use of tensor_perturb in gradient descent
+tensor:
+  Need to create the square distance
 
 trainer:
   create new directory, and proper test, for LX

@@ -76,13 +76,26 @@ const tensor_function softmax = {
   .pairwise_to_second = false,
 };
 
+const tensor_function squared_dist = {
+  
+  .f     = &tensor_squared_dist,
+  .f_d_1 = &tensor_squared_dist_d_1,
+  .f_d_2 = &tensor_squared_dist_d_2,
+  
+  .create = &tensor_squared_dist_create,
+
+  .pairwise_to_first  = false,
+  .pairwise_to_second = false,
+};
+
 const tensor_function *tensor_function_table[FUNCTION_CT] = {
   &add,
-  &sub, 
-  &scale, 
+  &sub,
+  &scale,
   &full,
   &amass,
   &softmax,
+  &squared_dist,
 };
 
 
@@ -401,3 +414,49 @@ tensor *tensor_softmax_create(tensor *A, tensor *B){
 
 
 
+
+
+tensor *tensor_squared_dist(tensor *C, tensor *A, tensor *B){
+  
+  for(DATA_LENGTH i = 0; i < A->data_length; i++){
+    ELEMENT e_dist = A->data[i] - B->data[i];
+    C->data[0] += e_dist*e_dist;
+  }
+  
+  return C;
+}
+
+tensor *tensor_squared_dist_d_1(tensor *C, tensor *A, tensor *B){
+   
+  for(DATA_LENGTH i = 0; i < A->data_length; i++){
+    C->data[i] = 2*(A->data[0] - B->data[0]);
+  }
+  
+  return C;
+}
+
+tensor *tensor_squared_dist_d_2(tensor *C, tensor *A, tensor *B){
+   
+  for(DATA_LENGTH i = 0; i < A->data_length; i++){
+    C->data[i] = 2*(B->data[0] - A->data[0]);
+  }
+  
+  return C;
+}
+
+tensor *tensor_squared_dist_create(tensor *A, tensor *B){
+  
+  FORM_ELEMENT scalar_form[1] = {1};
+  
+  tensor *C = tensor_create(1, scalar_form);
+  if(!C){
+    return NULL;
+  }
+  
+  if(!tensor_create_data(C)){
+    tensor_delete(C);
+    return NULL;
+  }
+  
+  return C;
+}

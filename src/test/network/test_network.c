@@ -287,13 +287,7 @@ int main(){
       printf("GRADIENT DECENT FAILED ! ! ! ! ! ! ! ! ! \n");
     }
     
-    if(i < 4){
-      for(int j = 0; j < 3; j++){
-        tensor_print(Z->derivatives[params[j]], "f");
-      }
-    }
-    
-    printf("           %f\n", Z->nodes[Z->error]->t->data[0]);
+    printf("Error:    %f\n", Z->nodes[Z->error]->t->data[0]);
     network_clean(Z);
     node_solve(Z, Z->error);
     propogate_error(Z, 3, params);
@@ -309,9 +303,28 @@ int main(){
   }
   
   
-  /*
+  /*       
+           
+                    I: input, {28,28}
+           H        P: parameters, {784, 10}
+          / \       D: intuitions, {10}
+         R   T      R: beliefs, {10}
+         |          T: Ground Truth, {10}
+         D          H: distance {1}
+        / \
+       I   P
   */ 
-    
+  
+  FORM_ELEMENT input_form[2] = {28,28};
+  FORM_ELEMENT param_form[2] = {28*28, 10};
+  FORM_ELEMENT digit_form[1] = {10};
+  
+  //tensor *input = create_tensor(2, input_form);
+  
+  
+  
+  
+   
   network_delete(Z);
   node_delete(F);
   node_delete(E);

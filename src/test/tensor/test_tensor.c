@@ -12,6 +12,23 @@
 
 int main(){
   
+  /*                                      //To add new tests
+  FORM_ELEMENT T_form[1]     = {1};
+  tensor      *T             = tensor_create(1, T_form);
+  
+   
+  ELEMENT      T_data[1]     =
+  {31};
+  
+  T->data                    = T_data;
+  
+  tensor_save("src/test/tensor/OUT/6/CA",T);
+  tensor_print(T, "f");
+  tensor_delete(T);
+  */
+  
+  
+  
   printf("\nTesting tensor\n");
   
   //Creating 4 pairs of identical tensors, to test tensor_equal
@@ -159,26 +176,7 @@ int main(){
   printf("tensor_save and tensor_read passed\n");
   
   
-  /*                                      //To add new tests
-  FORM_ELEMENT T_form[2]     = {4,4};
-  tensor      *T             = tensor_create(2, T_form);
   
-  float S = (float)(M_E+M_E*M_E + M_E*M_E*M_E + M_E*M_E*M_E*M_E);
-  
-  ELEMENT help[4] = 
-  {(float)(M_E/S), (float)(M_E*M_E/S), (float)(M_E*M_E*M_E/S), (float)(M_E*M_E*M_E*M_E/S)};
-  
-  ELEMENT      T_data[16]     =
-  {help[0]*(1-help[0]), -help[0]*help[1], -help[0]*help[2], -help[0]*help[3] ,
-   -help[1]*help[0], help[1]*(1-help[1]), -help[1]*help[2], -help[1]*help[3],
-   -help[2]*help[0], -help[2]*help[1], help[2]*(1-help[2]),  -help[2]*help[3],
-   -help[3]*help[0], -help[3]*help[1], -help[3]*help[2], help[3]*(1-help[3])};
-  T->data                    = T_data;
-  
-  tensor_save("src/test/tensor/OUT/5/AA_d1",T);
-  tensor_print(T, "f"); 
-  tensor_delete(T);
-  */
 
 
   //testing every function 

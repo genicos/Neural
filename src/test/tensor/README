@@ -1,0 +1,7 @@
+IN
+  Each letter corrosponds to a tensor, to be used as input
+
+OUT
+  Each folder corrosponds to a function
+    the numbers are indicies of tensor_function_table of src/tensor/functions.c
+    c is chain rule

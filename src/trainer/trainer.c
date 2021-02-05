@@ -16,8 +16,8 @@ int main(int argc, char** argv){
     printf("FAIL\n");
     return 1;
   }
-  
    
+  
   FILE *labels = fopen("src/trainer/train-labels-idx1-ubyte", "r");
   if(!labels){
     printf("GAH\n");
@@ -105,6 +105,8 @@ int main(int argc, char** argv){
     tensor_delete(ts[i]);
   }
   free(ts);
+  
+  
   
   return 0; 
 }
