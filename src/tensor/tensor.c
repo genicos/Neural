@@ -62,7 +62,8 @@ tensor *tensor_create(FORM_LENGTH form_length, FORM_ELEMENT *form){
   }
   
   t->data_length = (DATA_LENGTH)t->form_cascade[0];
-
+  t->data = NULL;
+  
   return t;
 }
 

@@ -233,15 +233,21 @@ bool tensor_append(IO *io, tensor *t){
     return false;
   
   save_FORM_LENGTH(io, t->form_length);
-  
+   
   for(FORM_LENGTH i = 0; i < t->form_length; i++){
     save_FORM_ELEMENT(io, t->form[i]);
   }
   
-  for(DATA_LENGTH i = 0; i < t->data_length; i++){
-    save_ELEMENT(io, t->data[i]); 
+  if(t->data){
+    for(DATA_LENGTH i = 0; i < t->data_length; i++){
+      save_ELEMENT(io, t->data[i]); 
+    }
+  }else{
+    for(DATA_LENGTH i = 0; i < t->data_length; i++){
+      save_ELEMENT(io, 0); 
+    }
   }
-  
+
   return true;
 }
 

@@ -89,13 +89,13 @@ const tensor_function squared_dist = {
 };
 
 const tensor_function *tensor_function_table[FUNCTION_CT] = {
-  &add,
-  &sub,
-  &scale,
-  &full,
-  &amass,
-  &softmax,
-  &squared_dist,
+  &add,             // 0
+  &sub,             // 1
+  &scale,           // 2
+  &full,            // 3
+  &amass,           // 4
+  &softmax,         // 5
+  &squared_dist,    // 6
 };
 
 
