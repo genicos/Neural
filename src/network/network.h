@@ -32,7 +32,7 @@ typedef struct network{
   node** nodes;
   bool nodes_responsibility; //if true, network is responsible for deleting every node
   
-  NODES_LENGTH error; //index of error node, usually is a scalar, ie has a form of {1}
+  NODES_LENGTH root; //index of error node, usually is a scalar, ie has a form of {1}
   
   tensor** derivatives; //The partial derivatives of error with respect to
     //the other nodes, calculated as needed. 

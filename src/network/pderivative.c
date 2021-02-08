@@ -83,7 +83,7 @@ bool propogate_error(network *w, NODES_LENGTH parameters_length, NODES_LENGTH *p
   }
 
   node *error;  
-  if(w->error >= w->nodes_length || !(error = w->nodes[w->error])){ //Ensuring that error node exists
+  if(w->root >= w->nodes_length || !(error = w->nodes[w->root])){ //Ensuring that error node exists
     return false;
   }
   
@@ -110,13 +110,13 @@ bool gradient_decent(network *w, double scale, double stochastic){
   if(!w){
     return false;
   }
-  if(w->nodes[w->error]->t->data_length != 1){
+  if(w->nodes[w->root]->t->data_length != 1){
     return false;
   }
   
    
   //this ensures that the procedure minimizes the absolute value of the error
-  if(w->nodes[w->error]->t->data[0] > 0){
+  if(w->nodes[w->root]->t->data[0] > 0){
     scale = -scale;
   }
   

@@ -95,7 +95,7 @@ network *network_create(NODES_LENGTH nodes_length, node **nodes){
   
   w->nodes_responsibility = false;
   
-  w->error = 0;
+  w->root = 0;
   
   return w;
 }
@@ -115,7 +115,7 @@ bool network_equal(network *w, network *x){
       return false;
   }
 
-  if(w->error != x->error)
+  if(w->root != x->root)
     return false;
 
   return true;

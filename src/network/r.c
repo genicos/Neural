@@ -122,7 +122,7 @@ bool network_append(IO *io, network *w){
 
    
   save_NODES_LENGTH(io, w->nodes_length);
-  save_NODES_LENGTH(io, w->error);
+  save_NODES_LENGTH(io, w->root);
   
   for(NODES_LENGTH n = 0; n < w->nodes_length; n++){
     node *curr = w->nodes[n];
@@ -147,7 +147,7 @@ network *network_extrct(IO *io){
     return NULL;
   
   NODES_LENGTH nodes_length = read_NODES_LENGTH(io);
-  NODES_LENGTH error        = read_NODES_LENGTH(io);
+  NODES_LENGTH root         = read_NODES_LENGTH(io);
   
   node **nodes = (node **)calloc(nodes_length, sizeof(node *));  
   
@@ -186,7 +186,7 @@ network *network_extrct(IO *io){
   }
   free(nodes);
   w->nodes_responsibility = true; 
-  w->error = error;
+  w->root = root;
  
 
   return w;

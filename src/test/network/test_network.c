@@ -75,52 +75,52 @@ int main(){
   node        *WE_1a_n[6]  = {(node *)0,(node *)1,(node *)2,(node *)3,(node *)4,(node *)5}; 
   NODES_LENGTH WE_1a_e  = 78;
   network     *WE_1a    = network_create(WE_1a_nl, WE_1a_n);
-  WE_1a->error = WE_1a_e;
+  WE_1a->root = WE_1a_e;
   
   NODES_LENGTH WE_1b_nl = 6;
   node        *WE_1b_n[6]  = {(node *)0,(node *)1,(node *)2,(node *)3,(node *)4,(node *)5}; 
   NODES_LENGTH WE_1b_e  = 78;
   network     *WE_1b    = network_create(WE_1b_nl, WE_1b_n);
-  WE_1b->error = WE_1b_e;
+  WE_1b->root = WE_1b_e;
   
   
   NODES_LENGTH WE_2a_nl = 4;
   node        *WE_2a_n[4]  = {(node *)0,(node *)1,(node *)2,(node *)3}; 
   NODES_LENGTH WE_2a_e  = 16;
   network     *WE_2a    = network_create(WE_2a_nl, WE_2a_n);
-  WE_2a->error = WE_2a_e;
+  WE_2a->root = WE_2a_e;
   
   NODES_LENGTH WE_2b_nl = 4;
   node        *WE_2b_n[4]  = {(node *)0,(node *)1,(node *)2,(node *)3}; 
   NODES_LENGTH WE_2b_e  = 16;
   network     *WE_2b    = network_create(WE_2b_nl, WE_2b_n);
-  WE_2b->error = WE_2b_e;
+  WE_2b->root = WE_2b_e;
   
   
   NODES_LENGTH WE_3a_nl = 7;
   node        *WE_3a_n[7]  = {(node *)0,(node *)1,(node *)2,(node *)3,(node *)4,(node *)5,(node *)6}; 
   NODES_LENGTH WE_3a_e  = 13;
   network     *WE_3a    = network_create(WE_3a_nl, WE_3a_n);
-  WE_3a->error = WE_3a_e;
+  WE_3a->root = WE_3a_e;
   
   NODES_LENGTH WE_3b_nl = 7;
   node        *WE_3b_n[7]  = {(node *)0,(node *)1,(node *)2,(node *)3,(node *)4,(node *)5,(node *)6}; 
   NODES_LENGTH WE_3b_e  = 13;
   network     *WE_3b    = network_create(WE_3b_nl, WE_3b_n);
-  WE_3b->error = WE_3b_e;
+  WE_3b->root = WE_3b_e;
   
   
   NODES_LENGTH WE_4a_nl = 2;
   node        *WE_4a_n[2]  = {(node *)0,(node *)1}; 
   NODES_LENGTH WE_4a_e  = 65;
   network     *WE_4a    = network_create(WE_4a_nl, WE_4a_n);
-  WE_4a->error = WE_4a_e;
+  WE_4a->root = WE_4a_e;
   
   NODES_LENGTH WE_4b_nl = 2;
   node        *WE_4b_n[2]  = {(node *)0,(node *)1}; 
   NODES_LENGTH WE_4b_e  = 65;
   network     *WE_4b    = network_create(WE_4b_nl, WE_4b_n);
-  WE_4b->error = WE_4b_e;
+  WE_4b->root = WE_4b_e;
   
   
   bool WE1 = network_equal(WE_1a,WE_1b);
@@ -137,8 +137,8 @@ int main(){
 
   WE_1a->nodes_length--;
   WE_2a->nodes[0]++;
-  WE_3a->error++;
-  WE_4a->error++;
+  WE_3a->root++;
+  WE_4a->root++;
 
  
   bool nWE1 = network_equal(WE_1a, WE_1b);
@@ -271,8 +271,8 @@ int main(){
   printf("\nTesting partial derivatives, by calculating partial derivatives of E with respect to A,B,D \n\n"); 
   
   NODES_LENGTH params[3] = {0,1,3};
-  Z->error = 5;
-  node_solve(Z,Z->error);
+  Z->root = 5;
+  node_solve(Z,Z->root);
   
   propogate_error(Z, 3, params);
   for(int i = 0; i < 3; i++){
@@ -287,15 +287,15 @@ int main(){
       printf("GRADIENT DECENT FAILED ! ! ! ! ! ! ! ! ! \n");
     }
     
-    printf("Error:    %f\n", Z->nodes[Z->error]->t->data[0]);
+    printf("Error:    %f\n", Z->nodes[Z->root]->t->data[0]);
     network_clean(Z);
-    node_solve(Z, Z->error);
+    node_solve(Z, Z->root);
     propogate_error(Z, 3, params);
   }
   printf("Gradient decent has been applied\n");
   
   network_clean(Z);
-  node_solve(Z, Z->error);
+  node_solve(Z, Z->root);
   
   for(int i = 0; i < Z->nodes_length; i++){
     printf("Node %c in Z:\n", 'A' + i);
@@ -334,8 +334,10 @@ int main(){
   node *L_h = node_create(distance , 6, 3,4);//5
   
   node *L_nodes[6] = {L_i, L_p, L_d, L_r, L_t, L_h};
-  
+ 
   network *L = network_create(6, L_nodes);
+  L->root = 5;
+
   network_save("MNIST-trainer", L); 
   
   network_delete(L); 
