@@ -4,7 +4,8 @@
 #include <string.h>
 
 #include "../network/network.h"
-#include "../trainer/lx.h"
+#include "../lx/lx.h"
+
 
 
 void pin_str(int row, int col, const char *str){
@@ -12,43 +13,7 @@ void pin_str(int row, int col, const char *str){
 }
 
 
-void draw_options(int row, int col, int hei, int count, int choice, const char **options){
-  
-  unsigned long width = 0;
-  
-  for(int i = 0; i < count; i++){
-    if(width < strlen(options[i])){
-      width = strlen(options[i]);
-    }
-  }
-  
-  width += 4;
-  
-  if(hei-row > count*4){
-    
-    for(int i = 0; i < count; i++){
-      if(i == choice){
-        mvaddch(row + 2*i, col - width/2,     ACS_RTEE);
-        mvaddch(row + 2*i, col - width/2 + 2, ACS_LTEE);
-      }
-      mvaddch(row + 2*i, col - width/2 + 1, ACS_DIAMOND);
-      mvaddstr(row + 2*i, col - width/2 + 4, options[i]);
-    }
-  }
-  
-  
-  
-  
-}
-
 int main(){
-  
-  printf("Demo\n");
-  
-  lx *mnist = lx_read("src/demo/mnist.lx");
-  if(!mnist){
-    printf("Failed\n"); //I need to create mnist.lx
-  }
   
   // initialize ncurses //
   initscr();
@@ -67,39 +32,101 @@ int main(){
   pin_str(hei/2-5,wid/2,"Neural Network training ground");
   pin_str(hei/2-4,wid/2,"Created by Nicolas Ayala");
   
- /* 
-  pin_str(hei/2  ,wid/2,"|A| Create network");
   
-  pin_str(hei/2+2,wid/2,"|B| Open network  ");
+  lx *mnist = lx_read("src/demo/mnist.lx");
+  if(!mnist){
+    //mnist.lx is missing, it must be created with images and label files.
+    
+    FILE *images = fopen("src/demo/train-images-idx3-ubyte", "r");
+    if(!images){
+      printf("Failed to find mnist images\n");
+      return 1;
+    } 
+    IO *images_io = io_create(images);
+    if(!images_io){
+      printf("failed to create io\n");
+      printf("FAIL\n");
+      return 1;
+    }
+    
+    
+    FILE *labels = fopen("src/demo/train-labels-idx1-ubyte", "r");
+    if(!labels){
+      printf("Failed to find mnist label\n");
+      return 2;
+    }
+    IO *labels_io = io_create(labels);
+    if(!labels_io){
+      printf("Failed to create labels_io\n");
+      printf("FAIL\n");
+      return 1;
+    }
+  
+  
+  
+    int tensors = 120000;
+    tensor *ts[120000];// = (tensor **)calloc(tensors, sizeof(tensor *));
+    
+    FORM_ELEMENT image_form[2] = {28,28};
+    FORM_ELEMENT label_form[1] = {10};
+    
+    fseek(images, 16, SEEK_SET);
+    for(int i = 0; i < 60000; i++){ //going through training digits
+      tensor *t = tensor_create(2, image_form);
+      tensor_create_data(t);
+      for(int j = 0; j < 28*28; j++){
+        t->data[j] = read_1_byte(images_io);
+      }
+      ts[i*2] = t;
+    }
+    
+    fseek(labels, 8, SEEK_SET);
+    for(int i = 0; i < 60000; i++){ //going through training labels
+      tensor *t = tensor_create(1, label_form);
+      tensor_create_data(t);
+      t->data[read_1_byte(labels_io)] = 1;
+      ts[i*2+1] = t;
+    }
+    
+    io_delete(images_io);
+    io_delete(labels_io);
+    
+    mnist = lx_create(60000,1,ts);
+    if(!mnist){
+      printf("Failed to create lx\n");
+      printf("FAIL\n");
+      return 1;
+    }
+    lx_save("src/demo/mnist.lx", mnist);
+  }
  
+
+
+   
+  
+  network *trainer = network_read("src/demo/MNIST-trainer");
+  if(!trainer){
+    return 1;
+  }
   
    
-  int option_column = -8;
   
-  mvaddch(hei/2-1,wid/2 + option_column-1,ACS_ULCORNER); 
-  mvaddch(hei/2-1,wid/2 + option_column+1,ACS_URCORNER); 
-  mvaddch(hei/2+1,wid/2 + option_column-1,ACS_LLCORNER); 
-  mvaddch(hei/2+1,wid/2 + option_column+1,ACS_LRCORNER); 
+  int sample_size = 400;
   
   
-  mvaddch(hei/2,wid/2 + option_column-1,ACS_RTEE); 
-  mvaddch(hei/2,wid/2 + option_column+1,ACS_LTEE); 
-  
-  mvaddch(hei/2-1,wid/2 + option_column,ACS_HLINE);
-  mvaddch(hei/2+1,wid/2 + option_column,ACS_HLINE); 
-  
-  while(running){
-    break;
+  for(uint32_t i = 0; i < mnist->examples_count; i++){
+    if( (((double)rand()) /RAND_MAX) < ((double)sample_size / (mnist->examples_count - i) )) {
+      sample_size--;
+      
+    }
   }
-  */
-
-  const char *main_menu_options[2] = {"Open network", "Create network"};  
-  draw_options(hei/2, wid/2, hei, 2, 0, main_menu_options);
+  
+  
   
   getch();
   endwin();
   
   lx_delete(mnist);
-   
+  
   return 0;
 }

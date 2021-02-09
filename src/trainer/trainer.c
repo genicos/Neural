@@ -1,13 +1,13 @@
 #include "../project.h"
 #include "../network/pderivative.h"
-#include "lx.h"
+#include "../lx/lx.h"
 
 
 int main(int argc, char** argv){
   
   FILE *images = fopen("src/trainer/train-images-idx3-ubyte", "r");
   if(!images){
-    printf("WHY\n");
+    printf("Failed to find mnist images\n");
     return 1;
   } 
   IO *images_io = io_create(images);
@@ -20,7 +20,7 @@ int main(int argc, char** argv){
   
   FILE *labels = fopen("src/trainer/train-labels-idx1-ubyte", "r");
   if(!labels){
-    printf("GAH\n");
+    printf("Failed to find mnist label\n");
     return 2;
   }
   IO *labels_io = io_create(labels);

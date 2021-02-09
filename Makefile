@@ -33,10 +33,17 @@ trainer: obj/trainer.o obj/lx.o obj/lx_r.o obj/tensor.o obj/tensor_r.o obj/io.o
 obj/trainer.o: src/trainer/trainer.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-obj/lx.o: src/trainer/lx.c src/trainer/lx.h  src/project.h 
+
+test_lx: obj/test_lx.o obj/lx.o obj/lx_r.o obj/tensor.o obj/tensor_r.o obj/io.o
+	$(CC)              $^ -o bin/test_lx 
+
+obj/test_lx.o: src/test/lx/test_lx.c src/lx/lx.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-obj/lx_r.o: src/trainer/r.c src/trainer/lx.h src/io.h src/project.h
+obj/lx.o: src/lx/lx.c src/lx/lx.h  src/project.h 
+	$(CC) $(CFLAGS) -c $< -o $@
+
+obj/lx_r.o: src/lx/r.c src/lx/lx.h src/io.h src/project.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
@@ -73,6 +80,7 @@ clean:
 	rm -f *_TEST_SAVE*
 	rm -f obj/*
 	rm -f bin/*
+	rm -f src/demo/mnist.lx
 
 valtest_io:
 	make clean
@@ -91,13 +99,9 @@ valtest_network:
 	valgrind --leak-check=yes bin/test_network
 	diff NETWORK_TEST_SAVE NETWORK_TEST_SAVE2 
 	
-valtest_trainer:
+valtest_lx:
 	make clean
-	make trainer	
-	valgrind --leak-check=yes bin/trainer
+	make test_lx	
+	valgrind --leak-check=yes bin/test_lx
 	diff LX_TEST_SAVE LX_TEST_SAVE2
 
-valtest_demo:
-	make clean
-	make demo
-	valgrind --leak-check=yes bin/demo
