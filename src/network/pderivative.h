@@ -10,4 +10,6 @@ bool back_propogate(network *w, NODES_LENGTH parameter_length, NODES_LENGTH *par
 
 bool gradient_decent(network *w, double scale, double stochastic);
 
+void randomize_parameters(network *w, NODES_LENGTH parameter_length, NODES_LENGTH *parameters);
+
 #endif

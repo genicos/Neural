@@ -315,30 +315,33 @@ int main(){
        I   P
   */ 
   
-  FORM_ELEMENT input_form[2] = {28,28};
+  //I should actually not have all these tensors pre-made
+   
+  //FORM_ELEMENT input_form[2] = {28,28};
   FORM_ELEMENT param_form[2] = {28*28, 10};
-  FORM_ELEMENT digit_form[1] = {10};
-  FORM_ELEMENT scalr_form[1] = {1}; 
-  tensor *input     = tensor_create(2, input_form);
-  tensor *param     = tensor_create(2, param_form);
-  tensor *intuition = tensor_create(1, digit_form);
-  tensor *beliefs   = tensor_create(1, digit_form);
-  tensor *truth     = tensor_create(1, digit_form);
-  tensor *distance  = tensor_create(1, scalr_form);
+  //FORM_ELEMENT digit_form[1] = {10};
+  //FORM_ELEMENT scalr_form[1] = {1}; 
   
-  node *L_i = node_create(input    , 0, 0,0);//0
+  //tensor *input     = tensor_create(2, input_form);
+  tensor *param     = tensor_create(2, param_form);
+  //tensor *intuition = tensor_create(1, digit_form);
+  //tensor *beliefs   = tensor_create(1, digit_form);
+  //tensor *truth     = tensor_create(1, digit_form);
+  //tensor *distance  = tensor_create(1, scalr_form);
+  
+  node *L_i = node_create(NULL     , 0, 0,0);//0
   node *L_p = node_create(param    , 0, 1,0);//1
-  node *L_d = node_create(intuition, 3, 0,1);//2
-  node *L_r = node_create(beliefs  , 5, 2,0);//3
-  node *L_t = node_create(truth    , 0, 4,0);//4
-  node *L_h = node_create(distance , 6, 3,4);//5
+  node *L_d = node_create(NULL     , 3, 0,1);//2
+  node *L_r = node_create(NULL     , 5, 2,0);//3
+  node *L_t = node_create(NULL     , 0, 4,0);//4
+  node *L_h = node_create(NULL     , 6, 3,4);//5
   
   node *L_nodes[6] = {L_i, L_p, L_d, L_r, L_t, L_h};
  
   network *L = network_create(6, L_nodes);
   L->root = 5;
 
-  network_save("MNIST-trainer", L); 
+  //network_save("MNIST-trainer", L); 
   
   network_delete(L); 
   node_delete(L_h);
@@ -347,12 +350,12 @@ int main(){
   node_delete(L_d);
   node_delete(L_p);
   node_delete(L_i);
-  tensor_delete(distance);
-  tensor_delete(truth);
-  tensor_delete(beliefs);
-  tensor_delete(intuition);
+  //tensor_delete(distance);
+  //tensor_delete(truth);
+  //tensor_delete(beliefs);
+  //tensor_delete(intuition);
   tensor_delete(param);
-  tensor_delete(input);
+  //tensor_delete(input);
   //
   
   

@@ -142,3 +142,17 @@ bool gradient_decent(network *w, double scale, double stochastic){
    
   return true;
 }
+
+
+void randomize_parameters(network *w, NODES_LENGTH parameters_length, NODES_LENGTH *parameters){
+  if(!w){
+    return;
+  }
+  
+  for(NODES_LENGTH i = 0; i < parameters_length; i++){
+    for(DATA_LENGTH j = 0; j < w->nodes[parameters[i]]->t->data_length; j++){
+      w->nodes[parameters[i]]->t->data[j] = (double)rand()/RAND_MAX * 2 - 1;
+    }
+  }
+  
+}

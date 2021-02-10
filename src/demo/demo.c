@@ -12,6 +12,19 @@ void pin_str(int row, int col, const char *str){
   mvaddstr(row, col - strlen(str)/2, str);
 }
 
+void draw_matrix(int row, int col, double scale, tensor *t){
+  
+  char *degrees = " .:-=+*#%@";
+  
+  for(DATA_LENGTH r = 0; r < t->form[0]; r++){
+    for(DATA_LENGTH c = 0; c < t->form[1]; c++){
+      mvaddch(row + r,col + c, 
+        degrees[(int)(t->data[r*t->form[0] + c]/scale * strlen(degrees))]);
+    }
+  }
+  
+}
+
 
 int main(){
   
@@ -19,18 +32,19 @@ int main(){
   initscr();
   cbreak();
   noecho();
+  nodelay(stdscr, 1);
+  
   
   clear();
   //
   
-  bool running = true;
   
   int wid = 0, hei = 0;
   getmaxyx(stdscr, hei, wid);
   printf("%d, %d\n", wid, hei);
  
-  pin_str(hei/2-5,wid/2,"Neural Network training ground");
-  pin_str(hei/2-4,wid/2,"Created by Nicolas Ayala");
+  //pin_str(hei/2-5,wid/2,"Neural Network training ground");
+  //pin_str(hei/2-4,wid/2,"Created by Nicolas Ayala");
   
   
   lx *mnist = lx_read("src/demo/mnist.lx");
@@ -99,9 +113,9 @@ int main(){
     }
     lx_save("src/demo/mnist.lx", mnist);
   }
- 
-
-
+  
+  
+  //draw_matrix(4, 5, 256, lx_example_input(mnist, 0, 0));
    
   
   network *trainer = network_read("src/demo/MNIST-trainer");
@@ -109,24 +123,86 @@ int main(){
     return 1;
   }
   
-   
+  bool running = true;
   
-  int sample_size = 400;
+  bool training = false;
+  double training_sample_size = 400;
+
+  bool see_sample = false;
+  int sample = 0;
   
+  bool randomize = false;
   
-  for(uint32_t i = 0; i < mnist->examples_count; i++){
-    if( (((double)rand()) /RAND_MAX) < ((double)sample_size / (mnist->examples_count - i) )) {
-      sample_size--;
+  mvaddstr(2, 0, "A: Quit Demo");
+  mvaddstr(4, 0, "T: Train network");
+  mvaddstr(6, 0, "E: Test network");
+  mvaddstr(8, 0, "S: Sample network");
+  mvaddstr(10, 0, "R: Randomize parameters");
+  
+  while(running){ 
+    
+    
+    int c = getch();
+    
+    if(training){
+      for(uint32_t i = 0; i < mnist->examples_count; i++){
+        if( (((double)rand()) /RAND_MAX) < (training_sample_size / (mnist->examples_count - i) )) {
+          training_sample_size--;
+          
+        }
+      }
+    }
+    
+    if(see_sample){
+      draw_matrix(20, 0, 256, lx_example_input(mnist, sample, 0));
+      tensor *output = trainer->nodes[trainer->nodes[trainer->root]->parent_1]->t;
+      
+      for(int i = 0; i < 10; i++){
+        mvaddch(20 + i, 28, '0' + i);
+        mvaddch(20 + i, 29, ':');
+        
+        
+        
+        for(int j = 0; j < 10; j++){
+          if(output->data[i] > j/10.0){
+            mvaddch(20 + i, 29 + j, '#');
+          }
+        }
+        
+      }
+    }
+    
+    
+    
+    if(c == 'a'){
+      running = false;
+    }
+    
+    
+    
+    if(c == 's'){
+      sample = rand()%60000;
+      trainer->nodes[0]->t = lx_example_input(mnist, sample, 0);
+      trainer->nodes[4]->t = lx_example_output(mnist, sample);
+      node_solve(trainer, trainer->root);
+      see_sample = true;
+    }
+    
+    if(c == 'r'){
+      
+      NODES_LENGTH params[1] = {4};
+      
+      randomize_parameters(trainer, 1, params);
       
     }
+     
   }
   
   
-  
-  getch();
   endwin();
+   
   
   lx_delete(mnist);
-  
+  network_delete(trainer);
   return 0;
 }

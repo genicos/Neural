@@ -140,6 +140,8 @@ bool node_solve(network *w, NODES_LENGTH n){
     return false;
   }
   
+  
+   
   node *child = w->nodes[n];
 
   if(child->t){
