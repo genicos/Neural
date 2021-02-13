@@ -155,4 +155,11 @@ bool node_solve(network *w, NODES_LENGTH n);
 //
 // `network_equal: true if `w and `x are equal, and false if they are not
 bool network_equal(network *w, network *x);
+
+//Prints out the tensor in every node
+//
+// `w: network to be printed
+// `printf_element_tag: print format tag for ELEMENT data type
+void network_print(network *w, const char *printf_element_tag);
+
 #endif

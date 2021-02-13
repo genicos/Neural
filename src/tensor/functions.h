@@ -151,4 +151,24 @@ tensor *tensor_squared_dist_create        (tensor *A, tensor *B);
 
 
 
+tensor *tensor_softsign    (tensor *C, tensor *A, tensor *B);
+tensor *tensor_softsign_d_1(tensor *C, tensor *A, tensor *B);
+tensor *tensor_softsign_d_2(tensor *C, tensor *A, tensor *B);
+
+tensor *tensor_softsign_create        (tensor *A, tensor *B);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #endif

@@ -460,3 +460,53 @@ tensor *tensor_squared_dist_create(tensor *A, tensor *B){
   
   return C;
 }
+
+
+
+
+
+/*
+tensor *tensor_squared_dist(tensor *C, tensor *A, tensor *B){
+  
+  for(DATA_LENGTH i = 0; i < A->data_length; i++){
+    ELEMENT e_dist = A->data[i] - B->data[i];
+    C->data[0] += e_dist*e_dist;
+  }
+  
+  return C;
+}
+
+tensor *tensor_squared_dist_d_1(tensor *C, tensor *A, tensor *B){
+   
+  for(DATA_LENGTH i = 0; i < A->data_length; i++){
+    C->data[i] = 2*(A->data[0] - B->data[0]);
+  }
+  
+  return C;
+}
+
+tensor *tensor_squared_dist_d_2(tensor *C, tensor *A, tensor *B){
+   
+  for(DATA_LENGTH i = 0; i < A->data_length; i++){
+    C->data[i] = 2*(B->data[0] - A->data[0]);
+  }
+  
+  return C;
+}
+
+tensor *tensor_squared_dist_create(tensor *A, tensor *B){
+  
+  FORM_ELEMENT scalar_form[1] = {1};
+  
+  tensor *C = tensor_create(1, scalar_form);
+  if(!C){
+    return NULL;
+  }
+  
+  if(!tensor_create_data(C)){
+    tensor_delete(C);
+    return NULL;
+  }
+  
+  return C;
+}*/

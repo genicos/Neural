@@ -18,8 +18,14 @@ void draw_matrix(int row, int col, double scale, tensor *t){
   
   for(DATA_LENGTH r = 0; r < t->form[0]; r++){
     for(DATA_LENGTH c = 0; c < t->form[1]; c++){
+      int index = (int)(t->data[r*t->form[0] + c]/scale * strlen(degrees)) ;
+      if(index < 0)
+        index = 0;
+      else if((unsigned long)index >= strlen(degrees))
+        index = 0;
+      
       mvaddch(row + r,col + c, 
-        degrees[(int)(t->data[r*t->form[0] + c]/scale * strlen(degrees))]);
+        degrees[index]);
     }
   }
   
@@ -123,6 +129,8 @@ int main(){
     return 1;
   }
   
+  NODES_LENGTH parameters[1] = {1};
+   
   bool running = true;
   
   bool training = false;
@@ -145,10 +153,17 @@ int main(){
     int c = getch();
     
     if(training){
+      double to_train = training_sample_size;
       for(uint32_t i = 0; i < mnist->examples_count; i++){
-        if( (((double)rand()) /RAND_MAX) < (training_sample_size / (mnist->examples_count - i) )) {
-          training_sample_size--;
+        if( (((double)rand()) /RAND_MAX) < (to_train / (mnist->examples_count - i) )) {
+          to_train--;
           
+          trainer->nodes[0]->t = lx_example_input(mnist, i, 0);
+          trainer->nodes[4]->t = lx_example_output(mnist, i);
+          node_solve(trainer, trainer->root);
+          propogate_error(trainer, 1, parameters);
+          gradient_decent(trainer, 0.01, 0.01);
+          printf("trained\n");
         }
       }
     }
@@ -161,12 +176,13 @@ int main(){
         mvaddch(20 + i, 28, '0' + i);
         mvaddch(20 + i, 29, ':');
         
+        double output_i = output->data[i];
+        mvaddch(20 + i, 30, '0' + (int)output_i);
+        mvaddch(20 + i, 31, '.');
         
-        
-        for(int j = 0; j < 10; j++){
-          if(output->data[i] > j/10.0){
-            mvaddch(20 + i, 29 + j, '#');
-          }
+        for(int j = 0; j < 5; j++){
+          output_i *= 10;
+          mvaddch(20 + i, 32 + j, '0' + ((int)output_i)%10);
         }
         
       }
@@ -186,14 +202,17 @@ int main(){
       trainer->nodes[4]->t = lx_example_output(mnist, sample);
       node_solve(trainer, trainer->root);
       see_sample = true;
+      
+      
     }
     
     if(c == 'r'){
       
-      NODES_LENGTH params[1] = {4};
-      
-      randomize_parameters(trainer, 1, params);
-      
+      randomize_parameters(trainer, 1, parameters, 0, 0.02);
+    }
+    
+    if(c == 't'){
+      training = !training;
     }
      
   }
@@ -201,6 +220,7 @@ int main(){
   
   endwin();
    
+  network_print(trainer, "f");
   
   lx_delete(mnist);
   network_delete(trainer);

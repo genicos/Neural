@@ -172,3 +172,12 @@ bool node_solve(network *w, NODES_LENGTH n){
 }
 
 
+void network_print(network *w, const char *printf_element_tag){
+  if(!w || !printf_element_tag)
+    return;
+  
+  for(NODES_LENGTH i = 0; i < w->nodes_length; i++){
+    printf("\nTensor in Node %d:\n", i);
+    tensor_print(w->nodes[i]->t, printf_element_tag);
+  }
+}

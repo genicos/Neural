@@ -79,7 +79,7 @@ ELEMENT* tensor_create_data(tensor *t){
 }
 
 
-void tensor_print(tensor *t, char* printf_element_tag){
+void tensor_print(tensor *t, const char* printf_element_tag){
   if(!t){
     printf("Null tensor\n");
     return; 

@@ -76,7 +76,7 @@ void tensor_delete(tensor *t);
 //Returns a tensor with the same form, and the same elements
 tensor *tensor_copy(tensor *t);
 
-void tensor_print(tensor *t, char *printf_element_tag);
+void tensor_print(tensor *t, const char *printf_element_tag);
 
 //returns true if
 //both tensors are non-null,
