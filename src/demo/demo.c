@@ -130,6 +130,8 @@ int main(){
   }
   
   NODES_LENGTH parameters[1] = {1};
+  network_add_parameters(trainer, 1, parameters);
+  
    
   bool running = true;
   
@@ -147,6 +149,8 @@ int main(){
   mvaddstr(8, 0, "S: Sample network");
   mvaddstr(10, 0, "R: Randomize parameters");
   
+  mvaddstr(2, 20, "Demo is still in the works");
+   
   while(running){ 
     
     
@@ -160,10 +164,11 @@ int main(){
           
           trainer->nodes[0]->t = lx_example_input(mnist, i, 0);
           trainer->nodes[4]->t = lx_example_output(mnist, i);
+          network_clean(trainer);
           node_solve(trainer, trainer->root);
-          propogate_error(trainer, 1, parameters);
-          gradient_decent(trainer, 0.01, 0.01);
-          printf("trained\n");
+          propogate_error(trainer);
+          gradient_decent(trainer, 1, 0.01);
+          
         }
       }
     }
@@ -200,6 +205,7 @@ int main(){
       sample = rand()%60000;
       trainer->nodes[0]->t = lx_example_input(mnist, sample, 0);
       trainer->nodes[4]->t = lx_example_output(mnist, sample);
+      network_clean(trainer);
       node_solve(trainer, trainer->root);
       see_sample = true;
       
@@ -208,7 +214,7 @@ int main(){
     
     if(c == 'r'){
       
-      randomize_parameters(trainer, 1, parameters, 0, 0.02);
+      randomize_parameters(trainer, 0, 0.02);
     }
     
     if(c == 't'){

@@ -3,22 +3,24 @@
 
 
 //derv is derivative of error with respect to parent
-bool node_propogate(network *w, NODES_LENGTH parameters_length, NODES_LENGTH *parameters, node *curr, node *parent, tensor *derv){
+bool node_propogate(network *w, node *curr, node *parent, tensor *derv){
+  if(!w || !w->parameters)
+    return false;
   
-  for(NODES_LENGTH i = 0; i < parameters_length; i++){ //Checking if parent is a parameter
-    if(parent == w->nodes[parameters[i]]){             //
-      tensor_add(w->derivatives[parameters[i]], w->derivatives[parameters[i]], derv); //Adding to derivative
+  for(NODES_LENGTH i = 0; i < w->parameters_length; i++){ //Checking if parent is a parameter
+    if(parent == w->nodes[w->parameters[i]]){             //
+      tensor_add(w->derivatives[w->parameters[i]], w->derivatives[w->parameters[i]], derv); //Adding to derivative
       tensor_delete(derv);
       return true;
     }
   }
     
-  return back_propogate(w, parameters_length, parameters, parent, derv);
+  return back_propogate(w, parent, derv);
 }
 
 
 //derv is partial derivative of error with respect to curr
-bool back_propogate(network *w, NODES_LENGTH parameter_length, NODES_LENGTH *parameters, node *curr, tensor *derv){
+bool back_propogate(network *w, node *curr, tensor *derv){
   
   node *parent_1 = w->nodes[curr->parent_1];
   node *parent_2 = w->nodes[curr->parent_2];
@@ -41,7 +43,7 @@ bool back_propogate(network *w, NODES_LENGTH parameter_length, NODES_LENGTH *par
       return false;
     }
     
-    if(!node_propogate(w, parameter_length, parameters, curr, parent_1, next_derv)){
+    if(!node_propogate(w, curr, parent_1, next_derv)){
       tensor_delete(next_derv);
       return false;
     } 
@@ -65,7 +67,7 @@ bool back_propogate(network *w, NODES_LENGTH parameter_length, NODES_LENGTH *par
       return false;
     }
     
-    if(!node_propogate(w, parameter_length, parameters, curr, parent_2, next_derv)){
+    if(!node_propogate(w, curr, parent_2, next_derv)){
       tensor_delete(next_derv);
       return false;
     }
@@ -76,9 +78,8 @@ bool back_propogate(network *w, NODES_LENGTH parameter_length, NODES_LENGTH *par
 }
 
 
-bool propogate_error(network *w, NODES_LENGTH parameters_length, NODES_LENGTH *parameters){
-  
-  if(!w || !parameters){
+bool propogate_error(network *w){
+  if(!w || !w->parameters){
     return false;
   }
 
@@ -88,18 +89,19 @@ bool propogate_error(network *w, NODES_LENGTH parameters_length, NODES_LENGTH *p
   }
   
 
-  for(NODES_LENGTH i = 0; i < parameters_length; i++){  //Clearing derivatives and replacing them with zero tensors
-    tensor_delete( w->derivatives[ parameters[i] ] );
-    //Creating empty matrix
-    FORM_ELEMENT form[2] = {error->t->data_length, w->nodes[ parameters[i] ]->t->data_length}; 
-    if( !(w->derivatives[ parameters[i] ] = tensor_zero(2, form)) ){
+  for(NODES_LENGTH i = 0; i < w->parameters_length; i++){  //Clearing derivatives and replacing them with zero tensors
+    tensor_delete( w->derivatives[ w->parameters[i] ] );
+    
+    //Creating empty matrix, partial derivative of error with respect to i
+    FORM_ELEMENT form[2] = {error->t->data_length, w->nodes[ w->parameters[i] ]->t->data_length}; 
+    if( !(w->derivatives[ w->parameters[i] ] = tensor_zero(2, form)) ){
       return false;
     }
   }
   
   tensor *derv = tensor_identity(error->t->data_length); //Derivative of error with respect to itself
   
-  return back_propogate(w, parameters_length, parameters, error, derv);
+  return back_propogate(w, error, derv);
 }
 
 
@@ -144,15 +146,14 @@ bool gradient_decent(network *w, double scale, double stochastic){
 }
 
 
-void randomize_parameters(network *w, NODES_LENGTH parameters_length, NODES_LENGTH *parameters, double base, double scale){
-  if(!w){
+void randomize_parameters(network *w, double base, double scale){
+  if(!w)
     return;
-  }
   
   
-  for(NODES_LENGTH i = 0; i < parameters_length; i++){
-    for(DATA_LENGTH j = 0; j < w->nodes[parameters[i]]->t->data_length; j++){
-      w->nodes[parameters[i]]->t->data[j] = base + scale*((double)rand()/RAND_MAX * 2 - 1);
+  for(NODES_LENGTH i = 0; i < w->parameters_length; i++){
+    for(DATA_LENGTH j = 0; j < w->nodes[w->parameters[i]]->t->data_length; j++){
+      w->nodes[w->parameters[i]]->t->data[j] = base + scale*((double)rand()/RAND_MAX * 2 - 1);
     }
   }
   

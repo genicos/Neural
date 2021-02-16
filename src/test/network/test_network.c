@@ -271,10 +271,16 @@ int main(){
   printf("\nTesting partial derivatives, by calculating partial derivatives of E with respect to A,B,D \n\n"); 
   
   NODES_LENGTH params[3] = {0,1,3};
+  
+  if(!network_add_parameters(Z, 3, params)){
+    printf("Failed to add parameters to network\n");
+    return 1; 
+  }
+  
   Z->root = 5;
   node_solve(Z,Z->root);
   
-  propogate_error(Z, 3, params);
+  propogate_error(Z);
   for(int i = 0; i < 3; i++){
     printf("Node %d\n", params[i]);
     tensor_print(Z->derivatives[params[i]] , "f");
@@ -290,7 +296,7 @@ int main(){
     printf("Error:    %f\n", Z->nodes[Z->root]->t->data[0]);
     network_clean(Z);
     node_solve(Z, Z->root);
-    propogate_error(Z, 3, params);
+    propogate_error(Z);
   }
   printf("Gradient decent has been applied\n");
   
@@ -340,7 +346,10 @@ int main(){
  
   network *L = network_create(6, L_nodes);
   L->root = 5;
-
+  
+  NODES_LENGTH parameters[2] = {1};
+  network_add_parameters(L, 1, parameters);
+ 
   //network_save("MNIST-trainer", L); 
   
   network_delete(L); 

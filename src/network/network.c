@@ -59,6 +59,9 @@ void network_delete(network *w){
         node_delete(w->nodes[i]);
       }
     }
+    
+    free(w->parameters);
+    
     free(w->derivatives);
     free(w->nodes);
   }
@@ -95,10 +98,38 @@ network *network_create(NODES_LENGTH nodes_length, node **nodes){
   
   w->nodes_responsibility = false;
   
+  w->parameters_length = 0;
+  w->parameters = NULL;
+  
   w->root = 0;
+  w->truth = 0;
+  w->inputs_length = 0;
   
   return w;
 }
+
+network *network_add_parameters(network *w, NODES_LENGTH parameters_length, NODES_LENGTH *parameters){
+  if(!w || !parameters || !parameters_length)
+    return NULL;
+  
+  free(w->parameters);
+  
+  w->parameters = (NODES_LENGTH *)calloc(parameters_length, sizeof(NODES_LENGTH));
+  if(!w->parameters){
+    return NULL;
+  }
+  
+  
+  w->parameters_length = parameters_length;
+  
+  for(NODES_LENGTH i = 0; i < parameters_length; i++){
+    w->parameters[i] = parameters[i];
+  }
+  
+  return w;
+}
+
+
 
 bool network_equal(network *w, network *x){
   if(w == x)
@@ -117,7 +148,20 @@ bool network_equal(network *w, network *x){
 
   if(w->root != x->root)
     return false;
-
+  
+  if(w->parameters || x->parameters){
+    if(!w->parameters || !x->parameters)    //If only one exists
+      return false;
+    
+    if(w->parameters_length != x->parameters_length)
+      return false;
+    
+    for(NODES_LENGTH i = 0; i < w->parameters_length; i++){
+      if(w->parameters[i] != x->parameters[i])
+        return false;
+    }
+  }
+  
   return true;
 }
 

@@ -28,14 +28,22 @@ typedef struct node{
 //Only leaf nodes may have more that one parent
 //network is responsible for node array, but not for nodes
 typedef struct network{
-  NODES_LENGTH nodes_length;
-  node** nodes;
-  bool nodes_responsibility; //if true, network is responsible for deleting every node
   
-  NODES_LENGTH root; //index of error node, usually is a scalar, ie has a form of {1}
+  NODES_LENGTH nodes_length;        // Array of nodes
+  node** nodes;                     //
+  bool nodes_responsibility;        // When true, this network must free each node
   
-  tensor** derivatives; //The partial derivatives of error with respect to
-    //the other nodes, calculated as needed. 
+  NODES_LENGTH root;                // index of error node, usually is a scalar,
+                                    //  ie has a form of {1}
+  
+  tensor** derivatives;             // The partial derivatives of error with respect to
+                                    //  the other nodes, calculated as needed.
+  
+  NODES_LENGTH parameters_length;   // Array of parameters as node arrays
+  NODES_LENGTH *parameters;         //  
+  
+  NODES_LENGTH truth;               // Ground truth node, for training 
+  NODES_LENGTH inputs_length;        // The first input_length nodes are the inputs
 } network;
 
 
@@ -131,6 +139,16 @@ void network_delete(network *w);
 network *network_create(NODES_LENGTH nodes_length,node **nodes);
 
 
+//Copies parameter list to network `w
+//  sets `w->parameter_responsibility to true
+//
+// `w: network to add to
+// `parameters_length: new `w->parameters_length
+// `parameters: array to be copied into `w->parameters
+//
+// `network_add_parameters: `w with new parameters list
+network *network_add_parameters(network *w, NODES_LENGTH parameters_length, NODES_LENGTH *parameters);
+
 //clears the data for the tensors of all non-leaf nodes, and the derivatives array
 //
 // `w: network to be cleaned
@@ -149,6 +167,10 @@ bool node_solve(network *w, NODES_LENGTH n);
 //  For each index of `nodes:
 //    the two nodes pointed to are equal
 //  They have the same `error
+//  One has a `parameters defined iff the other does too
+//    If `parameters is defined
+//      They have the same `parameters_length
+//      Each entry of `parameters is equal
 //
 // `w:  first network to be compared
 // `x: second network to be compared
