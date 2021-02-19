@@ -105,10 +105,11 @@ tensor* tensor_cartesian_product(tensor *A, tensor *B){
     return NULL;
   }
   FORM_ELEMENT c_form[2] = {A->data_length, B->data_length};
-
+  
   tensor *C = tensor_create(2, c_form);
+  
   tensor_create_data(C); 
-
+  
   return C;
 }
 
@@ -117,9 +118,9 @@ tensor* tensor_chain_rule(tensor *AB, tensor *BC){
     return NULL;
   }
   FORM_ELEMENT AC_form[2] = {AB->form[0], BC->form[1]};
-  
   tensor *AC = tensor_create(2, AC_form);
   tensor_create_data(AC);
+  
   
   if(!AC){
     return NULL;

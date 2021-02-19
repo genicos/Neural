@@ -6,7 +6,7 @@
 bool node_propogate(network *w, node *curr, node *parent, tensor *derv){
   if(!w || !w->parameters)
     return false;
-  
+   
   for(NODES_LENGTH i = 0; i < w->parameters_length; i++){ //Checking if parent is a parameter
     if(parent == w->nodes[w->parameters[i]]){             //
       tensor_add(w->derivatives[w->parameters[i]], w->derivatives[w->parameters[i]], derv); //Adding to derivative
@@ -14,7 +14,7 @@ bool node_propogate(network *w, node *curr, node *parent, tensor *derv){
       return true;
     }
   }
-    
+  
   return back_propogate(w, parent, derv);
 }
 
@@ -82,13 +82,14 @@ bool propogate_error(network *w){
   if(!w || !w->parameters){
     return false;
   }
-
+  
+  
   node *error;  
   if(w->root >= w->nodes_length || !(error = w->nodes[w->root])){ //Ensuring that error node exists
     return false;
   }
   
-
+  
   for(NODES_LENGTH i = 0; i < w->parameters_length; i++){  //Clearing derivatives and replacing them with zero tensors
     tensor_delete( w->derivatives[ w->parameters[i] ] );
     
@@ -98,6 +99,8 @@ bool propogate_error(network *w){
       return false;
     }
   }
+  
+  
   
   tensor *derv = tensor_identity(error->t->data_length); //Derivative of error with respect to itself
   

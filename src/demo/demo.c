@@ -5,7 +5,7 @@
 
 #include "../network/network.h"
 #include "../lx/lx.h"
-
+#include "../trainer/train.h"
 
 
 void pin_str(int row, int col, const char *str){
@@ -132,6 +132,8 @@ int main(){
   NODES_LENGTH parameters[1] = {1};
   network_add_parameters(trainer, 1, parameters);
   
+  trainer->inputs_length = 1;
+  trainer->truth  = 4; 
    
   bool running = true;
   
@@ -157,20 +159,9 @@ int main(){
     int c = getch();
     
     if(training){
-      double to_train = training_sample_size;
-      for(uint32_t i = 0; i < mnist->examples_count; i++){
-        if( (((double)rand()) /RAND_MAX) < (to_train / (mnist->examples_count - i) )) {
-          to_train--;
-          
-          trainer->nodes[0]->t = lx_example_input(mnist, i, 0);
-          trainer->nodes[4]->t = lx_example_output(mnist, i);
-          network_clean(trainer);
-          node_solve(trainer, trainer->root);
-          propogate_error(trainer);
-          gradient_decent(trainer, 1, 0.01);
-          
-        }
-      }
+      
+      train(trainer, 0.1, 0.02, (EXAMPLES_COUNT)training_sample_size, mnist);
+      
     }
     
     if(see_sample){

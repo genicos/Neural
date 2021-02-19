@@ -1,3 +1,6 @@
+#ifndef LX_H
+#define LX_H
+
 #include "../project.h"
 #include "../network/pderivative.h"
 #include "../io.h"
@@ -40,3 +43,5 @@ bool lx_save(char *file_name, lx *x);
 bool lx_append(IO *io, lx *x);
 lx  *lx_extrct(IO *io);
 lx  *lx_read(char *file_name);
+
+#endif

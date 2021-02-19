@@ -1,9 +1,3 @@
 demo.c:
-  make function that draws options in uniform way
-  if mnist.lx is not present, create it (take code from trainer.c)
-
-tensor:
-  Need to create the square distance
-
-trainer:
-  create new directory, and proper test, for LX
+  Strange behaviour: training seems to stabilize around a weird output
+  

@@ -3,7 +3,7 @@ CFLAGS =  -Wpedantic -Wextra -Wall -Werror -Wno-unused-parameter -Wno-unused-var
 
 .phony: clean valtest_tensor valtest_network
 
-demo: obj/demo.o obj/network.o obj/network_r.o obj/network_pderivative.o obj/tensor.o obj/tensor_r.o obj/tensor_functions.o obj/lx.o obj/lx_r.o obj/io.o
+demo: obj/demo.o obj/network.o obj/network_r.o obj/network_pderivative.o obj/tensor.o obj/tensor_r.o obj/tensor_functions.o obj/train.o obj/lx.o obj/lx_r.o obj/io.o
 	$(CC)              $^ -o bin/demo -lm -lcurses
 obj/demo.o: src/demo/demo.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -32,6 +32,10 @@ trainer: obj/trainer.o obj/lx.o obj/lx_r.o obj/tensor.o obj/tensor_r.o obj/io.o
 
 obj/trainer.o: src/trainer/trainer.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+obj/train.o: src/trainer/train.c src/trainer/train.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
 
 
 test_lx: obj/test_lx.o obj/lx.o obj/lx_r.o obj/tensor.o obj/tensor_r.o obj/io.o
