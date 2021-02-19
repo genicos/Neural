@@ -13,16 +13,16 @@
 int main(){
   
   /*                                      //To add new tests
-  FORM_ELEMENT T_form[1]     = {1};
-  tensor      *T             = tensor_create(1, T_form);
+  FORM_ELEMENT T_form[2]     = {1,4};
+  tensor      *T             = tensor_create(2, T_form);
   
    
-  ELEMENT      T_data[1]     =
-  {31};
+  ELEMENT      T_data[4]     =
+  {-1,-5,-7,-7};
   
   T->data                    = T_data;
   
-  tensor_save("src/test/tensor/OUT/6/CA",T);
+  tensor_save("src/test/tensor/OUT/6/CA_d1",T);
   tensor_print(T, "f");
   tensor_delete(T);
   */

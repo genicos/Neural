@@ -160,7 +160,7 @@ int main(){
     
     if(training){
       
-      train(trainer, 0.1, 0.02, (EXAMPLES_COUNT)training_sample_size, mnist);
+      train(trainer, 0.02, 0.02, (EXAMPLES_COUNT)training_sample_size, mnist);
       
     }
     

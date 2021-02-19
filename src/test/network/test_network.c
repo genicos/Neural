@@ -321,12 +321,8 @@ int main(){
        I   P
   */ 
   
-  //I should actually not have all these tensors pre-made
-   
-  //FORM_ELEMENT input_form[2] = {28,28};
   FORM_ELEMENT param_form[2] = {28*28, 10};
-  //FORM_ELEMENT digit_form[1] = {10};
-  //FORM_ELEMENT scalr_form[1] = {1}; 
+  
   
   //tensor *input     = tensor_create(2, input_form);
   tensor *param     = tensor_create(2, param_form);
