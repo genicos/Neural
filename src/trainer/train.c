@@ -44,7 +44,7 @@ bool train(network *w, double scale, double stochastic, INPUTS_COUNT sample_size
       network_clean(w);
       node_solve(w, w->root);
       
-      propogate_error(w);          ///problem
+      propogate_error(w);
       
       for(NODES_LENGTH j = 0; j < w->parameters_length; j++){
         tensor_add(

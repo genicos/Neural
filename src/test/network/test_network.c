@@ -310,58 +310,59 @@ int main(){
   
   
   /*       
-           
-                    I: input, {28,28}
-           H        P: parameters, {784, 10}
-          / \       D: intuitions, {10}
-         R   T      R: beliefs, {10}
-         |          T: Ground Truth, {10}
-         D          H: distance {1}
+                      Name             Form       Func(or type)   ID
+                      I: input,        {28,28}    INPUT           0
+             H        P: parameters,   {784, 10}  PARAMETER       1
+            / \       D: intuitions,   {10}       full            2
+           R   T      B: bias,         {10}       PARAMETER       3
+           |          F: Feelings,     {10}       add             4
+           F          R: beliefs,      {10}       soft_max        5
+          / \         T: Ground Truth, {10}       TRUTH           6
+         D   B        H: distance      {1}        squared_dist    7    root
         / \
        I   P
   */ 
   
   FORM_ELEMENT param_form[2] = {28*28, 10};
+  FORM_ELEMENT bias_form[1]  = {10};
   
   
-  //tensor *input     = tensor_create(2, input_form);
-  tensor *param     = tensor_create(2, param_form);
-  //tensor *intuition = tensor_create(1, digit_form);
-  //tensor *beliefs   = tensor_create(1, digit_form);
-  //tensor *truth     = tensor_create(1, digit_form);
-  //tensor *distance  = tensor_create(1, scalr_form);
+  tensor *param = tensor_create(2, param_form);
+  tensor *bias  = tensor_create(1, bias_form);
   
-  node *L_i = node_create(NULL     , 0, 0,0);//0
-  node *L_p = node_create(param    , 0, 1,0);//1
-  node *L_d = node_create(NULL     , 3, 0,1);//2
-  node *L_r = node_create(NULL     , 5, 2,0);//3
-  node *L_t = node_create(NULL     , 0, 4,0);//4
-  node *L_h = node_create(NULL     , 6, 3,4);//5
   
-  node *L_nodes[6] = {L_i, L_p, L_d, L_r, L_t, L_h};
+  node *L_i = node_create(NULL     , 0, 0,0);
+  node *L_p = node_create(param    , 0, 1,0);
+  node *L_d = node_create(NULL     , 3, 0,1);
+  node *L_b = node_create(bias     , 0, 3,0);
+  node *L_f = node_create(NULL     , 0, 2,3);
+  node *L_r = node_create(NULL     , 5, 4,0);
+  node *L_t = node_create(NULL     , 0, 6,0);
+  node *L_h = node_create(NULL     , 6, 5,6);
+  
+  node *L_nodes[8] = {L_i, L_p, L_d, L_b, L_f, L_r, L_t, L_h};
  
-  network *L = network_create(6, L_nodes);
-  L->root = 5;
+  network *L = network_create(8, L_nodes);
+  L->root = 7;
   
-  NODES_LENGTH parameters[2] = {1};
-  network_add_parameters(L, 1, parameters);
+  NODES_LENGTH parameters[2] = {1, 3};
+  network_add_parameters(L, 2, parameters);
  
-  //network_save("MNIST-trainer", L); 
+  network_save("MNIST-trainer", L); 
   
   network_delete(L); 
   node_delete(L_h);
   node_delete(L_t);
   node_delete(L_r);
+  node_delete(L_f);
+  node_delete(L_b);
   node_delete(L_d);
   node_delete(L_p);
   node_delete(L_i);
-  //tensor_delete(distance);
-  //tensor_delete(truth);
-  //tensor_delete(beliefs);
-  //tensor_delete(intuition);
+  
+  
+  tensor_delete(bias);
   tensor_delete(param);
-  //tensor_delete(input);
-  //
   
   
    

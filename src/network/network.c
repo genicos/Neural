@@ -223,5 +223,13 @@ void network_print(network *w, const char *printf_element_tag){
   for(NODES_LENGTH i = 0; i < w->nodes_length; i++){
     printf("\nTensor in Node %d:\n", i);
     tensor_print(w->nodes[i]->t, printf_element_tag);
+    
+    if(w->nodes[i]->t){ 
+    printf("FORM: {");
+    for(FORM_ELEMENT j = 0; j < w->nodes[i]->t->form_length; j++){
+      printf("%i,", w->nodes[i]->t->form[j]);
+    }
+    printf("}\n");
+    }
   }
 }

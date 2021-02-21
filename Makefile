@@ -85,6 +85,7 @@ clean:
 	rm -f obj/*
 	rm -f bin/*
 	rm -f src/demo/mnist.lx
+	rm -f MNIST-trainer
 
 valtest_io:
 	make clean

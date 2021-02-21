@@ -1,3 +1,4 @@
 demo.c:
-  Strange behaviour: training seems to stabilize around a weird output
   Training is bringing parameter to nan
+  
+  MNIST-trainer currently has double type

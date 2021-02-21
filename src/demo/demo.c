@@ -126,14 +126,15 @@ int main(){
   
   network *trainer = network_read("src/demo/MNIST-trainer");
   if(!trainer){
+    printf("training network not found\n");
     return 1;
   }
   
-  NODES_LENGTH parameters[1] = {1};
-  network_add_parameters(trainer, 1, parameters);
+  NODES_LENGTH parameters[2] = {1,3};
+  network_add_parameters(trainer, 2, parameters);
   
   trainer->inputs_length = 1;
-  trainer->truth  = 4; 
+  trainer->truth  = 6; 
    
   bool running = true;
   
@@ -158,13 +159,31 @@ int main(){
     
     int c = getch();
     
-    if(training){
+    if(c == 't'){
       
-      train(trainer, 0.02, 0.02, (EXAMPLES_COUNT)training_sample_size, mnist);
+      train(trainer, 0.002, 0.02, (EXAMPLES_COUNT)training_sample_size, mnist);
       
     }
     
-    if(see_sample){
+    
+    
+    if(c == 'a'){
+      running = false;
+    }
+    
+    
+    
+    if(c == 's'){
+      sample = rand()%60000;
+      
+      for(INPUTS_COUNT i = 0; i < trainer->inputs_length; i++){
+        trainer->nodes[i]->t = lx_example_input(mnist, sample, i);
+      }
+      trainer->nodes[trainer->truth]->t = lx_example_output(mnist, sample);
+      
+      network_clean(trainer);
+      node_solve(trainer, trainer->root);
+      
       draw_matrix(20, 0, 256, lx_example_input(mnist, sample, 0));
       tensor *output = trainer->nodes[trainer->nodes[trainer->root]->parent_1]->t;
       
@@ -180,26 +199,7 @@ int main(){
           output_i *= 10;
           mvaddch(20 + i, 32 + j, '0' + ((int)output_i)%10);
         }
-        
       }
-    }
-    
-    
-    
-    if(c == 'a'){
-      running = false;
-    }
-    
-    
-    
-    if(c == 's'){
-      sample = rand()%60000;
-      trainer->nodes[0]->t = lx_example_input(mnist, sample, 0);
-      trainer->nodes[4]->t = lx_example_output(mnist, sample);
-      network_clean(trainer);
-      node_solve(trainer, trainer->root);
-      see_sample = true;
-      
       
     }
     
@@ -208,9 +208,7 @@ int main(){
       randomize_parameters(trainer, 0, 0.02);
     }
     
-    if(c == 't'){
-      training = !training;
-    }
+    
      
   }
   
