@@ -4,7 +4,7 @@
 #include "../project.h"
 #include "../io.h"
 
-typedef double       ELEMENT;              //The type for the TENSOR ELEMENTS
+typedef float       ELEMENT;              //The type for the TENSOR ELEMENTS
 // ELEMENT must be float or double
 typedef uint8_t     FORM_LENGTH;          //Size of FORM length type
 //size(FORM_ELEMENT) <= size(DATA_LENGTH), product of all FORM elements is equal to DATA length

@@ -55,8 +55,14 @@ obj/lx_r.o: src/lx/r.c src/lx/lx.h src/io.h src/project.h
 test_tensor:  obj/test_tensor.o obj/tensor.o obj/tensor_r.o obj/tensor_functions.o obj/io.o
 	$(CC)              $^ -o bin/test_tensor -lm
 
+tensor_wrapper:  obj/tensor_wrapper.o obj/tensor.o obj/tensor_r.o obj/tensor_functions.o obj/io.o
+	$(CC)              $^ -o bin/tensor_wrapper -lm
+
 
 obj/test_tensor.o: src/test/tensor/test_tensor.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+obj/tensor_wrapper.o: src/wrappers/tensor/tensor_wrapper.c
 	$(CC) $(CFLAGS) -c $< -o $@ 
 
 obj/tensor.o: src/tensor/tensor.c src/tensor/tensor.h src/project.h
@@ -67,6 +73,7 @@ obj/tensor_r.o: src/tensor/r.c src/tensor/tensor.h src/io.c src/project.h
 
 obj/tensor_functions.o: src/tensor/functions.c src/tensor/functions.h src/tensor/tensor.h src/project.h
 	$(CC) $(CFLAGS) -c $< -o $@
+
 
 
 test_io: obj/test_io.o obj/io.o
