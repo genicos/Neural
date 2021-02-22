@@ -7,6 +7,6 @@
 #include "../lx/lx.h"
 
 
-bool train(network *w, double scale, double stochastic, EXAMPLES_COUNT sample_size, lx *x); 
+bool train(network *w, double scale, double stochastic, EXAMPLES_COUNT sample_size, lx *x, double *avg_error); 
 
 #endif

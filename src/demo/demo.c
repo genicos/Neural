@@ -150,7 +150,7 @@ int main(){
   mvaddstr(4, 0, "T: Train network");
   mvaddstr(6, 0, "E: Test network");
   mvaddstr(8, 0, "S: Sample network");
-  mvaddstr(10, 0, "R: Randomize parameters");
+  //mvaddstr(10, 0, "R: Randomize parameters");
   
   mvaddstr(2, 20, "Demo is still in the works");
    
@@ -161,8 +161,16 @@ int main(){
     
     if(c == 't'){
       
-      train(trainer, 0.002, 0.02, (EXAMPLES_COUNT)training_sample_size, mnist);
+      double avg_error = 0; 
+      train(trainer, 0.002, 0.02, (EXAMPLES_COUNT)training_sample_size, mnist, &avg_error);
       
+      mvaddstr(4, 22, "Average Error:");
+      mvaddch(4, 36, '0' + (int)avg_error);
+      mvaddch(4, 37, '.');
+      for(int j = 0; j < 5; j++){
+        avg_error *= 10;
+        mvaddch(4, 38 + j, '0' + ((int)avg_error)%10);
+      }
     }
     
     
@@ -205,7 +213,7 @@ int main(){
     
     if(c == 'r'){
       
-      randomize_parameters(trainer, 0, 0.02);
+      //randomize_parameters(trainer, 0, 0.02);
     }
     
     

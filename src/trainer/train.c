@@ -1,6 +1,8 @@
 #include "train.h"
 
-bool train(network *w, double scale, double stochastic, INPUTS_COUNT sample_size, lx *x){
+bool train(network *w,
+           double scale, double stochastic, INPUTS_COUNT sample_size, lx *x, 
+           double *avg_error){
   if(!w || !x)
     return false;
   
@@ -43,7 +45,9 @@ bool train(network *w, double scale, double stochastic, INPUTS_COUNT sample_size
       
       network_clean(w);
       node_solve(w, w->root);
+      *avg_error += w->nodes[w->root]->t->data[0];
       
+       
       propogate_error(w);
       
       for(NODES_LENGTH j = 0; j < w->parameters_length; j++){
@@ -60,7 +64,12 @@ bool train(network *w, double scale, double stochastic, INPUTS_COUNT sample_size
   
   
   scalar->data[0] = 1.0/sample_size;
+  *avg_error /= sample_size;
   
+  if(w->nodes[w->root]->t->data[0] > 0){
+    scale = -scale;
+  }
+   
   for(NODES_LENGTH i = 0; i < w->parameters_length; i++){
     tensor_scale(
       parameter_gradient[i],
