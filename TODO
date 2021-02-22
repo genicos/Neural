@@ -1,4 +1,2 @@
 demo.c:
-  Training is bringing parameter to nan
-  
   MNIST-trainer currently has double type

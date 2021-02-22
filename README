@@ -1,7 +1,11 @@
 A C library for Neural Networks
 
+Try:
+  
+  ./demo, train with [T], and sample with [S] 
+
 Tests:
   
   make valtest_network
   
-  make valtest_tensor
+  make valtest_tensor   -- ELEMENT is currently a double, it needs to be a float for this test to work
