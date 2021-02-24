@@ -7,18 +7,33 @@
 #include "../lx/lx.h"
 #include "../trainer/train.h"
 
+const char *degrees = " .:-=+*#%@";
+int deg_l = 10;
 
 void pin_str(int row, int col, const char *str){
   mvaddstr(row, col - strlen(str)/2, str);
 }
 
-void draw_matrix(int row, int col, double scale, tensor *t){
+
+void fill_rect(int row, int col, int height, int width, double gray){
+  int index = (int)(gray * deg_l);
   
-  char *degrees = " .:-=+*#%@";
+  if(index >= deg_l)
+    index = deg_l - 1;
+   
+  for(int r = 0; r < height; r++){
+    for(int c = 0; c < width; c++){
+      mvaddch(row + r, col + c, degrees[index]);
+    }
+  }
+  
+}
+
+void draw_matrix(int row, int col, double scale, tensor *t){
   
   for(DATA_LENGTH r = 0; r < t->form[0]; r++){
     for(DATA_LENGTH c = 0; c < t->form[1]; c++){
-      int index = (int)(t->data[r*t->form[0] + c]/scale * strlen(degrees)) ;
+      int index = (int)(t->data[r*t->form[0] + c]/scale * deg_l) ;
       if(index < 0)
         index = 0;
       else if((unsigned long)index >= strlen(degrees))
@@ -139,7 +154,7 @@ int main(){
   bool running = true;
   
   bool training = false;
-  double training_sample_size = 400;
+  double training_sample_size = 100;
 
   bool see_sample = false;
   int sample = 0;
@@ -148,8 +163,7 @@ int main(){
   
   mvaddstr(2, 0, "A: Quit Demo");
   mvaddstr(4, 0, "T: Train network");
-  mvaddstr(6, 0, "E: Test network");
-  mvaddstr(8, 0, "S: Sample network");
+  mvaddstr(6, 0, "S: Sample network");
   //mvaddstr(10, 0, "R: Randomize parameters");
   
   mvaddstr(2, 20, "Demo is still in the works");
@@ -162,7 +176,7 @@ int main(){
     if(c == 't'){
       
       double avg_error = 0; 
-      train(trainer, 0.002, 0.02, (EXAMPLES_COUNT)training_sample_size, mnist, &avg_error);
+      train(trainer, 0.002, 0.01, (EXAMPLES_COUNT)training_sample_size, mnist, &avg_error);
       
       mvaddstr(4, 22, "Average Error:");
       mvaddch(4, 36, '0' + (int)avg_error);
@@ -193,20 +207,19 @@ int main(){
       node_solve(trainer, trainer->root);
       
       draw_matrix(20, 0, 256, lx_example_input(mnist, sample, 0));
-      tensor *output = trainer->nodes[trainer->nodes[trainer->root]->parent_1]->t;
       
+      tensor *output = trainer->nodes[trainer->nodes[trainer->root]->parent_1]->t;
+      tensor *truth  = trainer->nodes[trainer->nodes[trainer->root]->parent_2]->t;
+      
+      mvaddstr(19, 29, "Truth Network");
+       
+      fill_rect(20, 29, 10, 14, 0);
       for(int i = 0; i < 10; i++){
-        mvaddch(20 + i, 28, '0' + i);
-        mvaddch(20 + i, 29, ':');
-        
-        double output_i = output->data[i];
-        mvaddch(20 + i, 30, '0' + (int)output_i);
-        mvaddch(20 + i, 31, '.');
-        
-        for(int j = 0; j < 5; j++){
-          output_i *= 10;
-          mvaddch(20 + i, 32 + j, '0' + ((int)output_i)%10);
-        }
+         mvaddch  (20 + i, 28, '0' + i);
+         fill_rect(20 + i, 29, 1, 5, truth->data[i]);
+         fill_rect(20 + i, 35, 1, 5, output->data[i]);
+         fill_rect(20 + i, 34, 1, 1, 0);
+         fill_rect(20 + i, 40, 1, 1, 0);
       }
       
     }
@@ -223,7 +236,7 @@ int main(){
   
   endwin();
    
-  network_print(trainer, "f");
+  //network_print(trainer, "f");
   
   lx_delete(mnist);
   network_delete(trainer);
