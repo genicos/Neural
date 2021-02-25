@@ -150,6 +150,17 @@ int main(){
   
   trainer->inputs_length = 1;
   trainer->truth  = 6; 
+  
+  
+  
+  //This matrix stores correlation between true and guessed digits
+  FORM_ELEMENT corr_matrix_form[2] = {10,10};
+  tensor *corr_matrix = tensor_create(2, corr_matrix_form);
+  tensor_create_data(corr_matrix);
+  
+  int sample_digit_count[10] = {0,0,0,0,0,0,0,0,0,0,};
+  
+  
    
   bool running = true;
   
@@ -185,6 +196,16 @@ int main(){
         avg_error *= 10;
         mvaddch(4, 38 + j, '0' + ((int)avg_error)%10);
       }
+
+      
+
+       //re setting correlation matrix
+       for(DATA_LENGTH i = 0; i < corr_matrix->data_length; i++){
+         corr_matrix->data[i] = 0;
+       }
+       for(int i = 0; i < 10; i++){
+         sample_digit_count[i] = 0;
+       }
     }
     
     
@@ -211,6 +232,8 @@ int main(){
       tensor *output = trainer->nodes[trainer->nodes[trainer->root]->parent_1]->t;
       tensor *truth  = trainer->nodes[trainer->nodes[trainer->root]->parent_2]->t;
       
+      int true_digit = 0;
+       
       mvaddstr(19, 29, "Truth Network");
        
       fill_rect(20, 29, 10, 14, 0);
@@ -220,8 +243,31 @@ int main(){
          fill_rect(20 + i, 35, 1, 5, output->data[i]);
          fill_rect(20 + i, 34, 1, 1, 0);
          fill_rect(20 + i, 40, 1, 1, 0);
+
+         if(truth->data[i] > 0.5)
+           true_digit = i;
       }
       
+      for(int i = 0; i < 10; i++){
+        corr_matrix->data[true_digit*10 + i] 
+          = (corr_matrix->data[true_digit*10 + i]*sample_digit_count[true_digit] + output->data[i])
+          / (sample_digit_count[true_digit] + 1);
+      }
+      
+      sample_digit_count[true_digit]++;
+
+      //  Drawing correlation matrix
+      
+      mvaddstr(17, 50, "Correlation matrix");
+      mvaddstr(18, 51, "Network");
+      mvaddstr(25, 43, "Truth"); 
+      
+      for(int i = 0; i < 10; i++){
+        mvaddch(19, 50 + i, '0' + i);
+        mvaddch(20 + i, 49, '0' + i); 
+      }
+      
+      draw_matrix(20, 50, 1,  corr_matrix);
     }
     
     if(c == 'r'){
